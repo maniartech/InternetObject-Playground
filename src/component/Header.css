@@ -1,0 +1,18 @@
+.header {
+  height: 40px;
+  display: flex;
+  padding: 0.5rem; }
+  .header .logo {
+    display: block;
+    padding-top: 0.3rem; }
+    .header .logo img {
+      width: 30px;
+      height: 30px; }
+  .header .menu-link li {
+    list-style: none;
+    display: inline;
+    padding: 0.3rem; }
+    .header .menu-link li a {
+      text-decoration: none;
+      color: #595959;
+      font-size: 1rem; }

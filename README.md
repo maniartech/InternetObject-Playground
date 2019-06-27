@@ -1,2 +1,3 @@
-# InternetObject-Playground
-Try internet object format on this playground
+# Internet Object Playground
+
+> Project is under heavy development!

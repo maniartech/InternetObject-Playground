@@ -1,0 +1,33 @@
+.header{
+    height: 40px;
+    display: flex;
+    padding: 0.5rem;
+    // background-color: #ececec;
+    // border-bottom: 1px solid #ccc;
+
+
+    .logo{
+       display: block;
+       padding-top: 0.3rem;
+
+       img{
+            width: 30px;
+            height: 30px;
+       }
+    }
+
+    .menu-link{
+
+        li{
+            list-style: none;
+            display: inline;
+            padding: 0.3rem;
+
+            a{
+                text-decoration: none;
+                color: #595959;
+                font-size: 1rem; 
+            }
+        }
+    }
+}
