@@ -20,22 +20,24 @@ export default class Internetobject extends Component{
         return(
             <div className="section-io">
                 <label>Json</label>
-                 <MonacoEditor
-                    width="100%"
-                    height="100%"
-                    language="javascript"
-                    
-                    value={code}
-                    options={
-                        {
-                            lineDecorationsWidth: 5,
-                            readonly: true
+                <div className="pane-wrapper">
+                    <MonacoEditor
+                        width="100%"
+                        height="100%"
+                        language="javascript"
+                        
+                        value={code}
+                        options={
+                            {
+                                lineDecorationsWidth: 5,
+                                readonly: true
+                            }
                         }
-                    }
-                    onChange={this.onChange}
-                    editorDidMount={this.editorDidMount}
-                    refresh={this.props.refresh}
-                />
+                        onChange={this.onChange}
+                        editorDidMount={this.editorDidMount}
+                        refresh={this.props.refresh}
+                    />
+                </div>
             </div>
         );
     }

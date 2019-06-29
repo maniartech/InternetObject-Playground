@@ -9,12 +9,23 @@
   border-bottom-right-radius: 8px;
   border: 10px solid #ededed;
   border-top: 0; }
+  .editor .Pane1 {
+    overflow: inherit;
+    margin-bottom: 10px; }
 
 .iheader, .idata, .section-io {
-  width: 100%;
+  width: 99%;
   height: 100%;
   position: relative;
-  padding-bottom: 1px; }
+  padding-bottom: 1px;
+  display: flex;
+  flex-direction: column; }
   .iheader label, .idata label, .section-io label {
     padding: 15px 10px 5px 10px;
-    display: inline-block; }
+    flex-basis: 20px;
+    display: block; }
+  .iheader .pane-wrapper, .idata .pane-wrapper, .section-io .pane-wrapper {
+    flex: 1;
+    position: relative;
+    display: block;
+    overflow: hidden; }

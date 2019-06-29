@@ -11,17 +11,30 @@
     border: 10px solid #ededed;
     border-top: 0;
 
+    .Pane1{
+        overflow: inherit;
+        margin-bottom: 10px;
+    }
+
 }
 .iheader,.idata,.section-io{
-    width:100%;
+    width: 99%;
     height: 100%;
     position: relative;
     padding-bottom: 1px;
-    // border: 1px solid red;
+    display: flex;
+    flex-direction: column;
 
     label{
         padding: 15px 10px 5px 10px;
-        // border: 1px solid red;
-        display: inline-block;
+        flex-basis: 20px;
+        display: block;
+    }
+
+    .pane-wrapper{
+        flex: 1;
+        position: relative;
+        display: block;
+        overflow: hidden;
     }
 }
