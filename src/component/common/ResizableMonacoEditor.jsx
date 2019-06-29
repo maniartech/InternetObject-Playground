@@ -21,9 +21,30 @@ export default class ResizableMonacoEditor extends Component {
     }
 
 	render() {
+        // return null
 		return (
 			<MonacoEditor
-				{ ...this.props }
+                { ...this.props }
+                theme="vs"
+                options = {
+                    {
+                        lineNumbers: 'off',
+                        glyphMargin: false,
+                        folding: false,
+                        lineDecorationsWidth: 10,
+                        lineNumbersMinChars: 0,
+                        highlightActiveIndentGuide: true,
+                        renderLineHighlight: "none",
+                        overviewRulerBorder: false,
+                        scrollbar: {
+                            vertical: "auto",
+                            horizontal: "auto"
+                        },
+                        minimap:{
+                            enabled: false
+                        }
+                    }
+                }
 				editorDidMount={this.handleEditorDidMount}
 			/>
 		);

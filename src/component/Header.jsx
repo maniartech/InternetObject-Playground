@@ -1,5 +1,5 @@
 import React,{Component} from 'react';
-import logo from '../static/img/logo.png';
+import logo from '../static/img/full-logo.png';
 import './Header.scss';
 
 export default class Header extends Component {
@@ -7,11 +7,11 @@ export default class Header extends Component {
 		return (
 		  <div className="header">
 			  <div className="row">
-				  <div className="col">
-				  	<a href="/" className="logo pull-left"><img src={ logo }/></a>
+				  <div className="col left">
+				  	<a href="/" className="logo pull-left"><img src={ logo } width="180px"/></a>
 				  </div>
 
-				  <div className="col">
+				  <div className="col right">
 					<ul className="menu-link pull-right">
 						<li><a href="#"> Link 1 </a></li>
 						<li><a href="#"> Link 2 </a></li>

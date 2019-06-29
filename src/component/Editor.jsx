@@ -16,8 +16,8 @@ export default class Editor extends Component{
     render(){
         return(
             <div className="editor">
-                <SplitPane split="vertical" defaultSize="50%" onChange={this.onChange}>
-                    <SplitPane split="horizontal" defaultSize="40%" onChange={this.onChange}> 
+                <SplitPane split="vertical" defaultSize="61.8%" onChange={this.onChange}>
+                    <SplitPane split="horizontal" defaultSize="30%" onChange={this.onChange}> 
                         <Iheader refresh={this.state.counter} />
                         <Idata refresh={this.state.counter} />
                     </SplitPane>

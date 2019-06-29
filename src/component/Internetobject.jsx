@@ -16,17 +16,22 @@ export default class Internetobject extends Component{
         const code = this.state.code;
             const options = {
             selectOnLineNumbers: true,
-            minimap: { enabled: false }
         };
         return(
             <div className="section-io">
+                <label>Json</label>
                  <MonacoEditor
                     width="100%"
                     height="100%"
                     language="javascript"
-                    theme="vs-dark"
+                    
                     value={code}
-                    options={options}
+                    options={
+                        {
+                            lineDecorationsWidth: 5,
+                            readonly: true
+                        }
+                    }
                     onChange={this.onChange}
                     editorDidMount={this.editorDidMount}
                     refresh={this.props.refresh}
