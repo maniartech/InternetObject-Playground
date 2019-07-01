@@ -2,18 +2,11 @@
     height: 50px;
     display: flex;
     padding: 0.5rem;
-    // background-color: #ececec;
-    // border-bottom: 1px solid #ccc;
 
 
     .logo{
        display: block;
        padding-top: 0.3rem;
-
-       img{
-            // width: 30px;
-            // height: 30px;
-       }
     }
 
     .menu-link{
@@ -25,8 +18,14 @@
 
             a{
                 text-decoration: none;
-                color: #232323;
-                font-size: 0.9rem; 
+                color: #555555;
+                font-size: 1rem;
+                font-family: Roboto, sans-serif;
+                padding-bottom: 0.5rem;
+
+                &:hover{
+                    border-bottom: 5px solid red;
+                }
             }
         }
     }

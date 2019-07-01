@@ -12,6 +12,10 @@
   .editor .Pane1 {
     overflow: inherit;
     margin-bottom: 10px; }
+  .editor .section-io {
+    margin-left: 4px; }
+  .editor .scroll-decoration {
+    box-shadow: none !important; }
 
 .iheader, .idata, .section-io {
   width: 99%;

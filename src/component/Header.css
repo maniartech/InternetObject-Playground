@@ -11,5 +11,9 @@
     padding: 0.3rem; }
     .header .menu-link li a {
       text-decoration: none;
-      color: #232323;
-      font-size: 0.9rem; }
+      color: #555555;
+      font-size: 1rem;
+      font-family: Roboto, sans-serif;
+      padding-bottom: 0.5rem; }
+      .header .menu-link li a:hover {
+        border-bottom: 5px solid red; }

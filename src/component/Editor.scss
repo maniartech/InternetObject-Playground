@@ -16,6 +16,13 @@
         margin-bottom: 10px;
     }
 
+    .section-io{
+        margin-left: 4px;
+    }
+    .scroll-decoration{
+        box-shadow: none!important;
+    }
+
 }
 .iheader,.idata,.section-io{
     width: 99%;
@@ -37,4 +44,5 @@
         display: block;
         overflow: hidden;
     }
+    
 }
