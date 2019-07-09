@@ -1,6 +1,4 @@
 import React,{Component} from 'react';
-
-// React Monaco Editor
 import  MonacoEditor from './common/ResizableMonacoEditor';
 
 export default class Idata extends Component{
@@ -15,10 +13,6 @@ export default class Idata extends Component{
     render(){
 
         const code = this.state.code;
-            const options = {
-            selectOnLineNumbers: true,
-            minimap: { enabled: false }
-        };
 
         return(
             <div className="idata">

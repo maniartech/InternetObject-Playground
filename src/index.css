@@ -39,12 +39,12 @@ body {
     -ms-flex-wrap: wrap;
     flex-wrap: wrap;
     width: 100%; }
-  .wrapper .col {
-    -ms-flex-preferred-size: 0;
-    -ms-flex-positive: 1;
-    flex-basis: 0;
-    flex-grow: 1;
-    max-width: 100%; }
+    .wrapper .row .col {
+      -ms-flex-preferred-size: 0;
+      -ms-flex-positive: 1;
+      flex-basis: 0;
+      flex-grow: 1;
+      max-width: 100%; }
   .wrapper .content {
     height: inherit;
     background-color: #0e1628; }

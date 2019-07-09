@@ -1,14 +1,14 @@
 import React,{Component} from 'react';
-import debounce from 'lodash/debounce'
+// import debounce from 'lodash/debounce';
 import  MonacoEditor from 'react-monaco-editor';
 
 export default class ResizableMonacoEditor extends Component {
 
-    constructor (props) {
-        super(props)
+    // constructor (props) {
+    //     super(props)
 
-        // this.handleResize = debounce(this.handleResize, 20)
-    }
+    //     // this.handleResize = debounce(this.handleResize, 20)
+    // }
 
     editor = null
 
@@ -21,7 +21,6 @@ export default class ResizableMonacoEditor extends Component {
     }
 
 	render() {
-        // return null
 		return (
 			<MonacoEditor
                 { ...this.props }

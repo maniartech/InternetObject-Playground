@@ -1,7 +1,7 @@
 import React,{Component} from 'react';
 import Iheader from './Iheader';
 import Idata from './Idata';
-import Internetobject from './Internetobject';
+import Json from './Json';
 import SplitPane from 'react-split-pane';
 import './Editor.scss';
 
@@ -21,7 +21,7 @@ export default class Editor extends Component{
                         <Iheader refresh={this.state.counter} />
                         <Idata refresh={this.state.counter} />
                     </SplitPane>
-                    <Internetobject refresh={this.state.counter}/>
+                    <Json refresh={this.state.counter}/>
                 </SplitPane>
             </div>
         );

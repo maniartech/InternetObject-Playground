@@ -8,7 +8,7 @@ export default class Header extends Component {
 		  <div className="header">
 			  <div className="row">
 				  <div className="col left">
-				  	<a href="/" className="logo pull-left"><img src={ logo } width="180px"/></a>
+				  	<a href="/" className="logo pull-left"><img src={ logo } width="180px" alt="Logo"/></a>
 				  </div>
 
 				  <div className="col right">
