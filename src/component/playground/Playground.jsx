@@ -28,7 +28,7 @@ export default class Playground extends Component {
     const showDefinitions = this.props.showDefinitions;
     if (showDefinitions) {
       return (
-        <SplitPane split="vertical" defaultSize="33.3%">
+        <SplitPane split="vertical" primary="first" defaultSize="33.3%">
           {this.renderDefPan()}
           <SplitPane
             split="vertical"
@@ -42,7 +42,7 @@ export default class Playground extends Component {
       );
     }
     return (
-      <SplitPane split="vertical" defaultSize="50%" onChange={this.onChange}>
+      <SplitPane split="vertical" defaultSize="50%" primary="first">
         {this.renderDocPan()}
         {this.renderOutputPan()}
       </SplitPane>
