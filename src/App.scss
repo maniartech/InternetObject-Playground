@@ -1,0 +1,36 @@
+/* .App {
+  text-align: center;
+} */
+
+.app {
+
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-image: url('./static/img/io-playground-logo.png');
+  background-size: 382px 200px;
+  background-repeat: no-repeat;
+  background-position-x: -120px;
+  background-position-y: -70px;
+
+  .header {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    height:61px;
+    // border: 1px solid red;
+  }
+
+  .playground {
+    position: absolute;
+    top: 61px;
+    right: 10px;
+    bottom: 10px;
+    left: 10px;
+    background-color: #1E1E1E;
+    border-radius: 5px;
+  }
+}
