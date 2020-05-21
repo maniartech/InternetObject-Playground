@@ -1,24 +1,31 @@
-import React,{Component} from 'react';
-import Header from './component/Header';
-import Playground from './component/Playground';
+import React, { Component } from "react";
+import Header from "./component/header/Header";
+import Playground from "./component/playground/Playground";
 
-
-
-import './App.css';
-
-// const examples = { json: '# Json example', internetobject: '// Internet Object Example' };
+import "./App.css";
 
 export default class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      showDefinitions: false,
+    };
+  }
+  render() {
+    const { showDefinitions } = this.state;
+    return (
+      <div className="app">
+        <Header
+          showDefinitions={showDefinitions}
+          onDefinitionsClick={this.onDefinitionsClick}
+        />
+        <Playground showDefinitions={showDefinitions} />
+      </div>
+    );
+  }
 
-
-	render(){
-		return (
-		  <div className="App">
-		      <div className="wrapper">
-			  	<Header/>
-				<Playground/>
-			  </div>
-		  </div>
-		);
-	}
+  onDefinitionsClick = () => {
+    const showDefinitions = !this.state.showDefinitions;
+    this.setState({ showDefinitions });
+  };
 }
