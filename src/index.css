@@ -3,7 +3,8 @@
 body {
   font-family: Roboto, sans-serif;
   margin: 0;
-  padding: 0; }
+  padding: 0;
+  background-color: #3C3C3C; }
 
 .pull-left {
   float: left; }
@@ -12,7 +13,9 @@ body {
   float: right; }
 
 .clearfix {
-  clear: both; }
+  clear: both;
+  margin: 0;
+  padding: 0; }
 
 .button-dropdown-arrow:after {
   content: "▾";
@@ -33,18 +36,6 @@ body {
   bottom: 20px;
   right: 20px;
   border-radius: 5px; }
-  .wrapper .row {
-    display: -ms-flexbox;
-    display: flex;
-    -ms-flex-wrap: wrap;
-    flex-wrap: wrap;
-    width: 100%; }
-    .wrapper .row .col {
-      -ms-flex-preferred-size: 0;
-      -ms-flex-positive: 1;
-      flex-basis: 0;
-      flex-grow: 1;
-      max-width: 100%; }
   .wrapper .content {
     height: inherit;
     background-color: #0e1628; }
