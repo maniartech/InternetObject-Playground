@@ -1,28 +1,34 @@
 {
-  "name": "internetobject-playground",
+  "name": "io-playground",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "internet-object": "^0.1.6",
-    "lodash": "^4.17.15",
-    "lodash.debounce": "^4.0.8",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
-    "react-monaco-editor": "^0.26.2",
-    "react-scripts": "^3.4.1",
-    "react-split-pane": "^0.1.87"
+    "@testing-library/jest-dom": "^5.14.1",
+    "@testing-library/react": "^13.0.0",
+    "@testing-library/user-event": "^13.2.1",
+    "@types/jest": "^27.0.1",
+    "@types/node": "^16.7.13",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-monaco-editor": "^0.54.0",
+    "react-scripts": "5.0.1",
+    "split-pane-react": "^0.1.3",
+    "typescript": "^4.4.2",
+    "web-vitals": "^2.1.0"
   },
   "scripts": {
-    "build-css": "node-sass-chokidar src/ -o src/ --recursive",
-    "watch-css": "npm run build-css && node-sass-chokidar src/ -o src/ --watch",
-    "start-js": "react-scripts start",
-    "start": "npm-run-all -p watch-css start-js",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
   },
   "browserslist": {
     "production": [
@@ -35,10 +41,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "node-sass": "^4.14.1",
-    "node-sass-chokidar": "^1.4.0",
-    "npm-run-all": "^4.1.5"
   }
 }

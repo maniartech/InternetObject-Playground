@@ -1,41 +1,18 @@
-@charset "UTF-8";
-@import url("https://fonts.googleapis.com/css?family=Oswald|Roboto&display=swap");
 body {
-  font-family: Roboto, sans-serif;
+  background-color: #1b1d23;
   margin: 0;
-  padding: 0;
-  background-color: #3C3C3C; }
-
-.pull-left {
-  float: left; }
-
-.pull-right {
-  float: right; }
-
-.clearfix {
-  clear: both;
-  margin: 0;
-  padding: 0; }
-
-.button-dropdown-arrow:after {
-  content: "▾";
-  padding-left: 5px;
-  padding-right: 3px; }
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 
 #root {
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0; }
+  position: relative;
+}
 
-.wrapper {
-  position: absolute;
-  top: 0;
-  left: 20px;
-  bottom: 20px;
-  right: 20px;
-  border-radius: 5px; }
-  .wrapper .content {
-    height: inherit;
-    background-color: #0e1628; }
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}

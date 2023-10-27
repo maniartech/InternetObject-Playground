@@ -1,0 +1,50 @@
+#root: {
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+.App {
+  border: 1px solid red;
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  display: grid;
+  grid-template-areas: 'header' 'main''footer';
+}
+
+.main {
+  grid-area: main;
+  border: 1px solid blue;
+  /* TODO: Just a temperory hack */
+  height: 87vh;
+  display: flex;
+}
+
+.left {
+  border: 2px solid green;
+  width: 50%;
+}
+
+.right {
+  border: 1px solid orange;
+  width: 50%;
+}
+
+.footer {
+  grid-area: footer;
+  border: 1px solid yellow;
+  height: 50px;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

@@ -1,0 +1,13 @@
+
+.App-header {
+  border-bottom: 1px solid orange;
+  grid-area: header;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  font-size: calc(10px + 1vmin);
+  color: white;
+  gap: 15px;
+  padding-left: 15px;
+  height: 70px;
+}
