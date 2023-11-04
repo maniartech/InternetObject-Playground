@@ -1,7 +1,8 @@
-import React from 'react';
-import './App.css';
+import                     './App.css';
 import Header         from '../../components/header/Header';
 import Editor         from '../../components/editor/Editor';
+import Output         from '../../components/output/Output';
+import Footer         from '../../components/footer/Footer';
 
 function App() {
   return (
@@ -12,10 +13,10 @@ function App() {
           <Editor />
         </div>
         <div className='right'>
-
+          <Output />
         </div>
       </main>
-      <footer className='footer'></footer>
+      <Footer />
     </div>
   );
 }

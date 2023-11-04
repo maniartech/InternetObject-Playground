@@ -1,10 +1,20 @@
+html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+  padding: 0;
+  overflow-x: hidden;
+}
+
 #root {
   margin: 0;
   padding: 0;
   position: relative;
 }
 .App {
-  border: 1px solid red;
   position: absolute;
   inset: 0;
   height: 100%;
@@ -13,30 +23,75 @@
 }
 
 .main {
+  background-color: var(--bg-color-theme);
   grid-area: main;
   /* TODO: Just a temperory hack */
   height: 87vh;
   display: flex;
 }
 
-.left {
-  border: 2px solid green;
+.main .left {
   width: 50%;
 }
 
-.right {
-  border: 1px solid orange;
+.main .right {
   width: 50%;
+  color: var(--text-color);
 }
 
-.footer {
-  grid-area: footer;
-  border: 1px solid yellow;
-  height: 50px;
+.main .left .react-monaco-editor-container {
+  box-shadow: 1px 0px 4px 2px #181c20;
+  padding: 0 2px;
+}
+
+.main .left .monaco-editor {
+  border-right: 2px solid #333;
+  margin-top: 2px;
+}
+
+.main .left .margin-view-overlays {
+  background-color:  var(--bg-color-secondary);
 }
 
 .App-link {
   color: #61dafb;
+}
+
+/* Button style */
+.btn {
+  width: 100px;
+  height: 40px;
+  cursor: pointer;
+  background: transparent;
+  border: 1px solid #91C9FF;
+  outline: none;
+  transition: 1s ease-in-out;
+}
+
+.btn svg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  fill: none;
+  stroke: #fff;
+  stroke-dasharray: 150 480;
+  stroke-dashoffset: 150;
+  transition: 1s ease-in-out;
+}
+
+.btn:hover {
+  transition: 1s ease-in-out;
+  background: #4F95DA;
+}
+
+.btn:hover svg {
+  stroke-dashoffset: -480;
+}
+
+.btn span {
+  color: white;
+  font-size: 14px;
+  font-weight: 100;
 }
 
 @keyframes App-logo-spin {

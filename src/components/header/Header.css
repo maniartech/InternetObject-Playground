@@ -1,13 +1,92 @@
 
 .App-header {
-  border-bottom: 1px solid orange;
+  position: relative;
   grid-area: header;
   display: flex;
-  flex-direction: row;
   align-items: center;
   font-size: calc(10px + 1vmin);
-  color: white;
+  background-color: var(--bg-color-secondary);
+  color: var(--text-color-contrast);
+  padding: 0 15px;
+  height: 60px;
+
+  box-shadow: 0px 2px 4px 2px #171a1d;
+  z-index: 9;
+}
+
+.App-header .left {
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  height: inherit;
+}
+
+.App-header .left .logo-container {
+  display: flex;
+  align-items: center;
+  height: inherit;
   gap: 15px;
-  padding-left: 15px;
-  height: 70px;
+}
+
+.App-header .left img{
+  height: 30px;
+  width: 30px;
+}
+
+.App-header .left h1 {
+  font-size: 1.6em;
+  font-style: italic;
+  color: var(--text-color);
+}
+
+
+.right {
+  height: inherit;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.actions {
+  position: relative;
+}
+
+
+/* Menu Style */
+
+ .header-menu {
+    /* align-items: stretch;
+    display: flex; */
+    height: 100%;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.header-menuItem {
+    align-items: stretch;
+    display: inline-flex;
+    flex: none;
+    margin: 0 16px;
+    border-bottom: 2px solid transparent;
+}
+
+.header-menuItem:hover{
+  border-bottom: 2px solid var(--border-color);
+}
+
+.header-menuItem > a {
+    font-size: 1em;
+    align-items: center;
+    color: var(--text-color);
+    font-weight: 400;
+    text-decoration: none;
+    padding: 16px 0px;
+}
+
+.header-menuItem > a:hover {
+  opacity: 0.8;
 }
