@@ -1,79 +1,33 @@
-// import { useEffect        } from 'react';
+import Editor       from '@monaco-editor/react';
+import dummyData    from './dummy-data';
+import setupMonaco  from './monaco';
 
-import MonacoEditor         from "react-monaco-editor";
-
-const Editor = () => {
-
-  const language = "io" //Set the language for syntax highlighting
-
-  // useEffect(() => {
-  //   // Register the custom language "io"
-  //   monaco.languages.register({ id: 'io' });
-
-  //   // Define the tokenization rules for "io"
-  //   monaco.languages.setMonarchTokensProvider('io', {
-  //     defaultToken: 'invalid',
-  //     keywords: ['myVariable', 'myFunction'],
-  //     operators: ['=', '{', '}', '(', ')'],
-  //     symbols: /[=(){}]/,
-  //     tokenizer: {
-  //       root: [
-  //         { include: 'keywords' },
-  //         { include: 'operators' },
-  //         [/\d+/, 'number'],
-  //         [/[a-zA-Z_]\w*/, 'variable'],
-  //         { include: 'whitespace' },
-  //       ],
-  //       keywords: [
-  //         [/\b(myVariable|myFunction)\b/, 'keyword'],
-  //       ],
-  //       operators: [
-  //         [/[{}=()]/, 'operator'],
-  //       ],
-  //       whitespace: [
-  //         [/\s+/, 'white'],
-  //       ],
-  //     },
-  //   });
-
-  //   // Set up the language configuration
-  //   monaco.languages.setLanguageConfiguration('io', {
-  //     comments: {
-  //       lineComment: '//',
-  //       blockComment: ['/*', '*/'],
-  //     },
-  //   });
-  // }, []);
-
-
-  const editorDidMount = (editor: any, monaco: any) => {
-    console.log('editorDidMount', editor);
+function IoEditor() {
+  const handleEditorDidMount = (editor: any, monaco: any) => {
+    setupMonaco(monaco);
     editor.focus();
-  }
-
-  const onChange = (newValue: any, e: any) => {
-    console.log('onChange', newValue, e);
-  }
-
-  const options = {
-    selectOnLineNumbers: true,
-    minimap: {
-      enabled: false
-    },
-    formatOnPaste: true,
-    formatOnType: true,
-  }
+  };
 
   return (
-    <MonacoEditor
-      language={language}
-      theme="vs-dark"
-      value={'Hello World'}
-      options={options}
-      onChange={onChange}
-      editorDidMount={editorDidMount}
+    <Editor
+      height="90vh"
+      defaultLanguage="io"
+      defaultValue="// Type in IO Code"
+      value={dummyData}
+      language="io"
+      theme="io-dark"
+      onMount={handleEditorDidMount}
+      options= {{
+        selectOnLineNumbers: true,
+        minimap: {
+          enabled: false
+        },
+        formatOnPaste: true,
+        formatOnType: true,
+        autoIndent: "full"
+      }}
     />
-  )
+  );
 }
 
-export default Editor;
+export default IoEditor;
