@@ -19,23 +19,23 @@ body {
   inset: 0;
   height: 100%;
   display: grid;
-  grid-template-areas: 'header' 'main''footer';
+  grid-template-areas: 'header' 'toolbar' 'main''footer';
 }
 
 .main {
   background-color: var(--bg-color-theme);
   grid-area: main;
   /* TODO: Just a temperory hack */
-  height: 87vh;
+  height: 80vh;
   display: flex;
 }
 
-.main .left {
+/* .main .left {
   width: 50%;
-}
+} */
 
 .main .right {
-  width: 50%;
+  /* width: 50%; */
   color: var(--text-color);
 }
 
@@ -45,11 +45,30 @@ body {
 }
 
 .main .left .monaco-editor {
-  border-right: 2px solid #333;
+  border-right: 2px solid var(--border-color);
   margin-top: 2px;
+  z-index: 99;
 }
 
-.main .left .margin-view-overlays {
+.monaco-editor {
+  /* TODO */
+  width: 100%!important;
+}
+
+.monaco-editor .overflow-guard {
+  /* TODO */
+  width: inherit!important;
+}
+
+.monaco-editor.no-user-select .view-lines {
+  width: inherit!important;
+}
+
+.monaco-scrollable-element {
+  width: 100%!important;
+}
+
+.monaco-editor .margin-view-overlays {
   background-color:  var(--bg-color-secondary);
 }
 
@@ -101,4 +120,8 @@ body {
   to {
     transform: rotate(360deg);
   }
+}
+
+.react-split__sash--vertical {
+  border: 2px solid var(--border-color);
 }

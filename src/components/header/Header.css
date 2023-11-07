@@ -27,17 +27,16 @@
   display: flex;
   align-items: center;
   height: inherit;
-  gap: 15px;
+  gap: 10px;
 }
 
 .App-header .left img{
-  height: 30px;
-  width: 30px;
+  height: 24px;
+  width: 24px;
 }
 
 .App-header .left h1 {
-  font-size: 1.6em;
-  font-style: italic;
+  font-size: 1.4em;
   color: var(--text-color);
 }
 

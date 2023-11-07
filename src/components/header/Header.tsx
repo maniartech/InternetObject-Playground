@@ -10,7 +10,7 @@ export default function Header() {
           <h1>Playground</h1>
         </div>
 
-        <div className="actions">
+        {/* <div className="actions">
         <button className="btn">
           <svg width="100px" height="40px" viewBox="0 0 100 40" className="border">
             <polyline points="179,1 179,59 1,59 1,1 179,1" className="bg-line" />
@@ -18,7 +18,7 @@ export default function Header() {
           </svg>
           <span>Run Code</span>
         </button>
-      </div>
+      </div> */}
       </div>
 
       <div className="right">
