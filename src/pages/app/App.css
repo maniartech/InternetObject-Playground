@@ -6,74 +6,80 @@ html {
 
 body {
   padding: 0;
+  height: 100%;
   overflow-x: hidden;
 }
 
 #root {
+  position: relative;
+  height: inherit;
   margin: 0;
   padding: 0;
-  position: relative;
 }
 .App {
   position: absolute;
   inset: 0;
   height: 100%;
   display: grid;
-  grid-template-areas: 'header' 'toolbar' 'main''footer';
+  grid-template-areas: 'header''main''footer';
 }
 
 .main {
+  position: relative;
   background-color: var(--bg-color-theme);
   grid-area: main;
-  /* TODO: Just a temperory hack */
-  height: 80vh;
   display: flex;
+
+  /* TODO: Just a temperory hack */
+  height: 87vh;
 }
 
-/* .main .left {
-  width: 50%;
-} */
+.editor-area {
+  display: flex;
+  height: 100%;
+}
 
-.main .right {
-  /* width: 50%; */
+.editor-area .bar {
+  position: relative;
+  height: 20px;
+  padding: 6px 12px;
+  background-color: var(--bg-color-secondary);
   color: var(--text-color);
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  box-shadow: var(--box-shadow-1);
+  z-index: 1;
 }
 
-.main .left .react-monaco-editor-container {
-  box-shadow: 1px 0px 4px 2px #181c20;
-  padding: 0 2px;
+.editor-area .bar p {
+  font-size: 0.875em;
 }
 
-.main .left .monaco-editor {
-  border-right: 2px solid var(--border-color);
-  margin-top: 2px;
-  z-index: 99;
+.editor-area-left {
+  flex: 1;
+  height: 100%;
 }
 
-.monaco-editor {
-  /* TODO */
+.editor-area-right {
+  flex: 1;
+  height: 100%;
+}
+
+.editor-area .monaco-scrollable-element {
+  /* TODO: This style is applied to override the monaca-editor scrollbar style */
   width: 100%!important;
 }
 
-.monaco-editor .overflow-guard {
-  /* TODO */
-  width: inherit!important;
-}
-
-.monaco-editor.no-user-select .view-lines {
-  width: inherit!important;
-}
-
-.monaco-scrollable-element {
-  width: 100%!important;
-}
-
-.monaco-editor .margin-view-overlays {
+.editor-area .monaco-editor, .monaco-editor-background{
   background-color:  var(--bg-color-secondary);
 }
 
-.App-link {
-  color: #61dafb;
+.editor-area .monaco-editor .margin-view-overlays {
+  background-color:  var(--bg-color-secondary);
 }
 
 /* Button style */
@@ -122,6 +128,29 @@ body {
   }
 }
 
-.react-split__sash--vertical {
+/* DropDown  */
+
+.pretemplate-dropdown {
+  position: absolute;
+  top: 10px;
+  right: 24px;
+}
+
+select {
+  padding: 6px;
+  border: 0;
+  outline: none;
+  border-radius: 4px;
+  background-color: var(--bg-color-secondary);
+  color: var(--text-color);
+  font-size: 0.9em;
+  line-height: 20;
+  box-shadow: none;
+}
+
+/* React Splitter */
+
+.react-split__sash--vertical, .react-split__sash--horizontal {
   border: 2px solid var(--border-color);
+  background-color: var(--bg-color-dark);
 }

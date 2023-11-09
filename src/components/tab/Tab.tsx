@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import './Tab.css';
+import React, { useState }          from 'react'
+import                                   './Tab.css'
 
 interface TabProps {
   tabs: string[];
@@ -33,4 +33,4 @@ const Tab: React.FC<TabProps> = ({ tabs, children }) => {
   );
 };
 
-export default Tab;
+export default Tab

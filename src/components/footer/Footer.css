@@ -8,10 +8,25 @@
   padding: 0 16px;
 }
 
+.footer .left {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  height: inherit;
+}
+
+.footer .right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex: 1;
+  height: inherit;
+}
+
 .footer p {
   margin: 0;
   color: var(--text-color-contrast);
-  font-size: 14px;
+  font-size: 0.8em;
 }
 
 .footer a {

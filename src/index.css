@@ -13,6 +13,8 @@
   --border-color: #333;
 
   --primary-color: #0071d1;
+
+  --box-shadow-1: 0px 2px 4px 2px #171a1d;
 }
 
 body {
@@ -23,6 +25,11 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+p {
+  margin: 0;
+  padding: 0;
 }
 
 #root {
