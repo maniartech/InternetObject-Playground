@@ -5,14 +5,16 @@
   --text-color-dark: #000;
   --text-color-highlight: #ff0000;
 
-  --bg-color-primary: #181c20;
+  --bg-color-primary: #333333;
   --bg-color-secondary: #1e2429;
   --bg-color-theme: #1e1e1e;
   --bg-color-dark: #2c3137;
 
-  --border-color: #bbbdbf;
+  --border-color: #333;
 
   --primary-color: #0071d1;
+
+  --box-shadow-1: 0px 2px 4px 2px #171a1d;
 }
 
 body {
@@ -23,6 +25,11 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+p {
+  margin: 0;
+  padding: 0;
 }
 
 #root {

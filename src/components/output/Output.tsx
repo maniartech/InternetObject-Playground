@@ -1,11 +1,10 @@
-import "./Output.css"
+import                         "./Output.css"
+import Editor             from "../editor/Editor"
 
 export default function Output() {
   return (
     <div className="output">
-      <code>
-          Just a test
-      </code>
+      <Editor />
     </div>
   )
 }

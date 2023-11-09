@@ -5,12 +5,10 @@
   display: flex;
   align-items: center;
   font-size: calc(10px + 1vmin);
-  background-color: var(--bg-color-secondary);
+  background-color: var(--bg-color-theme);
   color: var(--text-color-contrast);
   padding: 0 15px;
   height: 60px;
-
-  box-shadow: 0px 2px 4px 2px #171a1d;
   z-index: 9;
 }
 
@@ -27,22 +25,21 @@
   display: flex;
   align-items: center;
   height: inherit;
-  gap: 15px;
+  gap: 10px;
 }
 
 .App-header .left img{
-  height: 30px;
-  width: 30px;
+  height: 24px;
+  width: 24px;
 }
 
 .App-header .left h1 {
-  font-size: 1.6em;
-  font-style: italic;
+  font-size: 1.4em;
   color: var(--text-color);
 }
 
 
-.right {
+.App-header .right {
   height: inherit;
   flex: 1;
   display: flex;
@@ -54,19 +51,15 @@
   position: relative;
 }
 
-
 /* Menu Style */
-
  .header-menu {
-    /* align-items: stretch;
-    display: flex; */
     height: 100%;
     list-style: none;
     margin: 0;
     padding: 0;
 }
 
-.header-menuItem {
+.header-menu .header-menuItem {
     align-items: stretch;
     display: inline-flex;
     flex: none;
@@ -74,11 +67,11 @@
     border-bottom: 2px solid transparent;
 }
 
-.header-menuItem:hover{
+.header-menu .header-menuItem:hover{
   border-bottom: 2px solid var(--border-color);
 }
 
-.header-menuItem > a {
+.header-menu .header-menuItem > a {
     font-size: 1em;
     align-items: center;
     color: var(--text-color);
@@ -87,6 +80,6 @@
     padding: 16px 0px;
 }
 
-.header-menuItem > a:hover {
+.header-menu .header-menuItem > a:hover {
   opacity: 0.8;
 }

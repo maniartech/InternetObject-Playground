@@ -1,0 +1,35 @@
+.tab-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;;
+}
+
+.tab-list {
+  list-style: none;
+  margin: 15px 0 0 15px;
+  padding: 0;
+  display: flex;
+  column-gap: 4px;
+}
+
+.tab-list li {
+  font-size: 0.875em;
+  font-weight: 400;
+  padding: 5px 10px;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.3s ease;
+  color: var(--text-color);
+}
+
+.tab-list li.active {
+  background-color: var(--bg-color-primary);
+  color: var(--text-color-contrast);
+}
+
+.tab-content {
+  background-color:  var(--bg-color-secondary);
+  width: calc(100% - 3px);
+  /* TODO */
+  height: calc(100% - 20px);
+}

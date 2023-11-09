@@ -1,5 +1,5 @@
-import logo from '../../logo.png';
-import './Logo.css';
+import                       './Logo.css'
+import logo             from '../../logo.png'
 
 export default function Logo() {
 
