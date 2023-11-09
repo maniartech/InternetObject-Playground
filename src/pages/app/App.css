@@ -43,15 +43,12 @@ body {
   position: relative;
   height: 20px;
   padding: 6px 12px;
-  background-color: var(--bg-color-secondary);
+  background-color: var(--bg-color-primary);
   color: var(--text-color);
 
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
-  box-shadow: var(--box-shadow-1);
   z-index: 1;
 }
 
@@ -132,7 +129,7 @@ body {
 
 .pretemplate-dropdown {
   position: absolute;
-  top: 10px;
+  top: 6px;
   right: 24px;
 }
 
@@ -151,6 +148,9 @@ select {
 /* React Splitter */
 
 .react-split__sash--vertical, .react-split__sash--horizontal {
-  border: 2px solid var(--border-color);
-  background-color: var(--bg-color-dark);
+  background-color: var(--bg-color-primary);
+}
+
+.react-split__sash--vertical:hover, .react-split__sash--horizontal:hover {
+  background-color: var(--primary-color);
 }

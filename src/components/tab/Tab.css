@@ -13,29 +13,23 @@
 }
 
 .tab-list li {
-  font-size: 0.95em;
+  font-size: 0.875em;
   font-weight: 400;
   padding: 5px 10px;
-  border-radius: 5px 5px 0 0;
   cursor: pointer;
   user-select: none;
   transition: background-color 0.3s ease;
-  background-color: var(--bg-color-secondary);
   color: var(--text-color);
 }
 
 .tab-list li.active {
-  background-color: var(--primary-color);
+  background-color: var(--bg-color-primary);
   color: var(--text-color-contrast);
 }
 
 .tab-content {
-  margin: 0 10px;
   background-color:  var(--bg-color-secondary);
-  border: 2px solid var(--border-color);
-  border-radius: 8px;
-
-  width: calc(100% - 2%);
+  width: calc(100% - 3px);
   /* TODO */
-  height: calc(100% - 10%);
+  height: calc(100% - 20px);
 }
