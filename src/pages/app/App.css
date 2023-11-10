@@ -7,14 +7,14 @@ html {
 body {
   padding: 0;
   height: 100%;
-  overflow-x: hidden;
+  overflow: hidden;
 }
 
 #root {
   position: relative;
-  height: inherit;
   margin: 0;
   padding: 0;
+  height: inherit;
 }
 .App {
   position: absolute;
@@ -22,6 +22,8 @@ body {
   height: 100%;
   display: grid;
   grid-template-areas: 'header''main''footer';
+  grid-template-rows: 60px 1fr 30px;
+  min-height: 100vh;
 }
 
 .main {
@@ -31,29 +33,12 @@ body {
   display: flex;
 
   /* TODO: Just a temperory hack */
-  height: 87vh;
+  /* height: 87vh; */
 }
 
 .editor-area {
   display: flex;
   height: 100%;
-}
-
-.editor-area .bar {
-  position: relative;
-  height: 20px;
-  padding: 6px 12px;
-  background-color: var(--bg-color-primary);
-  color: var(--text-color);
-
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  z-index: 1;
-}
-
-.editor-area .bar p {
-  font-size: 0.875em;
 }
 
 .editor-area-left {
@@ -62,6 +47,7 @@ body {
 }
 
 .editor-area-right {
+  position: relative;
   flex: 1;
   height: 100%;
 }

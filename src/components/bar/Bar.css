@@ -1,0 +1,16 @@
+.bar {
+  position: relative;
+  height: 20px;
+  padding: 6px 12px;
+  background-color: var(--bg-color-primary);
+  color: var(--text-color);
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  z-index: 1;
+}
+
+.bar p {
+  font-size: 0.875em;
+}
