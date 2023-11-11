@@ -113,13 +113,17 @@ body {
 
 /* DropDown  */
 
-.pretemplate-dropdown {
+.toolbar {
   position: absolute;
   top: 6px;
   right: 24px;
+
+  display: flex;
+  align-items: center;
+  gap: 20px;
 }
 
-select {
+.toolbar select {
   padding: 6px;
   border: 0;
   outline: none;
@@ -129,6 +133,18 @@ select {
   font-size: 0.9em;
   line-height: 20;
   box-shadow: none;
+}
+
+.toolbar label.toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.toolbar label.toggle span {
+  color: white;
+  opacity: 0.5;
+  user-select: none;
 }
 
 /* React Splitter */
