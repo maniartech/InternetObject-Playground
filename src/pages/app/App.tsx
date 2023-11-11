@@ -1,13 +1,15 @@
 import { useState }             from 'react';
 import                               'split-pane-react/esm/themes/default.css';
+import SplitPane, { Pane }      from 'split-pane-react';
+
 import                               './App.css';
 import Header                   from '../../components/header/Header';
 import Editor                   from '../../components/editor/Editor';
 import Output                   from '../../components/output/Output';
 import Footer                   from '../../components/footer/Footer';
 
-import SplitPane, { Pane }      from 'split-pane-react';
 import Tab                      from '../../components/tab/Tab';
+import Bar                      from '../../components/bar/Bar';
 
 function App() {
   const [sizes, setSizes] = useState([180, 'auto']);
@@ -52,25 +54,19 @@ function App() {
                   >
                     <Pane minSize={10} maxSize='40%'>
                       <div className='top' style={layoutCSS}>
-                        <div className='bar'>
-                          <p>Schema</p>
-                        </div>
+                        <Bar label='Schema'/>
                         <Editor />
                       </div>
                     </Pane>
                     <div className='bottom' style={layoutCSS}>
-                      <div className='bar'>
-                        <p>Internet Object</p>
-                      </div>
+                      <Bar label='Internet Object'/>
                       <Editor />
                     </div>
                   </SplitPane>
                 </div>
               </Pane>
               <div className='editor-area-right'>
-                <div className='bar'>
-                  <p>JSON</p>
-                </div>
+                <Bar label='JSON' bgColor='#dd444a'/>
                 <Output />
               </div>
             </SplitPane>
