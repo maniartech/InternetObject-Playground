@@ -12,9 +12,10 @@
         "sourceType": "module"
     },
     "plugins": [
-        "react"
+        // Other Plugins
     ],
     "rules": {
-      "no-inline-styles": "off"
+      "no-multi-spaces": "off",
+      "react/react-in-jsx-scope": "off"
     }
 }
