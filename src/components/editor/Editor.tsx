@@ -1,24 +1,46 @@
-import Editor       from '@monaco-editor/react';
-import parse        from 'internet-object/dist/parser/index';
+import parse from 'internet-object/dist/parser'
+import { useMemo } from 'react'
 
-import dummyData    from '../../sample-data/dummy-data';
-import setupMonaco  from './monaco';
-import useDebounce  from '../../hooks/use-debounce';
+import Editor from '@monaco-editor/react'
+
+import useDebounce    from '../../hooks/use-debounce'
+import dummyData      from '../../sample-data/dummy-data'
+import editorOptions  from './editor-options'
+import setupMonaco    from './monaco'
 
 // REF: https://chat.openai.com/c/828fa9d6-981d-404a-8ef8-46e8140111ba
 
-function compile(text:string) {
+function compile (text: string): void {
   try {
-    const parsedData = parse(text);
-    console.log(parsedData.toObject());
+    const parsedData = parse(text)
+    console.log(parsedData.toObject())
   } catch (error) {
-    console.log(error);
+    console.log(error)
   }
 }
 
-function IoEditor() {
-  const handleEditorDidMount = (editor: any, monaco: any) => {
-    setupMonaco(monaco);
+interface IoEditorProps {
+  onChange?: (value: any, event: any) => void
+
+  onMount?: (editor: any, monaco: any) => void
+
+  language?: string
+
+  theme?: string
+
+  options?: Record<string, any>
+}
+
+function IoEditor (prop: IoEditorProps): JSX.Element {
+  const options: any = useMemo(() => {
+    return {
+      ...editorOptions,
+      ...(prop.options ?? {})
+    }
+  }, [prop.options])
+
+  const handleEditorDidMount = (editor: any, monaco: any): void => {
+    setupMonaco(monaco)
 
     // Set the model markers
     monaco.editor.setModelMarkers(editor.getModel(), 'owner', [
@@ -30,15 +52,15 @@ function IoEditor() {
         message: 'Error message here',
         severity: monaco.MarkerSeverity.Error
       }
-    ]);
+    ])
 
-    editor.focus();
+    editor.focus()
     compile(dummyData.doc)
-  };
+  }
 
   const handleOnChange = useDebounce((value: any, event: any) => {
-    compile(value);
-  }, 500);
+    compile(value)
+  }, 500)
 
   return (
     <Editor
@@ -54,19 +76,9 @@ function IoEditor() {
       onChange={handleOnChange}
 
       // Options
-      options= {{
-        selectOnLineNumbers: true,
-        minimap: {
-          enabled: false
-        },
-        formatOnPaste: true,
-        formatOnType: true,
-        autoIndent: "full",
-        matchBrackets: "always",
-      }}
-
+      options= {options}
     />
-  );
+  )
 }
 
-export default IoEditor;
+export default IoEditor
