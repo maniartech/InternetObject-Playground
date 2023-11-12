@@ -1,62 +1,61 @@
-import { useEffect, useState }  from 'react';
-import Toggle                   from 'react-toggle';
+import './App.css'
+import 'split-pane-react/esm/themes/default.css'
 
-import                               'split-pane-react/esm/themes/default.css';
-import SplitPane, { Pane }      from 'split-pane-react';
+import { useEffect, useState }  from 'react'
+import Toggle                   from 'react-toggle'
+import SplitPane, { Pane }      from 'split-pane-react'
 
-import                               './App.css';
-import Header                   from '../../components/header/Header';
-import Editor                   from '../../components/editor/Editor';
-import Output                   from '../../components/output/Output';
-import Footer                   from '../../components/footer/Footer';
+import Header                   from '../../components/header/Header'
+import Editor                   from '../../components/editor/Editor'
+import Output                   from '../../components/output/Output'
+import Footer                   from '../../components/footer/Footer'
+import Tab                      from '../../components/tab/Tab'
+import Bar                      from '../../components/bar/Bar'
 
-import Tab                      from '../../components/tab/Tab';
-import Bar                      from '../../components/bar/Bar';
-
-function App() {
+function App (): JSX.Element {
   // Note: in the following line, the sizes is set with let instead of const
   // this is because somehow, after the setSizes is called, the sizes is not
   // updated immediately, so the next time the handleSchemaChange is called,
   // the sizes is still the old value, so the showSchema is not updated
   // properly. So, we use let to make sure the sizes is updated immediately
   // after the setSizes is called.
-  let [sizes, setSizes] = useState([0, 'auto']);
-  const [sizes1, setSizes1] = useState([0, 'auto']);
-  const [showSchema, setShowSchema] = useState(false);
+  let [sizes, setSizes] = useState([0, 'auto'])
+  const [sizes1, setSizes1] = useState([0, 'auto'])
+  const [showSchema, setShowSchema] = useState(false)
 
   useEffect(() => {
     if (sizes1[0] === 0) {
-      setSizes1(['60%', 'auto']);
+      setSizes1(['60%', 'auto'])
     }
-  }, [sizes1]);
+  }, [sizes1])
 
   const layoutCSS = {
-    height: '100%',
-  };
+    height: '100%'
+  }
 
-  const handleToggleSchema = () => {
-    setShowSchema(!showSchema);
+  const handleToggleSchema = (): void => {
+    setShowSchema(!showSchema)
     if (showSchema) {
-      setSizes([0, 'auto']);
+      setSizes([0, 'auto'])
     } else {
-      setSizes([200, 'auto']);
+      setSizes([200, 'auto'])
     }
   }
 
-  const handleOnChange = (s:any) => {
-    sizes = s;
-    setSizes(s);
+  const handleOnChange = (s: any): void => {
+    sizes = s
+    setSizes(s)
   }
 
-  const handleSchemaChange = () => {
+  const handleSchemaChange = (): void => {
     if (typeof sizes[0] === 'number') {
       if (sizes[0] <= 100) {
         if (showSchema) {
-          setSizes([0, 'auto']);
-          setShowSchema(false);
+          setSizes([0, 'auto'])
+          setShowSchema(false)
         } else {
-          setSizes([200, 'auto']);
-          setShowSchema(true);
+          setSizes([200, 'auto'])
+          setShowSchema(true)
         }
       } else {
         setShowSchema(sizes[0] > 0)
@@ -133,7 +132,7 @@ function App() {
       </main>
       <Footer />
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
