@@ -1,7 +1,6 @@
-import parse from 'internet-object/dist/parser'
-import { useMemo } from 'react'
-
-import Editor from '@monaco-editor/react'
+import parse          from 'internet-object/dist/parser/index'
+import { useMemo }    from 'react'
+import MonacoEditor   from '@monaco-editor/react'
 
 import useDebounce    from '../../hooks/use-debounce'
 import dummyData      from '../../sample-data/dummy-data'
@@ -19,25 +18,37 @@ function compile (text: string): void {
   }
 }
 
-interface IoEditorProps {
+// Define an interface for the Editor component's props
+export interface EditorProps {
+
+  value?: string
+
+  // onChange is an optional function that will be called when the editor's
+  // value changes
   onChange?: (value: any, event: any) => void
 
+  // onMount is an optional function that will be called when the
+  // editor is mounted
   onMount?: (editor: any, monaco: any) => void
 
+  // language is an optional string that specifies the language of the editor
   language?: string
 
+  // theme is an optional string that specifies the theme of the editor
   theme?: string
 
+  // options is an optional record that can contain any additional
+  // options for the editor
   options?: Record<string, any>
 }
 
-function IoEditor (prop: IoEditorProps): JSX.Element {
+function Editor (props: EditorProps): JSX.Element {
   const options: any = useMemo(() => {
     return {
       ...editorOptions,
-      ...(prop.options ?? {})
+      ...(props.options ?? {})
     }
-  }, [prop.options])
+  }, [props.options])
 
   const handleEditorDidMount = (editor: any, monaco: any): void => {
     setupMonaco(monaco)
@@ -59,15 +70,18 @@ function IoEditor (prop: IoEditorProps): JSX.Element {
   }
 
   const handleOnChange = useDebounce((value: any, event: any) => {
-    compile(value)
+    // compile(value)
+    if (props.onChange) {
+      props.onChange(value, event)
+    }
   }, 500)
 
   return (
-    <Editor
+    <MonacoEditor
       height="90vh"
       defaultLanguage="io"
       defaultValue="// Type in IO Code"
-      value={dummyData.doc}
+      value={props.value ?? ''}
       language="io"
       theme="io-dark"
 
@@ -81,4 +95,4 @@ function IoEditor (prop: IoEditorProps): JSX.Element {
   )
 }
 
-export default IoEditor
+export default Editor
