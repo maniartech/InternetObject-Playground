@@ -1,17 +1,26 @@
 import                         "./Output.css"
-import Editor             from "../editor/Editor"
+import Editor, { EditorProps }             from "../editor/Editor"
 import Overlay            from "../overlay/Overlay"
 
-export default function Output() {
+interface OutputProps extends EditorProps {
+  error?: string
+}
+
+export default function Output({
+  value,
+  error
+}:any) {
   return (
     <div className="output">
-      <Editor />
-      <Overlay
+      <Editor value={value} />
+      {
+      error &&  <Overlay
         heading="Complied with problems:"
         onClose={() => {}}
       >
-        <p>Check for the error</p>
+        <div className="error">{error}</div>
       </Overlay>
+      }
     </div>
   )
 }
