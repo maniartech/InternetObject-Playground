@@ -1,5 +1,5 @@
-import React, { useState }          from 'react'
-import                                   './Tab.css'
+import './Tab.css'
+import React, { useState } from 'react'
 
 interface TabProps {
   tabs: string[];
@@ -8,26 +8,35 @@ interface TabProps {
 
 const Tab: React.FC<TabProps> = ({ tabs, children }) => {
   const [activeTab, setActiveTab] = useState(0);
-
   const handleTabClick = (index: number) => {
     setActiveTab(index);
   };
 
+  // If children is a single element, wrap it in an array
+  if (!Array.isArray(children)) {
+    children = [children];
+  }
+
+  const tabHeaders = tabs.map((tab, index) => (
+    <li
+      key={index}
+      className={index === activeTab ? 'active' : ''}
+      onClick={() => handleTabClick(index)}
+    >
+      {tab}
+    </li>
+    ))
+
   return (
     <div className="tab-container">
       <ul className="tab-list">
-        {tabs.map((tab, index) => (
-          <li
-            key={index}
-            className={index === activeTab ? 'active' : ''}
-            onClick={() => handleTabClick(index)}
-          >
-            {tab}
-          </li>
-        ))}
+        { tabHeaders }
       </ul>
-      <div className="tab-content">
-        {children && children[activeTab]}
+      <div
+        key={activeTab}
+        className='tab-content'
+      >
+        { children[activeTab] }
       </div>
     </div>
   );
