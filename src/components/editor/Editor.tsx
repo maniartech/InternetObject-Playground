@@ -1,4 +1,4 @@
-import parse          from 'internet-object/dist/parser/index'
+import parse          from 'internet-object/dist/parser'
 import { useMemo }    from 'react'
 import MonacoEditor   from '@monaco-editor/react'
 
@@ -6,17 +6,6 @@ import useDebounce    from '../../hooks/use-debounce'
 import dummyData      from '../../sample-data/dummy-data'
 import editorOptions  from './editor-options'
 import setupMonaco    from './monaco'
-
-// REF: https://chat.openai.com/c/828fa9d6-981d-404a-8ef8-46e8140111ba
-
-function compile (text: string): void {
-  try {
-    const parsedData = parse(text)
-    console.log(parsedData.toObject())
-  } catch (error) {
-    console.log(error)
-  }
-}
 
 // Define an interface for the Editor component's props
 export interface EditorProps {
@@ -66,11 +55,9 @@ function Editor (props: EditorProps): JSX.Element {
     ])
 
     editor.focus()
-    compile(dummyData.doc)
   }
 
-  const handleOnChange = useDebounce((value: any, event: any) => {
-    // compile(value)
+  const handleOnChange = useDebounce((value, event) => {
     if (props.onChange) {
       props.onChange(value, event)
     }
