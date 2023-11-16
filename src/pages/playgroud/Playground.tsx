@@ -4,17 +4,25 @@ import SplitPane from "split-pane-react/esm/SplitPane";
 import Editor from "../../components/editor/Editor";
 import Bar from "../../components/bar/Bar";
 import Output from "../../components/output/Output";
+import { parseIO } from "./compiler";
+import { useMonaco } from "@monaco-editor/react";
 
 
 const Playground = ({showSchema, setShowSchema}:any) => {
 
+  const monaco = useMonaco()
+
   // Note: 'sizesH' is declared with 'let' instead of 'const'. This is needed
   // because 'sizesH' does not update immediately after 'setHSizes' is called.
-  // When 'handleSchemaChange' is called again, 'sizesH' holds its old value,
+  // When 'handleSchemaBar' is called again, 'sizesH' holds its old value,
   // preventing correct 'showSchema' updates. Using 'let' ensures 'sizesH' is
   // updated right after 'setHSizes' is executed.
   let [sizesH, setHSizes] = useState([0, 'auto'])
   const [sizesV, setVSizes] = useState([0, 'auto'])
+
+  const [schemaText, setSchemaText] = useState('')
+  const [ioText, setIoText] = useState('')
+  const [jsonText, setJsonText] = useState('')
 
   useEffect(() => {
     if (sizesV[0] === 0) {
@@ -35,7 +43,7 @@ const Playground = ({showSchema, setShowSchema}:any) => {
     height: '100%'
   }
 
-  const handleSchemaChange = (): void => {
+  const handleHBarDragEnd = (): void => {
     if (typeof sizesH[0] === 'number') {
       if (sizesH[0] <= 100) {
         if (showSchema) {
@@ -51,9 +59,18 @@ const Playground = ({showSchema, setShowSchema}:any) => {
     }
   }
 
-  const handleOnHScplitterChange = (s:any): void => {
+  const handleHBar = (s:any): void => {
     sizesH = s
     setHSizes(s)
+  }
+
+  const handleSchemaChange = (value: string): void => {
+
+  }
+
+  const handleIOChange = (value: string): void => {
+    const json:string = parseIO(value, monaco)
+    setJsonText(json)
   }
 
   return (
@@ -70,21 +87,21 @@ const Playground = ({showSchema, setShowSchema}:any) => {
             <SplitPane
               split='horizontal'
               sizes={sizesH}
-              onChange={handleOnHScplitterChange}
-              onDragEnd={handleSchemaChange}
+              onChange={handleHBar}
+              onDragEnd={handleHBarDragEnd}
               sashRender={(size: number) => <div className="sash"
               />}
             >
               <Pane minSize={0}>
                 <div className='top' style={layoutCSS}>
                   <Bar label='Schema'/>
-                  <Editor onChange={handleSchemaChange} />
+                  <Editor onChange={handleSchemaChange} value={schemaText} />
                 </div>
               </Pane>
               <Pane minSize={200}>
                 <div className='bottom' style={layoutCSS}>
                   <Bar label='Internet Object'/>
-                  <Editor />
+                  <Editor onChange={handleIOChange} value={ioText} />
                 </div>
               </Pane>
             </SplitPane>
@@ -92,7 +109,7 @@ const Playground = ({showSchema, setShowSchema}:any) => {
         </Pane>
         <div className='editor-area-right'>
           <Bar label='JSON' bgColor='#dd444a'/>
-          <Output />
+          <Output value={jsonText} />
         </div>
       </SplitPane>
     </div>
