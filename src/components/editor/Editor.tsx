@@ -67,7 +67,7 @@ function Editor (props: EditorProps): JSX.Element {
     <MonacoEditor
       height="90vh"
       defaultLanguage="io"
-      defaultValue="// Type in IO Code"
+      defaultValue=""
       value={props.value ?? ''}
       language="io"
       theme="io-dark"
