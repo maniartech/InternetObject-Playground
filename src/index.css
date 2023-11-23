@@ -45,3 +45,5 @@ code {
 .highlight {
   color: var(--text-color-highlight);
 }
+
+@import url('./styles/toggle')
