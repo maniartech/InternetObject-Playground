@@ -13,8 +13,8 @@ const Playground = ({ showSchema, setShowSchema, document, schema }: any) => {
   // const monaco = useMonaco();
 
   // Note: 'sizesH' is declared with 'let' instead of 'const'. This is needed
-  // because 'sizesH' does not update immediately after 'setHSizes' is called.
-  // When 'handleSchemaBar' is called again, 'sizesH' holds its old value,
+  // because somehow 'sizesH' does not update immediately after 'setHSizes' is
+  // called. When 'handleSchemaBar' is called again, 'sizesH' shows old value,
   // preventing correct 'showSchema' updates. Using 'let' ensures 'sizesH' is
   // updated right after 'setHSizes' is executed.
   let [sizesH, setHSizes] = useState([0, "auto"]);
@@ -118,7 +118,9 @@ const Playground = ({ showSchema, setShowSchema, document, schema }: any) => {
         </Pane>
         <div className="editor-area-right">
           <Bar label="JSON" bgColor="#dd444a" />
-          <Output value={jsonText} />
+          <Output value={jsonText} options={{
+            wordWrap: "on"
+          }} />
         </div>
       </SplitPane>
     </div>
