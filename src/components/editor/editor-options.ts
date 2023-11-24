@@ -6,7 +6,11 @@ const editorOptions = {
   formatOnPaste: true,
   formatOnType: true,
   autoIndent: 'full',
-  matchBrackets: 'always'
+  matchBrackets: 'always',
+  scrollbars: {
+    vertical: 'visible',
+    horizontal: 'visible'
+  },
 }
 
 export default editorOptions
