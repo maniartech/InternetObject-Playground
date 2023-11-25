@@ -13,7 +13,7 @@ const doc = `~ recordCount: 22
       city: {string, choices:[New York, San Fransisco, Washington]},
       state: {string, maxLen:2, choices:[NY, CA, WA]}
     },
-    colors?: [string], # Color array in the form of string array
+    colors?: [string], # Color array inthe form of string array
     isActive?: {bool, F}
   }
 ---
