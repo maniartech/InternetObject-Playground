@@ -35,6 +35,7 @@ const Playground = ({ showSchema, setShowSchema, document, schema }: any) => {
   useEffect(() => {
     setSchemaText(schema);
     setDocumentText(document);
+    parse(document);
   }, [schema, document]);
 
   useEffect(() => {
@@ -80,8 +81,7 @@ const Playground = ({ showSchema, setShowSchema, document, schema }: any) => {
   const handleSchemaChange = (value: string): void => {};
 
   const handleIOChange = (value: string): void => {
-    const json: string = parseIO(value.trim(), null);
-    setJsonText(json);
+    parse(value)
   };
 
   return (
