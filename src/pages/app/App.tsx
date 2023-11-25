@@ -38,8 +38,8 @@ function App (): JSX.Element {
       <Header />
       <main className='main'>
         <div className='toolbar'>
-          <label className='toggle'>
-            <span>Show Schema</span>
+          <label className='toggle' title="Separate the schema from the data document!">
+            <span>Separate Schema</span>
             <Toggle
               checked={showSchema}
               onChange={(v:any) => setShowSchema(v.target.checked)}
