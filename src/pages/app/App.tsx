@@ -16,7 +16,7 @@ function App (): JSX.Element {
   const [currentDoc, setCurrentDoc] = useState('')
   const [currentSchema, setCurrentSchema] = useState('')
 
-  const samples = useMemo(() => {
+  const options = useMemo(() => {
     return sampleData.map((item, index) => (
       <option key={index} value={item.name}>{item.name}</option>
     ))
@@ -34,7 +34,7 @@ function App (): JSX.Element {
   }, [])
 
   return (
-    <div className="App">
+    <div className="app">
       <Header />
       <main className='main'>
         <div className='toolbar'>
@@ -45,8 +45,10 @@ function App (): JSX.Element {
               onChange={(v:any) => setShowSchema(v.target.checked)}
             />
           </label>
-          <select name="format" title="Select IO sample data!" onChange={ handleSampleChange }>
-            { samples }
+          <select id="sample-data-selector"
+          title="Select IO sample data"
+          onChange={ handleSampleChange }>
+            { options }
           </select>
         </div>
         <Tab tabs={['IO to JSON']}>

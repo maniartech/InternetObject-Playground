@@ -16,7 +16,7 @@ body {
   padding: 0;
   height: inherit;
 }
-.App {
+.app {
   position: absolute;
   inset: 0;
   height: 100%;
