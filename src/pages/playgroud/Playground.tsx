@@ -24,7 +24,7 @@ const Playground = ({ showSchema, setShowSchema, document, schema }: any) => {
   const [jsonText, setJsonText] = useState("");
 
   const parse = useCallback((value: string) => {
-    const json = parseIO(value.trim(), null);
+    const json = parseIO(value, null);
     setJsonText(json);
   }, []);
 
