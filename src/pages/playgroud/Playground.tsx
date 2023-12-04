@@ -22,10 +22,12 @@ const Playground = ({ showSchema, setShowSchema, document, schema }: any) => {
   const [schemaText, setSchemaText] = useState(schema);
   const [documentText, setDocumentText] = useState(document);
   const [jsonText, setJsonText] = useState("");
+  const [markers, setMarkers] = useState<any[]>([]);
 
   const parse = useCallback((value: string) => {
-    const json = parseIO(value, null);
-    setJsonText(json);
+    const result = parseIO(value, null);
+    setJsonText(result.data);
+    setMarkers(result.markers);
   }, []);
 
   useEffect(() => {
@@ -110,7 +112,7 @@ const Playground = ({ showSchema, setShowSchema, document, schema }: any) => {
               <Pane minSize={200}>
                 <div className="bottom" style={layoutCSS}>
                   <Bar label="Internet Object" />
-                  <Editor onChange={handleIOChange} value={documentText} />
+                  <Editor onChange={handleIOChange} value={documentText} markers={markers} />
                 </div>
               </Pane>
             </SplitPane>

@@ -1,5 +1,5 @@
 import parse          from 'internet-object/dist/parser'
-import { useMemo }    from 'react'
+import { useEffect, useMemo, useState }    from 'react'
 import MonacoEditor   from '@monaco-editor/react'
 
 import useDebounce    from '../../hooks/use-debounce'
@@ -11,6 +11,8 @@ import setupMonaco    from './monaco'
 export interface EditorProps {
 
   value?: string
+
+  markers?: any
 
   // onChange is an optional function that will be called when the editor's
   // value changes
@@ -32,6 +34,8 @@ export interface EditorProps {
 }
 
 function Editor (props: EditorProps): JSX.Element {
+  const [editorInstance, setEditorInstance] = useState<any>(null);
+
   const options: any = useMemo(() => {
     return {
       ...editorOptions,
@@ -39,21 +43,25 @@ function Editor (props: EditorProps): JSX.Element {
     }
   }, [props.options])
 
-  const handleEditorDidMount = (editor: any, monaco: any): void => {
-    setupMonaco(monaco)
+
+  useEffect(() => {
+    const monaco = (window as any).monaco
+    if (!monaco) {
+      return
+    }
+
 
     // Set the model markers
-    monaco.editor.setModelMarkers(editor.getModel(), 'owner', [
-      {
-        startLineNumber: 3,
-        startColumn: 10,
-        endLineNumber: 3,
-        endColumn: 10,
-        message: 'Error message here',
-        severity: monaco.MarkerSeverity.Error
-      }
-    ])
+    if (editorInstance && props.markers) {
+      monaco.editor.setModelMarkers(editorInstance.getModel(), 'owner', props.markers)
+      console.log('markers', props.markers)
+    }
 
+  }, [props.markers])
+
+  const handleEditorDidMount = (editor: any, monaco: any): void => {
+    setupMonaco(monaco)
+    setEditorInstance(editor)
     editor.focus()
   }
 
