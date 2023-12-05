@@ -1,6 +1,5 @@
-// Overlay.tsx
-import React                            from 'react'
-import                                       './Overlay.css'
+import React                          from 'react'
+import                                     './Overlay.css'
 interface OverlayProps {
   heading?: string;
   onClose: () => void;

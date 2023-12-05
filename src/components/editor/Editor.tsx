@@ -1,11 +1,9 @@
-import parse          from 'internet-object/dist/parser'
-import { useEffect, useMemo, useState }    from 'react'
-import MonacoEditor   from '@monaco-editor/react'
+import { useEffect, useMemo, useState }       from 'react'
+import MonacoEditor                           from '@monaco-editor/react'
 
-import useDebounce    from '../../hooks/use-debounce'
-import dummyData      from '../../sample-data/dummy-data'
-import editorOptions  from './editor-options'
-import setupMonaco    from './monaco'
+import useDebounce                            from '../../hooks/use-debounce'
+import editorOptions                          from './editor-options'
+import setupMonaco                            from './monaco'
 
 // Define an interface for the Editor component's props
 export interface EditorProps {
@@ -73,7 +71,7 @@ function Editor (props: EditorProps): JSX.Element {
 
   return (
     <MonacoEditor
-      height="90vh"
+      // height="90vh" // This is causing a problem. while scrolling
       defaultLanguage="io"
       defaultValue=""
       value={props.value ?? ''}
