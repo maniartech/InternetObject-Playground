@@ -1,6 +1,6 @@
-import                         "./Output.css"
-import Editor, { EditorProps }             from "../editor/Editor"
-import Overlay            from "../overlay/Overlay"
+import                                          './Output.css'
+import Editor, { EditorProps }             from '../editor/Editor'
+import Overlay                             from '../overlay/Overlay'
 
 interface OutputProps extends EditorProps {
   error?: string

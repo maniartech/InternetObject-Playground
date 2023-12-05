@@ -10,6 +10,7 @@
 .footer .left {
   display: flex;
   align-items: center;
+  column-gap: 4px;
   flex: 1;
   height: inherit;
 }
@@ -18,14 +19,13 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  flex: 1;
   height: inherit;
 }
 
 .footer p {
   margin: 0;
   color: var(--text-color-contrast);
-  font-size: 0.8em;
+  font-size: 0.785em;
 }
 
 .footer a {

@@ -1,13 +1,11 @@
-import { useCallback, useEffect, useState } from 'react';
-import { Pane } from 'split-pane-react';
-import SplitPane from 'split-pane-react/esm/SplitPane';
+import { useCallback, useEffect, useState }     from 'react';
+import { Pane }                                 from 'split-pane-react';
+import SplitPane                                from 'split-pane-react/esm/SplitPane';
 
-import { useMonaco } from '@monaco-editor/react';
-
-import Bar from '../../components/bar/Bar';
-import Editor from '../../components/editor/Editor';
-import Output from '../../components/output/Output';
-import { parseIO } from './compiler';
+import { parseIO }                              from './compiler';
+import Bar                                      from '../../components/bar/Bar';
+import Editor                                   from '../../components/editor/Editor';
+import Output                                   from '../../components/output/Output';
 
 const Playground = ({ showSchema, setShowSchema, document, schema }: any) => {
   // const monaco = useMonaco();
@@ -119,7 +117,7 @@ const Playground = ({ showSchema, setShowSchema, document, schema }: any) => {
           </div>
         </Pane>
         <div className="editor-area-right">
-          <Bar label="JSON" bgColor="#dd444a" />
+          <Bar label="JSON" />
           <Output value={jsonText} options={{
             wordWrap: "on"
           }} />

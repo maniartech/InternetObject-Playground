@@ -46,10 +46,6 @@
   justify-content: flex-end;
 }
 
-.actions {
-  position: relative;
-}
-
 /* Menu Style */
  .header-menu {
     height: 100%;
@@ -76,7 +72,7 @@
     color: var(--text-color);
     font-weight: 400;
     text-decoration: none;
-    padding: 16px 0px;
+    padding: 8px 0px;
 }
 
 .header-menu .header-menuItem > a:hover {

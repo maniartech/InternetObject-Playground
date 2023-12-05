@@ -13,13 +13,15 @@
 }
 
 .tab-list li {
-  font-size: 0.875em;
+  font-size: 0.85em;
   font-weight: 400;
   padding: 5px 10px;
   cursor: pointer;
   user-select: none;
   transition: background-color 0.3s ease;
   color: var(--text-color);
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
 }
 
 .tab-list li.active {

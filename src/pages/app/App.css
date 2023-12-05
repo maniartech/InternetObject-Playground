@@ -31,9 +31,6 @@ body {
   background-color: var(--bg-color-theme);
   grid-area: main;
   display: flex;
-
-  /* TODO: Just a temperory hack */
-  /* height: 87vh; */
 }
 
 .editor-area {
@@ -52,6 +49,13 @@ body {
   height: 100%;
 }
 
+.editor-area .react-split--vertical > .react-split__pane:nth-child(2) {
+   @media screen and (max-width: 768px) {
+    display: none;
+  }
+}
+
+
 .editor-area .monaco-scrollable-element {
   /* TODO: This style is applied to override the monaca-editor scrollbar style */
   width: 100%!important;
@@ -59,6 +63,10 @@ body {
 
 .editor-area .monaco-editor, .monaco-editor-background{
   background-color:  var(--bg-color-secondary);
+
+  /* background-color:  #272727; */
+  color: var(--text-color);
+  font-size: 15px;
 }
 
 .editor-area .monaco-editor .margin-view-overlays {
@@ -67,11 +75,9 @@ body {
 
 /* Button style */
 .btn {
+  color: var(--text-color);
   width: 100px;
-  height: 40px;
   cursor: pointer;
-  background: transparent;
-  border: 1px solid #91C9FF;
   outline: none;
   transition: 1s ease-in-out;
 }
@@ -113,6 +119,12 @@ body {
 
 /* DropDown  */
 
+.pretemplate-dropdown {
+  position: absolute;
+  top: 6px;
+  right: 24px;
+}
+
 .toolbar {
   position: absolute;
   top: 6px;
@@ -135,6 +147,14 @@ body {
   box-shadow: none;
 }
 
+.actions {
+  position: absolute;
+  top: 6px;
+  right: 24px;
+  display: flex;
+  column-gap: 16px;
+}
+
 .toolbar label.toggle {
   display: flex;
   align-items: center;
@@ -153,6 +173,24 @@ body {
   background-color: var(--bg-color-primary);
 }
 
+.react-split__sash--vertical {
+  @media screen and (max-width: 768px) {
+    display: none;
+  }
+}
+
 .react-split__sash--vertical:hover, .react-split__sash--horizontal:hover {
   background-color: var(--primary-color);
+}
+
+.sidebar {
+  position: absolute;
+  background-color: var(--bg-color-secondary);
+  grid-area: sidebar;
+  display: flex;
+  flex-direction: column;
+  width: 200px;
+  height: 100%;
+  overflow: hidden;
+  border: 5px solid red;
 }
