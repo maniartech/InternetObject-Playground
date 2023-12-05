@@ -8,11 +8,12 @@ interface OutputProps extends EditorProps {
 
 export default function Output({
   value,
-  error
+  error,
+  options
 }:any) {
   return (
     <div className="output">
-      <Editor value={value} />
+      <Editor value={value}  options={options} />
       {
       error &&  <Overlay
         heading="Complied with problems:"

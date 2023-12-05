@@ -1,5 +1,4 @@
-const doc = `
-name, age, gender, joiningDt, address, colors, isActive
+const doc = `name, age, gender, joiningDt, address, colors, isActive
 ---
 ~ Alice Smith, 28, f, d'2021-04-15', {Elm Street, Dallas, TX}, [yellow, green], T
 ~ Bob Johnson, 22, m, d'2022-02-20', {Oak Street, Chicago, IL}, [blue, black], T
@@ -27,10 +26,10 @@ name, age, gender, joiningDt, address, colors, isActive
 ~ James Rhodes, 38, m, d'2022-07-29', {War Machine Blvd, Philadelphia, PA}, [grey, silver], T
 ~ Pepper Potts, 37, f, d'2021-09-13', {Stark Industries, Malibu, CA}, [green, white], F
 ~ Shuri, 24, f, d'2023-01-01', {Wakanda Way, Oakland, CA}, [black, purple], T
-~ T'Challa, 35, m, d'2022-04-30', {Royal Palace, Birnin Zana}, [black, silver], F
+~ "T'Challa", 35, m, d'2022-04-30', {Royal Palace, Birnin Zana}, [black, silver], F
 ~ Okoye, 33, f, d'2021-08-18', {Warrior Falls, Birnin Zana}, [red, green], T
 ~ Erik Killmonger, 29, m, d'2022-10-31', {Golden City, Birnin Zana}, [gold, black], F
-~ M'Baku, 31, m, d'2021-12-12', {Jabari Land, Birnin Zana}, [white, brown], T
+~ "M'Baku", 31, m, d'2021-12-12', {Jabari Land, Birnin Zana}, [white, brown], T
 `
 
 const exportable = {
