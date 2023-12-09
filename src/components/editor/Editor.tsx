@@ -1,9 +1,6 @@
-import parse          from 'internet-object/dist/parser'
 import { useEffect, useMemo, useState }    from 'react'
 import MonacoEditor   from '@monaco-editor/react'
-
 import useDebounce    from '../../hooks/use-debounce'
-import dummyData      from '../../sample-data/dummy-data'
 import editorOptions  from './editor-options'
 import setupMonaco    from './monaco'
 
@@ -54,7 +51,6 @@ function Editor (props: EditorProps): JSX.Element {
     // Set the model markers
     if (editorInstance && props.markers) {
       monaco.editor.setModelMarkers(editorInstance.getModel(), 'owner', props.markers)
-      console.log('markers', props.markers)
     }
 
   }, [props.markers])
