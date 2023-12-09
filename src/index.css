@@ -1,4 +1,7 @@
 :root {
+
+  --app-font: "Open Sans",Helvetica,"Lucida Sans Unicode","Lucida Grande",Arial,Verdana,sansSerif;
+
   --text-color: #bbbdbf;
   --text-color-light: #999;
   --text-color-contrast: #fff;
@@ -16,14 +19,14 @@
   --primary-color: #0071d1;
 
   --box-shadow-1: 0px 2px 4px 2px #171a1d;
+
 }
 
 body {
   background-color: var(--bg-color-primary);
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: var(--app-font);
+  letter-spacing: 0.03em;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -38,8 +41,8 @@ p, h1, h2, h3 {
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+
 }
 
 .highlight {

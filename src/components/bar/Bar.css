@@ -1,5 +1,6 @@
 .bar {
-  position: relative;
+  position: sticky;
+  top: 0;
   height: 20px;
   padding: 6px 12px;
   background-color: var(--bg-color-primary);
@@ -9,8 +10,11 @@
   align-items: center;
   justify-content: flex-end;
   z-index: 1;
+
+  text-transform: uppercase;
 }
 
 .bar p {
-  font-size: 0.875em;
+  font-size: 0.75em;
+  font-weight: 600;
 }

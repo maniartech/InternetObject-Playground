@@ -1,5 +1,5 @@
-import './Tab.css'
-import React, { useState } from 'react'
+import React, { useState }                  from 'react'
+import                                           './Tab.css'
 
 interface TabProps {
   tabs: string[];
