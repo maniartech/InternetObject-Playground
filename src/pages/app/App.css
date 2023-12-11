@@ -7,7 +7,6 @@ html {
 body {
   padding: 0;
   height: 100%;
-  /* overflow: hidden; */
 }
 
 #root {
@@ -17,13 +16,10 @@ body {
   height: inherit;
 }
 .app {
-  position: absolute;
-  inset: 0;
   height: 100%;
   display: grid;
   grid-template-areas: 'header''main''footer';
   grid-template-rows: 60px 1fr 30px;
-  min-height: 100vh;
 }
 
 .main {
@@ -34,37 +30,36 @@ body {
 }
 
 .editor-area {
+  position: relative;
   display: flex;
   height: 100%;
+
 }
 
 .editor-area-left {
-  flex: 1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
   height: 100%;
+}
+
+.editor-area-left .react-split__pane .top,
+.editor-area-left .react-split__pane .bottom {
+  position: relative;
+  display: flex;
+  flex-direction: column;
 }
 
 .editor-area-right {
   position: relative;
-  flex: 1;
-  height: 100%;
-}
-
-.editor-area .react-split--vertical > .react-split__pane:nth-child(2) {
-   @media screen and (max-width: 768px) {
-    display: none;
-  }
-}
-
-
-.editor-area .monaco-scrollable-element {
-  /* TODO: This style is applied to override the monaca-editor scrollbar style */
-  width: 100%!important;
+  height: inherit;
+  display: flex;
+  flex-direction: column;
 }
 
 .editor-area .monaco-editor, .monaco-editor-background{
   background-color:  var(--bg-color-secondary);
 
-  /* background-color:  #272727; */
   color: var(--text-color);
   font-size: 15px;
 }
@@ -108,15 +103,6 @@ body {
   font-weight: 100;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 /* DropDown  */
 
 .pretemplate-dropdown {
@@ -127,12 +113,13 @@ body {
 
 .toolbar {
   position: absolute;
-  top: 6px;
+  top: 3px;
   right: 24px;
 
   display: flex;
   align-items: center;
   gap: 20px;
+  z-index: 999;
 }
 
 .toolbar select {
@@ -147,7 +134,7 @@ body {
   box-shadow: none;
 }
 
-.actions {
+.toolbar .actions {
   position: absolute;
   top: 6px;
   right: 24px;
@@ -173,24 +160,6 @@ body {
   background-color: var(--bg-color-primary);
 }
 
-.react-split__sash--vertical {
-  @media screen and (max-width: 768px) {
-    display: none;
-  }
-}
-
 .react-split__sash--vertical:hover, .react-split__sash--horizontal:hover {
   background-color: var(--primary-color);
-}
-
-.sidebar {
-  position: absolute;
-  background-color: var(--bg-color-secondary);
-  grid-area: sidebar;
-  display: flex;
-  flex-direction: column;
-  width: 200px;
-  height: 100%;
-  overflow: hidden;
-  border: 5px solid red;
 }
