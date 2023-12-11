@@ -71,7 +71,6 @@ function Editor (props: EditorProps): JSX.Element {
 
   return (
     <MonacoEditor
-      // height="90vh" // This is causing a problem. while scrolling
       defaultLanguage="io"
       defaultValue=""
       value={props.value ?? ''}
