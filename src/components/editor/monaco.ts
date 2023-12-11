@@ -18,7 +18,7 @@ const setupMonaco = (monaco: any) => {
         [/(\$*[a-zA-Z_]*[?\*]{0,2}\w*)(\s*:)/, ['attribute.name', 'delimiter']],
 
         // delimiters
-        [/{|}|[|]|,/, 'delimiter'],
+        [/{|}|[|]|~|,/, 'delimiter'],
 
         // strings
         [/"([^"\\]|\\.)*"/, 'string'], // to match double-quoted strings
@@ -41,7 +41,7 @@ const setupMonaco = (monaco: any) => {
       { token: 'attribute.name', foreground: '#7bdcfe' },
       { token: 'tagged-string', foreground: '#A34532' },
       // { token: 'comment', foreground: '#00FF00' },
-      // { token: 'delimiter', foreground: '#C0C0C0' },
+      { token: 'delimiter', foreground: '#009999' },
       // { token: 'keyword', foreground: '#FF0000' }
     ],
     colors: {
