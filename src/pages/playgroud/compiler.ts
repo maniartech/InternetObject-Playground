@@ -5,6 +5,8 @@
 import parse from "internet-object/dist/parser"
 import InternetObjectError from 'internet-object/dist/errors/io-error';
 import Token from 'internet-object/dist/tokenizer/tokens';
+import InternetObjectSyntaxError from 'internet-object/dist/errors/io-syntax-error';
+import InternetObjectValidationError from 'internet-object/dist/errors/io-validation-error';
 
 export const parseIO = function (text: string, monaco:any): any {
   try {
@@ -14,9 +16,16 @@ export const parseIO = function (text: string, monaco:any): any {
       markers: []
     }
   } catch (e: any) {
+    let errType = "ERROR:"
+    if (e instanceof InternetObjectSyntaxError) {
+      errType = "SYNTAX_ERROR: "
+    } else if (e instanceof InternetObjectValidationError) {
+      errType = "VALIDATION_ERROR: "
+    }
+
     console.error(e)
     return {
-      data: "ERROR: " + e.message,
+      data: errType + e.message,
       markers: getMarkers(e)
     }
   }
