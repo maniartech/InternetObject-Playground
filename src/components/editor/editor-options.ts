@@ -7,6 +7,7 @@ const editorOptions = {
   formatOnType: true,
   autoIndent: 'full',
   matchBrackets: 'always',
+  fixedOverflowWidgets: true,
   scrollbars: {
     vertical: 'visible',
     horizontal: 'visible'
