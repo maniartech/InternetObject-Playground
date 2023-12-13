@@ -57,8 +57,7 @@ body {
 
 
 .editor-area .monaco-scrollable-element {
-  /* TODO: This style is applied to override the monaca-editor scrollbar style */
-  width: 100%!important;
+
 }
 
 .editor-area .monaco-editor, .monaco-editor-background{
