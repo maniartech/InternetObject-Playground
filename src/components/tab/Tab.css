@@ -1,7 +1,8 @@
 .tab-container {
+  position: relative;
   display: flex;
   flex-direction: column;
-  width: 100%;;
+  width: 100%;
 }
 
 .tab-list {
@@ -30,8 +31,9 @@
 }
 
 .tab-content {
+  position: relative;
   background-color:  var(--bg-color-secondary);
   width: calc(100% - 3px);
   /* TODO */
-  height: calc(100% - 20px);
+  height: calc(100% - 40px);
 }
