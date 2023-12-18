@@ -3,7 +3,7 @@ const doc = `~ recordCount: 22
 ~ page: 3
 ~ prevPage: "/api/v1/people/page/2"
 ~ nextPage: F
-~ cymk: [cyan, yellow, magenta, black]
+~ @cymk: [cyan, yellow, magenta, black]
 ~ $schema: {
     name: string,  # The person name
     age: {int, min:20, max:35},  # The person age!
@@ -18,7 +18,7 @@ const doc = `~ recordCount: 22
     isActive?: {bool, F}
   }
 ---
-~ John Doe, 25, d'2022-01-01', m, {Bond Street, New York, NY}, $cymk, T
+~ John Doe, 25, d'2022-01-01', m, {Bond Street, New York, NY}, @cymk, T
 ~ Jane Done, 20, d'2022-10-10', f, {Bond Street, "\uD83D\uDCC8 New York", NY}, [green, purple]
 `
 
