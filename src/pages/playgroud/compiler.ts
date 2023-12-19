@@ -12,7 +12,7 @@ export const parseIO = function (text: string, monaco:any): any {
   try {
     const parsedData = parse(text)
     return {
-      data: JSON.stringify(parsedData.toObject()),
+      data: JSON.stringify(parsedData.toObject(), null, 2),
       markers: []
     }
   } catch (e: any) {
