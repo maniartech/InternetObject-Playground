@@ -1,11 +1,11 @@
-import { useCallback, useEffect, useState }     from 'react';
-import { Pane }                                 from 'split-pane-react';
-import SplitPane                                from 'split-pane-react/esm/SplitPane';
+import { useEffect, useState }  from 'react';
+import { Pane }                 from 'split-pane-react';
 
-import { parseIO }                              from './compiler';
-import Bar                                      from '../../components/bar/Bar';
-import Editor                                   from '../../components/editor/Editor';
-import Output                                   from '../../components/output/Output';
+import SplitPane  from 'split-pane-react/esm/SplitPane';
+import parseIO    from './compiler';
+import Bar        from '../../components/bar/Bar';
+import Editor     from '../../components/editor/Editor';
+import Output     from '../../components/output/Output';
 
 const Playground = ({ showSchema, setShowSchema, document, schema }: any) => {
   // const monaco = useMonaco();
@@ -15,27 +15,37 @@ const Playground = ({ showSchema, setShowSchema, document, schema }: any) => {
   // called. When 'handleSchemaBar' is called again, 'sizesH' shows old value,
   // preventing correct 'showSchema' updates. Using 'let' ensures 'sizesH' is
   // updated right after 'setHSizes' is executed.
-  let [sizesH, setHSizes] = useState([0, "auto"]);
-  const [sizesV, setVSizes] = useState([0, "auto"]);
-  const [schemaText, setSchemaText] = useState(schema);
+  let   [sizesH, setHSizes]             = useState([0, "auto"]);
+  const [sizesV, setVSizes]             = useState([0, "auto"]);
+  const [schemaText, setSchemaText]     = useState(schema);
   const [documentText, setDocumentText] = useState(document);
-  const [jsonText, setJsonText] = useState("");
-  const [markers, setMarkers] = useState<any[]>([]);
+  const [jsonText, setJsonText]         = useState("");
+  const [markers, setMarkers]           = useState<any[]>([]);
+  const [defMarkers, setDefMarkers]     = useState<any[]>([]);
 
-  const parse = useCallback((value: string) => {
-    const result = parseIO(value, null);
-    setJsonText(result.data);
-    setMarkers(result.markers);
-  }, []);
+  const parse = () => {
+    const result = parseIO(documentText, showSchema ? schemaText : null);
+    if (result.defsMarkers) {
+      setDefMarkers(result.defsMarkers);
+    }
+
+    if (result.output) {
+      const output = JSON.stringify(result.output, null, 2);
+      setJsonText(output);
+    } else {
+      setJsonText(result.errorMessage || "");
+    }
+
+  }
 
   useEffect(() => {
-    parse(documentText);
-  }, []);
+    parse();
+  }, [schemaText, documentText]);
 
   useEffect(() => {
     setSchemaText(schema);
     setDocumentText(document);
-    parse(document);
+    // parse();
   }, [schema, document]);
 
   useEffect(() => {
@@ -78,10 +88,12 @@ const Playground = ({ showSchema, setShowSchema, document, schema }: any) => {
     setHSizes(s);
   };
 
-  const handleSchemaChange = (value: string): void => {};
+  const handleSchemaChange = (value: string): void => {
+    setSchemaText(value);
+  };
 
   const handleIOChange = (value: string): void => {
-    parse(value)
+    setDocumentText(value);
   };
 
   return (
@@ -104,7 +116,7 @@ const Playground = ({ showSchema, setShowSchema, document, schema }: any) => {
               <Pane minSize={0}>
                 <div className="top" style={layoutCSS}>
                   <Bar label="Schema" />
-                  <Editor onChange={handleSchemaChange} value={schemaText} />
+                  <Editor onChange={handleSchemaChange} value={schemaText} markers={defMarkers} />
                 </div>
               </Pane>
               <Pane minSize={200}>
