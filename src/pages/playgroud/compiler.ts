@@ -1,38 +1,77 @@
-
-
 // REF: https://chat.openai.com/c/828fa9d6-981d-404a-8ef8-46e8140111ba
+//
+import Definitions                    from "internet-object/dist/core/definitions";
+import parse                          from "internet-object/dist/parser"
+import parseDefinitions               from 'internet-object/dist/parser/parse-defs';
+import InternetObjectError            from 'internet-object/dist/errors/io-error';
+import Token                          from 'internet-object/dist/tokenizer/tokens';
+import InternetObjectSyntaxError      from 'internet-object/dist/errors/io-syntax-error';
+import InternetObjectValidationError  from 'internet-object/dist/errors/io-validation-error';
 
-import parse from "internet-object/dist/parser"
-import InternetObjectError from 'internet-object/dist/errors/io-error';
-import Token from 'internet-object/dist/tokenizer/tokens';
-import InternetObjectSyntaxError from 'internet-object/dist/errors/io-syntax-error';
-import InternetObjectValidationError from 'internet-object/dist/errors/io-validation-error';
+type ParsingResult = {
+  errorMessage?   : string,
+  defs?           : Definitions | null,
+  output?         : any         | null,
+  defsMarkers?    : any[]       | null,
+  docMarkers?     : any[]       | null,
+}
 
-export const parseIO = function (text: string, monaco:any): any {
+export default function parseIO(document: string, defs: string | null): ParsingResult {
+  if (defs === null) {
+    return parseDoc(document, null)
+  }
+
+  const defsResult = parseDefs(defs)
+  if (defsResult.errorMessage) {
+    return defsResult
+  }
+
+  return parseDoc(document, defsResult.defs)
+}
+
+function parseDefs(defs: string): ParsingResult {
   try {
-    const parsedData = parse(text)
     return {
-      data: JSON.stringify(parsedData.toObject(), null, 2),
-      markers: []
+      defs: parseDefinitions(defs, null),
     }
   } catch (e: any) {
-    let errType = "ERROR:"
-    if (e instanceof InternetObjectSyntaxError) {
-      errType = "SYNTAX_ERROR: "
-    } else if (e instanceof InternetObjectValidationError) {
-      errType = "VALIDATION_ERROR: "
-    }
-
-    console.error(e)
+    console.log("Error parsing defs")
+    console.log(e)
     return {
-      data: errType + e.message,
-      markers: getMarkers(e)
+      errorMessage: getErrorMessage(e),
+      defsMarkers: getErrorMarkers(e)
     }
   }
 }
 
-function getMarkers(e:any): any {
+function parseDoc(doc: string, defs: Definitions | null = null): ParsingResult {
+  try {
+    const d = parse(doc, defs )
+    return {
+      output: d.toObject(),
+    }
+  } catch (e: any) {
+    console.log("Error parsing document")
+    console.log(e)
+    return {
+      errorMessage: getErrorMessage(e),
+      docMarkers: getErrorMarkers(e)
+    }
+  }
+}
 
+function getErrorMessage(e: any): string {
+  let errType = "ERROR:"
+  if (e instanceof InternetObjectSyntaxError) {
+    errType = "SYNTAX_ERROR: "
+  } else if (e instanceof InternetObjectValidationError) {
+    errType = "VALIDATION_ERROR: "
+  }
+
+  return errType + e.message
+}
+
+function getErrorMarkers(e:any): any {
   if (e instanceof InternetObjectError) {
     const startPos = e.position
     if (e.position instanceof Token) {
