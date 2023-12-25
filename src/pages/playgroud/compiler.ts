@@ -20,7 +20,6 @@ export default function parseIO(document: string, defs: string | null): ParsingR
   if (defs === null) {
     return parseDoc(document, null)
   }
-
   const defsResult = parseDefs(defs)
   if (defsResult.errorMessage) {
     return defsResult

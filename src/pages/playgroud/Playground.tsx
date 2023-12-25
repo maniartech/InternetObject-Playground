@@ -27,6 +27,14 @@ const Playground = ({ showSchema, setShowSchema, document, schema }: any) => {
     const result = parseIO(documentText, showSchema ? schemaText : null);
     if (result.defsMarkers) {
       setDefMarkers(result.defsMarkers);
+    } else {
+      setDefMarkers([]);
+    }
+
+    if (result.docMarkers) {
+      setMarkers(result.docMarkers);
+    } else {
+      setMarkers([]);
     }
 
     if (result.output) {
@@ -40,7 +48,7 @@ const Playground = ({ showSchema, setShowSchema, document, schema }: any) => {
 
   useEffect(() => {
     parse();
-  }, [schemaText, documentText]);
+  }, [schemaText, documentText, showSchema]);
 
   useEffect(() => {
     setSchemaText(schema);
