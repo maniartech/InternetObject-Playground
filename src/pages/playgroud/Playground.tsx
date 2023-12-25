@@ -7,6 +7,8 @@ import Bar        from '../../components/bar/Bar';
 import Editor     from '../../components/editor/Editor';
 import Output     from '../../components/output/Output';
 
+import 'split-pane-react/esm/themes/default.css';
+
 const Playground = ({ showSchema, setShowSchema, document, schema }: any) => {
   // const monaco = useMonaco();
 

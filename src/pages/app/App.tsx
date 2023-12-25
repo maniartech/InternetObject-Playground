@@ -1,14 +1,13 @@
-import './App.css';
-import 'split-pane-react/esm/themes/default.css';
-
 import { useCallback, useMemo, useState } from 'react';
-import Toggle from 'react-toggle';
+import Toggle     from 'react-toggle';
 
-import Footer from '../../components/footer/Footer';
-import Header from '../../components/header/Header';
-import Tab from '../../components/tab/Tab';
+import Footer     from '../../components/footer/Footer';
+import Header     from '../../components/header/Header';
+import Tab        from '../../components/tab/Tab';
 import sampleData from '../../sample-data';
 import Playground from '../playgroud/Playground';
+
+import './App.css';
 
 function App (): JSX.Element {
 
@@ -29,6 +28,7 @@ function App (): JSX.Element {
       setCurrentSchema(sample.schema)
       setShowSchema(true)
     } else {
+      setCurrentSchema('')
       setShowSchema(false)
     }
   }, [])
