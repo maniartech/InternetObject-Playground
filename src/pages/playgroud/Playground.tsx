@@ -1,11 +1,11 @@
 import { useEffect, useState }  from 'react';
 import { Pane }                 from 'split-pane-react';
+import SplitPane                from 'split-pane-react/esm/SplitPane';
 
-import SplitPane  from 'split-pane-react/esm/SplitPane';
-import parseIO    from './compiler';
 import Bar        from '../../components/bar/Bar';
 import Editor     from '../../components/editor/Editor';
 import Output     from '../../components/output/Output';
+import parseIO    from './compiler';
 
 import 'split-pane-react/esm/themes/default.css';
 

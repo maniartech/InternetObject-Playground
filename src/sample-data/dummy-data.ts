@@ -8,7 +8,7 @@ const doc = `~ recordCount: 22
 ~ Jane Done, 20, d'2022-10-10', f, {\\uD83D\\uDCC8 Bond Street, "New York", NY}, [green, purple]
 `
 
-const schema = `# Employee Shema and Variables
+const schema = `# Employee Schema and Variables
 ~ @officeAddr: {Santacruze, California, CA}
 ~ $schema: {
     name: string,  # The person name
