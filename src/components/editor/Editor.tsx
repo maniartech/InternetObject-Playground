@@ -16,6 +16,12 @@ export interface EditorProps {
   // value changes
   onChange?: (value: any, event: any) => void
 
+  onChangeCaretPosition?: (position: {
+    row: number
+    column: number
+    position: number
+  }) => void
+
   // onMount is an optional function that will be called when the
   // editor is mounted
   onMount?: (editor: any, monaco: any) => void
@@ -59,6 +65,18 @@ function Editor (props: EditorProps): JSX.Element {
   const handleEditorDidMount = (editor: any, monaco: any): void => {
     setupMonaco(monaco)
     setEditorInstance(editor)
+
+    editor.onDidChangeCursorPosition((event: any) => {
+      if (props.onChangeCaretPosition) {
+        const position = editor.getModel().getOffsetAt(event.position)
+        props.onChangeCaretPosition({
+          row: event.position.lineNumber,
+          column: event.position.column,
+          position,
+        })
+      }
+    })
+
     editor.focus()
   }
 

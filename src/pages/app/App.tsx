@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from 'react';
 import Toggle     from 'react-toggle';
 
-import Footer     from '../../components/footer/Footer';
+import Footer     from '../footer/Footer';
 import Header     from '../../components/header/Header';
 import Tab        from '../../components/tab/Tab';
 import sampleData from '../../sample-data';

@@ -1,4 +1,5 @@
 import { useEffect, useState }  from 'react';
+import { useRecoilState }       from 'recoil';
 import { Pane }                 from 'split-pane-react';
 import SplitPane                from 'split-pane-react/esm/SplitPane';
 
@@ -8,9 +9,11 @@ import Output     from '../../components/output/Output';
 import parseIO    from './compiler';
 
 import 'split-pane-react/esm/themes/default.css';
+import editorPosition from '../../states/editor-pos';
 
 const Playground = ({ showSchema, setShowSchema, document, schema }: any) => {
   // const monaco = useMonaco();
+  const [_, setEditorPos] = useRecoilState(editorPosition)
 
   // Note: 'sizesH' is declared with 'let' instead of 'const'. This is needed
   // because somehow 'sizesH' does not update immediately after 'setHSizes' is
@@ -106,6 +109,15 @@ const Playground = ({ showSchema, setShowSchema, document, schema }: any) => {
     setDocumentText(value);
   };
 
+  const handleCaretPositionChange = (name: string, position: any): void => {
+    setEditorPos({
+      editorName: name,
+      row: position.row,
+      column: position.column,
+      position: position.position
+    })
+  }
+
   return (
     <div className="editor-area">
       <SplitPane
@@ -126,13 +138,27 @@ const Playground = ({ showSchema, setShowSchema, document, schema }: any) => {
               <Pane minSize={0}>
                 <div className="top" style={layoutCSS}>
                   <Bar label="Schema" />
-                  <Editor onChange={handleSchemaChange} value={schemaText} markers={defMarkers} />
+                  <Editor
+                    onChange={handleSchemaChange}
+                    value={schemaText}
+                    markers={defMarkers}
+                    onChangeCaretPosition={(pos) => {
+                      handleCaretPositionChange("Definitions", pos)
+                    }}
+                  />
                 </div>
               </Pane>
               <Pane minSize={200}>
                 <div className="bottom" style={layoutCSS}>
                   <Bar label="Internet Object" />
-                  <Editor onChange={handleIOChange} value={documentText} markers={markers} />
+                  <Editor
+                    value={documentText}
+                    markers={markers}
+                    onChange={handleIOChange}
+                    onChangeCaretPosition={(pos) => {
+                      handleCaretPositionChange("Internet Object", pos)
+                    }}
+                  />
                 </div>
               </Pane>
             </SplitPane>
