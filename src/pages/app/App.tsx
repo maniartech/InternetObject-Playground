@@ -16,9 +16,14 @@ function App (): JSX.Element {
   const [currentSchema, setCurrentSchema] = useState('')
 
   const options = useMemo(() => {
-    return sampleData.map((item, index) => (
+    const options = [
+      <option value="" key="select">Select an option</option>,
+      <option disabled key="sep">──────────</option>
+    ]
+    options.push(...sampleData.map((item, index) => (
       <option key={index} value={item.name}>{item.name}</option>
-    ))
+    )))
+    return options
   }, [])
 
   const handleSampleChange = useCallback((e:any) => {
