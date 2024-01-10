@@ -1,11 +1,11 @@
-import { useRecoilState } from 'recoil'
+import { useRecoilValue } from 'recoil'
 
 import editorPosition from '../../states/editor-pos'
 
 import './Footer.css'
 
 export default function Footer() {
-  const [editorPos, ] = useRecoilState(editorPosition)
+  const editorPos = useRecoilValue(editorPosition)
 
 
   return (
