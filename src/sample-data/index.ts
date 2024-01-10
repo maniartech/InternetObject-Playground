@@ -1,5 +1,7 @@
 import dummyData          from "./dummy-data";
 import simple             from "./simple";
+import complex            from "./complex";
+import json               from "./json";
 import simpleCollection   from "./simple-collection";
 
 const sampleData:Array<{
@@ -8,6 +10,8 @@ const sampleData:Array<{
   name: string,
 }> = [
   simple,
+  complex,
+  json,
   simpleCollection,
   dummyData,
 ]
