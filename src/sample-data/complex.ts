@@ -3,7 +3,8 @@ const schema = `
 ~ $borrowedBooks: {bookIsbn, borrowDate}
 ~ $users: {userId, name, membershipType, currentlyBorrowedBooks:[$borrowedBooks]}
 ~ $books: {title, author, isbn, availability, categories, published, borrowedBy?: $borrower}
-~ $schema: {name: string, address: string, books: [$books], users: [$users]}
+~ $library: {name: string, address: string, books: [$books], users: [$users]}
+~ $schema: $library
 `.trim()
 
 const doc = `
