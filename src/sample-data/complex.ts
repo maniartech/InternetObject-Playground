@@ -1,8 +1,8 @@
 const schema = `
-~ $borrower: {userId, dueDate:date}
-~ $borrowedBooks: {bookIsbn, borrowDate:date}
-~ $users: {userId, name, membershipType, currentlyBorrowedBooks:[$borrowedBooks]}
-~ $books: {title, author, isbn, availability, categories, published, borrowedBy?: $borrower}
+~ $borrower: {userId:string, dueDate:date}
+~ $borrowedBooks: {bookIsbn:number, borrowDate:date}
+~ $users: {userId:string, name:string, membershipType:{type:string, choices:[Standard, Premium]}, currentlyBorrowedBooks:[$borrowedBooks]}
+~ $books: {title:string, author:string, isbn:number, availability:bool, categories:[string], published:number, borrowedBy?: $borrower}
 ~ $library: {name: string, address: string, books: [$books], users: [$users]}
 ~ $schema: $library
 `.trim()
