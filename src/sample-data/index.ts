@@ -3,6 +3,7 @@ import simple             from "./simple";
 import complex            from "./complex";
 import json               from "./json";
 import simpleCollection   from "./simple-collection";
+import multipSections     from "./multiple-sections";
 
 const sampleData:Array<{
   doc:string,
@@ -13,7 +14,9 @@ const sampleData:Array<{
   complex,
   json,
   simpleCollection,
+  multipSections,
   dummyData,
+
 ]
 
 export default sampleData;
