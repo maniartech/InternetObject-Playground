@@ -20,13 +20,13 @@ body {
   display: grid;
   grid-template-areas: 'header''main''footer';
   grid-template-rows: 60px 1fr 30px;
-}
 
-.main {
-  position: relative;
-  background-color: var(--bg-color-theme);
-  grid-area: main;
-  display: flex;
+  .main {
+    position: relative;
+    background-color: var(--bg-color-theme);
+    grid-area: main;
+    display: flex;
+  }
 }
 
 .editor-area {
@@ -34,25 +34,24 @@ body {
   display: flex;
   height: 100%;
 
-}
+  .editor-area-left {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
 
-.editor-area-left {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
+  .editor-area-right {
+    position: relative;
+    height: inherit;
+    display: flex;
+    flex-direction: column;
+  }
 }
 
 .editor-area-left .react-split__pane .top,
 .editor-area-left .react-split__pane .bottom {
   position: relative;
-  display: flex;
-  flex-direction: column;
-}
-
-.editor-area-right {
-  position: relative;
-  height: inherit;
   display: flex;
   flex-direction: column;
 }
@@ -75,17 +74,17 @@ body {
   cursor: pointer;
   outline: none;
   transition: 1s ease-in-out;
-}
 
-.btn svg {
-  position: absolute;
-  left: 0;
-  top: 0;
-  fill: none;
-  stroke: #fff;
-  stroke-dasharray: 150 480;
-  stroke-dashoffset: 150;
-  transition: 1s ease-in-out;
+  svg {
+    position: absolute;
+    left: 0;
+    top: 0;
+    fill: none;
+    stroke: #fff;
+    stroke-dasharray: 150 480;
+    stroke-dashoffset: 150;
+    transition: 1s ease-in-out;
+  }
 }
 
 .btn:hover {
@@ -120,6 +119,14 @@ body {
   align-items: center;
   gap: 20px;
   z-index: 999;
+
+  .actions {
+    position: absolute;
+    top: 6px;
+    right: 24px;
+    display: flex;
+    column-gap: 16px;
+  }
 }
 
 .toolbar select {
@@ -134,24 +141,37 @@ body {
   box-shadow: none;
 }
 
-.toolbar .actions {
-  position: absolute;
-  top: 6px;
-  right: 24px;
-  display: flex;
-  column-gap: 16px;
-}
-
-.toolbar label.toggle {
+.toolbar label.toggle, .toggleSwtich {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-.toolbar label.toggle span {
+.toolbar label.toggle span, .toggleSwtich span {
   color: white;
   opacity: 0.5;
   user-select: none;
+  font-size: 0.876em;
+  text-transform: capitalize;
+}
+
+.toolbar .react-toggle-track, .toggleSwtich .react-toggle-track {
+  width: 44px;
+  height: 20px;
+
+  svg, .react-toggle-track-x {
+    width: 8px;
+    height: 10px;
+  }
+}
+
+.react-toggle--checked .react-toggle-track {
+  background-color: var(--primary-color)!important;
+}
+
+.toolbar .react-toggle-thumb, .toggleSwtich .react-toggle-thumb {
+  width: 18px;
+  height: 18px;
 }
 
 /* React Splitter */
@@ -162,4 +182,20 @@ body {
 
 .react-split__sash--vertical:hover, .react-split__sash--horizontal:hover {
   background-color: var(--primary-color);
+}
+
+/* Animations */
+
+.fade-in {
+  opacity: 0;
+  animation: fadeIn 0.3s ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
