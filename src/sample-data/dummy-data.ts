@@ -33,7 +33,7 @@ const schema = `
 const exportable = {
   doc,
   schema,
-  name: 'full',
+  name: 'An Object with Separat Schema',
 }
 
 export default exportable;
