@@ -1,15 +1,27 @@
 .bar {
-  padding: 6px 12px;
+  padding: 8px 16px;
   background-color: var(--bg-color-primary);
   color: var(--text-color);
+  min-height: 18px;
 
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
   text-transform: uppercase;
 }
 
 .bar p {
   font-size: 0.75em;
   font-weight: 600;
+
+  .count {
+    padding: 0 4px;
+    color: var(--text-color-constrast);
+    text-transform: capitalize;
+    background-color: var(--primary-color);
+    border-radius: 3px;
+    min-width: 14px;
+    display: inline-block;
+    text-align: center;
+  }
 }

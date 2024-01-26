@@ -1,15 +1,16 @@
-import { useEffect, useState }  from 'react';
-import { useRecoilState }       from 'recoil';
-import { Pane }                 from 'split-pane-react';
-import SplitPane                from 'split-pane-react/esm/SplitPane';
+import { useEffect, useState }            from 'react'
+import { useRecoilState }                 from 'recoil'
+import { Pane }                           from 'split-pane-react'
+import Toggle                             from 'react-toggle'
+import SplitPane                          from 'split-pane-react/esm/SplitPane'
 
-import Bar        from '../../components/bar/Bar';
-import Editor     from '../../components/editor/Editor';
-import Output     from '../../components/output/Output';
-import parseIO    from './compiler';
+import Bar                                from '../../components/bar/Bar'
+import Editor                             from '../../components/editor/Editor'
+import Output                             from '../../components/output/Output'
+import parseIO                            from './compiler'
+import editorPosition                     from '../../states/editor-pos'
 
-import 'split-pane-react/esm/themes/default.css';
-import editorPosition from '../../states/editor-pos';
+import                                         'split-pane-react/esm/themes/default.css'
 
 const Playground = ({ showSchema, setShowSchema, document, schema }: any) => {
   // const monaco = useMonaco();
@@ -137,7 +138,7 @@ const Playground = ({ showSchema, setShowSchema, document, schema }: any) => {
             >
               <Pane minSize={0}>
                 <div className="top" style={layoutCSS}>
-                  <Bar label="Schema" />
+                  <Bar label="Schema" bytes="2" />
                   <Editor
                     onChange={handleSchemaChange}
                     value={schemaText}
@@ -150,7 +151,7 @@ const Playground = ({ showSchema, setShowSchema, document, schema }: any) => {
               </Pane>
               <Pane minSize={200}>
                 <div className="bottom" style={layoutCSS}>
-                  <Bar label="Internet Object" />
+                  <Bar label="Internet Object" bytes="5" />
                   <Editor
                     value={documentText}
                     markers={markers}
@@ -165,7 +166,12 @@ const Playground = ({ showSchema, setShowSchema, document, schema }: any) => {
           </div>
         </Pane>
         <div className="editor-area-right">
-          <Bar label="JSON" />
+          <Bar label="JSON" bytes="20">
+            <label className="toggleSwtich" title="Compress">
+              <span>Compress</span>
+              <Toggle />
+            </label>
+          </Bar>
           <Output value={jsonText} options={{
             wordWrap: "on"
           }} />

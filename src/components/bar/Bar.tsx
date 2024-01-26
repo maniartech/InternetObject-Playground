@@ -1,15 +1,19 @@
-import                './Bar.css'
+
+import                             './Bar.css'
 
 interface BarProps {
   label: string;
   bgColor?: string;
+  children?: any;
+  bytes?: string;
 }
 
+const Bar = ({ label, bgColor, children, bytes }: BarProps) => {
 
-const Bar = ({ label, bgColor }: BarProps) => {
   return (
     <div className='bar' style={{backgroundColor: bgColor}}>
-      <p>{label}</p>
+      <p>{label} {bytes && <span className="count" title={`${bytes} bytes`}>{bytes}</span>} </p>
+      { children }
     </div>
   )
 }
