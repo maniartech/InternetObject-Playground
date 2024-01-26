@@ -18,8 +18,8 @@ const Bar = ({ label, bgColor, children, bytes, outputBytes, compressed}: BarPro
     <div className='bar' style={{backgroundColor: bgColor}}>
       <p>{label} {bytes !== 0 && <span className="count" title={`${bytes} bytes in ${label}`}>{bytes} Bytes</span>}
       &nbsp;
-      {bytes !== 0 && !!outputBytes && <span className="comparision" title={`${bytes} bytes in ${label}`}>{percText} than { compressed ? 'compressed ' : ''}JSON</span>}
       </p>
+      {bytes !== 0 && !!outputBytes && <span className="comparision" title={`${bytes} bytes in ${label}`}>{percText} than { compressed ? 'compressed ' : ''}JSON</span>}
       { children }
     </div>
   )

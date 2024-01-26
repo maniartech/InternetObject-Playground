@@ -8,6 +8,17 @@
   align-items: center;
   justify-content: space-between;
   text-transform: uppercase;
+
+  .comparision {
+    padding: 0 4px;
+    border-radius: 3px;
+    background-color: var(--primary-color);
+    color: var(--text-color-dark);
+    font-size: 0.75em;
+    text-align: right;
+    text-transform: capitalize;
+    font-weight: 600;
+  }
 }
 
 .bar p {
@@ -25,13 +36,4 @@
     text-align: center;
   }
 
-  .comparision {
-    padding: 0 4px;
-    border-radius: 3px;
-    background-color: var(--primary-color);
-    color: var(--text-color-dark);
-    font-size: 0.9em;
-    text-align: right;
-    text-transform: capitalize;
-  }
 }
