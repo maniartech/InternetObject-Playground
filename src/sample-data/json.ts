@@ -1,5 +1,7 @@
 
-const doc = `{
+const doc = `
+# JSON format is compatible with Internet Object
+{
   "library": {
     "name": "City Central Library",
     "address": "123 Library St, Bookville",
@@ -45,7 +47,7 @@ const doc = `{
       }
     ]
   }
-}`
+}`.trim()
 
 const exportable = {
   doc,

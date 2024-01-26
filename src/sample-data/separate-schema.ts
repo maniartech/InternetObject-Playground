@@ -4,8 +4,7 @@ const doc = `
 ~ page: 3
 ~ prevPage: "/api/v1/people/page/2"
 ~ nextPage: T
-
---- $schema: abc
+---
 ~ John Doe, 25, d'2022-01-01', m, @officeAddr,@officeAddr, [red, green, blue]
 ~ Jane Done, 20, d'2022-10-10', f, {\uD83D\uDCC8 Bond Street, "New York", NY},N, [green, purple]
 `.trim()
