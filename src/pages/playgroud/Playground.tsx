@@ -13,7 +13,7 @@ import editorPosition                     from '../../states/editor-pos'
 import                                         'split-pane-react/esm/themes/default.css'
 
 const Playground = ({ showSchema, setShowSchema, document, schema }: any) => {
-  // const monaco = useMonaco();
+  // const monaco = useMonaco()
   const [_, setEditorPos] = useRecoilState(editorPosition)
 
   // Note: 'sizesH' is declared with 'let' instead of 'const'. This is needed
@@ -21,94 +21,97 @@ const Playground = ({ showSchema, setShowSchema, document, schema }: any) => {
   // called. When 'handleSchemaBar' is called again, 'sizesH' shows old value,
   // preventing correct 'showSchema' updates. Using 'let' ensures 'sizesH' is
   // updated right after 'setHSizes' is executed.
-  let   [sizesH, setHSizes]             = useState([0, "auto"]);
-  const [sizesV, setVSizes]             = useState([0, "auto"]);
-  const [schemaText, setSchemaText]     = useState(schema);
-  const [documentText, setDocumentText] = useState(document);
-  const [jsonText, setJsonText]         = useState("");
-  const [markers, setMarkers]           = useState<any[]>([]);
-  const [defMarkers, setDefMarkers]     = useState<any[]>([]);
+  let   [sizesH, setHSizes]             = useState([0, "auto"])
+  const [sizesV, setVSizes]             = useState([0, "auto"])
+  const [schemaText, setSchemaText]     = useState(schema)
+  const [documentText, setDocumentText] = useState(document)
+  const [jsonText, setJsonText]         = useState("")
+  const [markers, setMarkers]           = useState<any[]>([])
+  const [defMarkers, setDefMarkers]     = useState<any[]>([])
+  const [compressOutput, setCompressOutput] = useState(localStorage.getItem("compressOutput") === "true" ? true : false)
 
   const parse = () => {
-    const result = parseIO(documentText, showSchema ? schemaText : null);
+    const result = parseIO(documentText, showSchema ? schemaText : null)
     if (result.defsMarkers) {
-      setDefMarkers(result.defsMarkers);
+      setDefMarkers(result.defsMarkers)
     } else {
-      setDefMarkers([]);
+      setDefMarkers([])
     }
 
     if (result.docMarkers) {
-      setMarkers(result.docMarkers);
+      setMarkers(result.docMarkers)
     } else {
-      setMarkers([]);
+      setMarkers([])
     }
 
     if (result.output) {
-      const output = JSON.stringify(result.output, null, 2);
-      setJsonText(output);
+      const output = JSON.stringify(result.output, null, compressOutput ? 0 : 2)
+      setJsonText(output)
     } else {
-      setJsonText(result.errorMessage || "");
+      setJsonText(result.errorMessage || "")
     }
-
   }
 
   useEffect(() => {
-    parse();
-  }, [schemaText, documentText, showSchema]);
+    setCompressOutput(compressOutput)
+  }, [compressOutput])
 
   useEffect(() => {
-    setSchemaText(schema);
-    setDocumentText(document);
-    // parse();
-  }, [schema, document]);
+    parse()
+  }, [schemaText, documentText, showSchema, compressOutput])
+
+  useEffect(() => {
+    setSchemaText(schema)
+    setDocumentText(document)
+  }, [schema, document])
 
   useEffect(() => {
     if (sizesV[0] === 0) {
-      setVSizes(["60%", "auto"]);
+      setVSizes(["60%", "auto"])
     }
-  }, [sizesV]);
+  }, [sizesV])
 
   useEffect(() => {
     // setShowSchema(!showSchema)
     if (!showSchema) {
-      setHSizes([0, "auto"]);
+      setHSizes([0, "auto"])
     } else {
-      setHSizes([200, "auto"]);
+      setHSizes([200, "auto"])
     }
-  }, [showSchema]);
+  }, [showSchema])
 
   const layoutCSS = {
     height: "100%",
-  };
+  }
 
   const handleHBarDragEnd = (): void => {
     if (typeof sizesH[0] === "number") {
       if (sizesH[0] <= 100) {
         if (showSchema) {
-          setHSizes([0, "auto"]);
-          setShowSchema(false);
+          setHSizes([0, "auto"])
+          setShowSchema(false)
         } else {
-          setHSizes([200, "auto"]);
-          setShowSchema(true);
+          setHSizes([200, "auto"])
+          setShowSchema(true)
         }
       } else {
-        setShowSchema(sizesH[0] > 0);
+        setShowSchema(sizesH[0] > 0)
       }
     }
-  };
+  }
 
   const handleHBar = (s: any): void => {
-    sizesH = s;
-    setHSizes(s);
-  };
+    sizesH = s
+    setHSizes(s)
+  }
 
   const handleSchemaChange = (value: string): void => {
-    setSchemaText(value);
-  };
+    setSchemaText(value)
+  }
 
   const handleIOChange = (value: string): void => {
-    setDocumentText(value);
-  };
+    setDocumentText(value)
+  }
 
   const handleCaretPositionChange = (name: string, position: any): void => {
     setEditorPos({
@@ -117,6 +120,11 @@ const Playground = ({ showSchema, setShowSchema, document, schema }: any) => {
       column: position.column,
       position: position.position
     })
+  }
+
+  const handleOnCompressChange = (event: any): void => {
+    localStorage.setItem("compressOutput", event.target.checked)
+    setCompressOutput(event.target.checked)
   }
 
   return (
@@ -138,7 +146,7 @@ const Playground = ({ showSchema, setShowSchema, document, schema }: any) => {
             >
               <Pane minSize={0}>
                 <div className="top" style={layoutCSS}>
-                  <Bar label="Schema" bytes="2" />
+                  <Bar label="Schema" bytes={schemaText.length} />
                   <Editor
                     onChange={handleSchemaChange}
                     value={schemaText}
@@ -151,7 +159,7 @@ const Playground = ({ showSchema, setShowSchema, document, schema }: any) => {
               </Pane>
               <Pane minSize={200}>
                 <div className="bottom" style={layoutCSS}>
-                  <Bar label="Internet Object" bytes="5" />
+                  <Bar label="Internet Object" bytes={documentText.length} outputBytes={jsonText.length} compressed={compressOutput} />
                   <Editor
                     value={documentText}
                     markers={markers}
@@ -166,10 +174,10 @@ const Playground = ({ showSchema, setShowSchema, document, schema }: any) => {
           </div>
         </Pane>
         <div className="editor-area-right">
-          <Bar label="JSON" bytes="20">
+          <Bar label="JSON Output" bytes={jsonText.length}>
             <label className="toggleSwtich" title="Compress">
               <span>Compress</span>
-              <Toggle />
+              <Toggle onChange={handleOnCompressChange} checked={compressOutput} />
             </label>
           </Bar>
           <Output value={jsonText} options={{
@@ -178,7 +186,7 @@ const Playground = ({ showSchema, setShowSchema, document, schema }: any) => {
         </div>
       </SplitPane>
     </div>
-  );
-};
+  )
+}
 
-export default Playground;
+export default Playground
