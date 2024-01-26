@@ -6,10 +6,10 @@ interface BarProps {
   children?     : any;
   bytes?        : number;
   outputBytes?  : number;
-  compressed?   : boolean;
+  minified?   : boolean;
 }
 
-const Bar = ({ label, bgColor, children, bytes, outputBytes, compressed}: BarProps) => {
+const Bar = ({ label, bgColor, children, bytes, outputBytes, minified}: BarProps) => {
   bytes     = bytes || 0
   const perc = 100 - (outputBytes ? (bytes / outputBytes) * 100 : 0)
   const percText = perc > 0 ? `${perc.toFixed(2)}% Smaller` : `${Math.abs(perc).toFixed(2)}% Larger`
@@ -19,7 +19,7 @@ const Bar = ({ label, bgColor, children, bytes, outputBytes, compressed}: BarPro
       <p>{label} {bytes !== 0 && <span className="count" title={`${bytes} bytes in ${label}`}>{bytes} Bytes</span>}
       &nbsp;
       </p>
-      {bytes !== 0 && !!outputBytes && <span className="comparision" title={`${bytes} bytes in ${label}`}>{percText} than { compressed ? 'compressed ' : ''}JSON</span>}
+      {bytes !== 0 && !!outputBytes && <span className="comparision" title={`${bytes} bytes in ${label}`}>{percText} than { minified ? 'minified ' : ''}JSON</span>}
       { children }
     </div>
   )

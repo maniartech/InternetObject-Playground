@@ -28,7 +28,7 @@ const Playground = ({ showSchema, setShowSchema, document, schema }: any) => {
   const [jsonText, setJsonText]         = useState("")
   const [markers, setMarkers]           = useState<any[]>([])
   const [defMarkers, setDefMarkers]     = useState<any[]>([])
-  const [compressOutput, setCompressOutput] = useState(localStorage.getItem("compressOutput") === "true" ? true : false)
+  const [minifiedOutput, setMinifiedOutput] = useState(localStorage.getItem("minifiedOutput") === "true" ? true : false)
 
   const parse = () => {
     const result = parseIO(documentText, showSchema ? schemaText : null)
@@ -45,7 +45,7 @@ const Playground = ({ showSchema, setShowSchema, document, schema }: any) => {
     }
 
     if (result.output) {
-      const output = JSON.stringify(result.output, null, compressOutput ? 0 : 2)
+      const output = JSON.stringify(result.output, null, minifiedOutput ? 0 : 2)
       setJsonText(output)
     } else {
       setJsonText(result.errorMessage || "")
@@ -53,12 +53,12 @@ const Playground = ({ showSchema, setShowSchema, document, schema }: any) => {
   }
 
   useEffect(() => {
-    setCompressOutput(compressOutput)
-  }, [compressOutput])
+    setMinifiedOutput(minifiedOutput)
+  }, [minifiedOutput])
 
   useEffect(() => {
     parse()
-  }, [schemaText, documentText, showSchema, compressOutput])
+  }, [schemaText, documentText, showSchema, minifiedOutput])
 
   useEffect(() => {
     setSchemaText(schema)
@@ -123,8 +123,8 @@ const Playground = ({ showSchema, setShowSchema, document, schema }: any) => {
   }
 
   const handleOnCompressChange = (event: any): void => {
-    localStorage.setItem("compressOutput", event.target.checked)
-    setCompressOutput(event.target.checked)
+    localStorage.setItem("minifiedOutput", event.target.checked)
+    setMinifiedOutput(event.target.checked)
   }
 
   return (
@@ -159,7 +159,7 @@ const Playground = ({ showSchema, setShowSchema, document, schema }: any) => {
               </Pane>
               <Pane minSize={200}>
                 <div className="bottom" style={layoutCSS}>
-                  <Bar label="Internet Object" bytes={documentText.length} outputBytes={jsonText.length} compressed={compressOutput} />
+                  <Bar label="Internet Object" bytes={documentText.length} outputBytes={jsonText.length} minified={minifiedOutput} />
                   <Editor
                     value={documentText}
                     markers={markers}
@@ -176,8 +176,8 @@ const Playground = ({ showSchema, setShowSchema, document, schema }: any) => {
         <div className="editor-area-right">
           <Bar label="JSON Output" bytes={jsonText.length}>
             <label className="toggleSwtich" title="Compress">
-              <span>Compress</span>
-              <Toggle onChange={handleOnCompressChange} checked={compressOutput} />
+              <span>Minify</span>
+              <Toggle onChange={handleOnCompressChange} checked={minifiedOutput} />
             </label>
           </Bar>
           <Output value={jsonText} options={{
