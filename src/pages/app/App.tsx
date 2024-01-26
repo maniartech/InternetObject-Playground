@@ -1,19 +1,19 @@
-import { useCallback, useMemo, useState } from 'react';
-import Toggle     from 'react-toggle';
+import { useCallback, useMemo, useState }               from 'react'
+import Toggle                                           from 'react-toggle'
 
-import Footer     from '../footer/Footer';
-import Header     from '../../components/header/Header';
-import Tab        from '../../components/tab/Tab';
-import sampleData from '../../sample-data';
-import Playground from '../playgroud/Playground';
+import Footer                                           from '../footer/Footer'
+import Header                                           from '../../components/header/Header'
+import Tab                                              from '../../components/tab/Tab'
+import sampleData                                       from '../../sample-data'
+import Playground                                       from '../playgroud/Playground'
 
 import './App.css';
 
 function App (): JSX.Element {
 
-  const [showSchema, setShowSchema] = useState(false)
-  const [currentDoc, setCurrentDoc] = useState('')
-  const [currentSchema, setCurrentSchema] = useState('')
+  const [showSchema, setShowSchema]                     = useState(false)
+  const [currentDoc, setCurrentDoc]                     = useState('')
+  const [currentSchema, setCurrentSchema]               = useState('')
 
   const options = useMemo(() => {
     const options = [
