@@ -1,4 +1,4 @@
-import dummyData          from "./dummy-data";
+import dummyData          from "./separate-schema";
 import simple             from "./simple";
 import complex            from "./complex";
 import json               from "./json";
