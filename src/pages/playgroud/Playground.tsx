@@ -1,16 +1,17 @@
-import { useEffect, useState }            from 'react'
-import { useRecoilState }                 from 'recoil'
-import { Pane }                           from 'split-pane-react'
-import Toggle                             from 'react-toggle'
-import SplitPane                          from 'split-pane-react/esm/SplitPane'
+import 'split-pane-react/esm/themes/default.css';
 
-import Bar                                from '../../components/bar/Bar'
-import Editor                             from '../../components/editor/Editor'
-import Output                             from '../../components/output/Output'
-import parseIO                            from './compiler'
-import editorPosition                     from '../../states/editor-pos'
+import { useEffect, useState }  from 'react';
+import { useRecoilState }       from 'recoil';
+import { Pane }                 from 'split-pane-react';
 
-import                                         'split-pane-react/esm/themes/default.css'
+import Toggle     from 'react-toggle';
+import SplitPane  from 'split-pane-react/esm/SplitPane';
+
+import Bar            from '../../components/bar/Bar';
+import Editor         from '../../components/editor/Editor';
+import Output         from '../../components/output/Output';
+import editorPosition from '../../states/editor-pos';
+import parseIO        from './compiler';
 
 const Playground = ({ showSchema, setShowSchema, document, schema }: any) => {
   // const monaco = useMonaco()
@@ -21,14 +22,16 @@ const Playground = ({ showSchema, setShowSchema, document, schema }: any) => {
   // called. When 'handleSchemaBar' is called again, 'sizesH' shows old value,
   // preventing correct 'showSchema' updates. Using 'let' ensures 'sizesH' is
   // updated right after 'setHSizes' is executed.
-  let   [sizesH, setHSizes]             = useState([0, "auto"])
-  const [sizesV, setVSizes]             = useState([0, "auto"])
-  const [schemaText, setSchemaText]     = useState(schema)
-  const [documentText, setDocumentText] = useState(document)
-  const [jsonText, setJsonText]         = useState("")
-  const [markers, setMarkers]           = useState<any[]>([])
-  const [defMarkers, setDefMarkers]     = useState<any[]>([])
-  const [minifiedOutput, setMinifiedOutput] = useState(localStorage.getItem("minifiedOutput") === "true" ? true : false)
+  let   [sizesH, setHSizes]                 = useState([0, "auto"])
+  const [sizesV, setVSizes]                 = useState([0, "auto"])
+  const [schemaText, setSchemaText]         = useState(schema)
+  const [documentText, setDocumentText]     = useState(document)
+  const [jsonText, setJsonText]             = useState("")
+  const [markers, setMarkers]               = useState<any[]>([])
+  const [defMarkers, setDefMarkers]         = useState<any[]>([])
+  const [error, setError]                   = useState<boolean>(false)
+  const [minifiedOutput, setMinifiedOutput] = useState(
+    localStorage.getItem("minifiedOutput") === "true" ? true : false)
 
   const parse = () => {
     const result = parseIO(documentText, showSchema ? schemaText : null)
@@ -47,8 +50,10 @@ const Playground = ({ showSchema, setShowSchema, document, schema }: any) => {
     if (result.output) {
       const output = JSON.stringify(result.output, null, minifiedOutput ? 0 : 2)
       setJsonText(output)
+      setError(false)
     } else {
       setJsonText(result.errorMessage || "")
+      setError(true)
     }
   }
 
@@ -159,7 +164,7 @@ const Playground = ({ showSchema, setShowSchema, document, schema }: any) => {
               </Pane>
               <Pane minSize={200}>
                 <div className="bottom" style={layoutCSS}>
-                  <Bar label="Internet Object" bytes={documentText.length} outputBytes={jsonText.length} minified={minifiedOutput} />
+                  <Bar label="Internet Object" bytes={documentText.length} outputBytes={jsonText.length} minified={minifiedOutput} isError={error} />
                   <Editor
                     value={documentText}
                     markers={markers}
