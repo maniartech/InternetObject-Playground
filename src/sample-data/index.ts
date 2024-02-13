@@ -5,11 +5,13 @@ import json               from "./json";
 import simpleCollection   from "./simple-collection";
 import multipSections     from "./multiple-sections";
 import employeeRegister   from "./employee-register";
+import recursiveSchema    from "./recursive-schema";
 
 const sampleData:Array<{ doc:string, schema:string | null, name: string, }> = [
   simple,
   complex,
   json,
+  recursiveSchema,
   simpleCollection,
   employeeRegister,
   multipSections,
