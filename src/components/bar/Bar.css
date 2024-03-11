@@ -1,6 +1,7 @@
 .bar {
   padding: 8px 16px;
-  background-color: var(--bg-color-primary);
+  /* background-color: var(--bg-color-primary); */
+  background-color: #2f1b26;
   color: var(--text-color);
   min-height: 18px;
 
@@ -10,10 +11,12 @@
   text-transform: uppercase;
 
   .comparision {
-    padding: 0 4px;
+    padding: 3px 6px;
     border-radius: 3px;
-    background-color: var(--primary-color);
-    color: var(--text-color-dark);
+    /* background-color: var(--primary-color); */
+    background-color: #0000008c;
+    /* color: var(--text-color-dark); */
+    color: #858585;
     font-size: 0.75em;
     text-align: right;
     text-transform: capitalize;
@@ -26,14 +29,15 @@
   font-weight: 600;
 
   .count {
-    padding: 0 4px;
+    padding: 2px 6px;
     color: var(--text-color-constrast);
     text-transform: capitalize;
-    background-color: var(--text-color-dark);
+    background-color: #ffffff1f;
     border-radius: 3px;
     min-width: 14px;
     display: inline-block;
     text-align: center;
+    font-weight: 400;
   }
 
 }

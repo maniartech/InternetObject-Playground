@@ -1,6 +1,6 @@
 :root {
 
-  --app-font: "Open Sans",Helvetica,"Lucida Sans Unicode","Lucida Grande",Arial,Verdana,sansSerif;
+  --app-font: 'Inter', sans-serif;
 
   --text-color: #bbbdbf;
   --text-color-light: #999;

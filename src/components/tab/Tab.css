@@ -23,10 +23,12 @@
   color: var(--text-color);
   border-top-left-radius: 3px;
   border-top-right-radius: 3px;
+  visibility: hidden;
 }
 
 .tab-list li.active {
-  background-color: var(--bg-color-primary);
+  /* background-color: var(--bg-color-primary); */
+  background-color: #2f1b26;
   color: var(--text-color-contrast);
 }
 

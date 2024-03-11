@@ -5,7 +5,8 @@
   display: flex;
   align-items: center;
   font-size: calc(10px + 1vmin);
-  background-color: var(--bg-color-theme);
+  /* background-color: var(--bg-color-theme); */
+  background-color: #060606;
   color: var(--text-color-contrast);
   padding: 0 15px;
   z-index: 9;
@@ -25,16 +26,30 @@
   align-items: center;
   height: inherit;
   gap: 10px;
+  margin-bottom: -32px;
 }
 
 .App-header .left img{
   height: 24px;
   width: 24px;
+  filter: contrast(0.6);
 }
 
 .App-header .left h1 {
-  font-size: 1.3em;
-  color: var(--text-color);
+  font-size: 1.8rem;
+  /* color: var(--text-color); */
+  color: white;
+  font-family: "Oswald";
+  font-weight: 400;
+  letter-spacing: 1px;
+  text-transform: capitalize;
+
+  span {
+    background: linear-gradient(95deg, #059DFF 15%, #6549D5 45%, #E33FA1 75%, #FB5343 100%) 98%/200% 100%;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-style: italic;
+  }
 }
 
 
@@ -59,22 +74,19 @@
     display: inline-flex;
     flex: none;
     margin: 0 16px;
-    border-bottom: 2px solid transparent;
-}
-
-.header-menu .header-menuItem:hover{
-  border-bottom: 2px solid var(--border-color);
 }
 
 .header-menu .header-menuItem > a {
-    font-size: 1em;
+  font-weight: 'Inter', sans-serif;
+    font-size: 16px;
     align-items: center;
     color: var(--text-color);
     font-weight: 400;
     text-decoration: none;
     padding: 8px 0px;
+    transition: color 0.3s ease;
 }
 
 .header-menu .header-menuItem > a:hover {
-  opacity: 0.8;
+  color: var(--primary-color);
 }
