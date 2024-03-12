@@ -75,15 +75,15 @@ body {
 }
 
 .editor-area .monaco-editor, .monaco-editor-background{
-  background-color:  var(--bg-color-secondary);
-  background-color: #2f1b2675;
+  /* background-color:  var(--bg-color-secondary); */
+  background-color: #1a1619!important;
 
   color: var(--text-color);
   font-size: 15px;
 }
 
 .editor-area .monaco-editor .margin-view-overlays {
-  background-color:  var(--bg-color-secondary);
+  /* background-color:  var(--bg-color-secondary); */
   background-color: #2f1b2675;
 }
 
