@@ -9,9 +9,9 @@
   --text-color-highlight: #ff0000;
   --text-color-error: #dd444a;
 
-  --bg-color-primary: #333333;
-  --bg-color-secondary: #1e2429;
-  --bg-color-theme: #1e1e1e;
+  --bg-color-theme: #060606;
+  --bg-color-primary: color-mix(in srgb, #060606 90%, white);
+  --bg-color-secondary: color-mix(in srgb, #060606 80%, white);
   --bg-color-dark: #2c3137;
 
   --border-color: #333;
@@ -20,7 +20,6 @@
 
   --box-shadow-1: 0px 2px 4px 2px #171a1d;
   --box-shadow-2: 0 8px 16px rgba(0, 0, 0, 0.2);
-
 }
 
 body {
