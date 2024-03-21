@@ -20,13 +20,18 @@ export default function Header() {
               </a>
             </li>
             <li className="header-menuItem">
+              <a href="io-vs-json" aria-label="IO vs JSON">
+                IO vs JSON
+              </a>
+            </li>
+            <li className="header-menuItem">
               <a href="/the-story/" aria-label="About">
                 The Story
               </a>
             </li>
             <li className="header-menuItem">
-              <a href="contribute" aria-label="Contribute">
-                Contribute
+              <a href="/community/" aria-label="Community">
+                Join Community
               </a>
             </li>
             <li className="header-menuItem">
