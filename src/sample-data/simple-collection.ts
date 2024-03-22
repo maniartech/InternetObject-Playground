@@ -1,4 +1,4 @@
-const doc = `name, age, gender, joiningDt, address, colors, isActive
+const doc = `name, age, gender, joiningDt, address: {street, city, state?}, colors, isActive
 ---
 ~ Alice Smith, 28, f, d'2021-04-15', {Elm Street, Dallas, TX}, [yellow, green], T
 ~ Bob Johnson, 22, m, d'2022-02-20', {Oak Street, Chicago, IL}, [blue, black], T
