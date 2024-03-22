@@ -71,34 +71,32 @@ function getErrorMessage(e: any): string {
 }
 
 function getErrorMarkers(e:any): any {
-  if (e instanceof InternetObjectError) {
-    const startPos = e.position
-    if (e.position instanceof Token) {
-      const token = e.position as Token
-      const endPos = e.position.getEndPosition()
+  if (e instanceof InternetObjectError == false) return []
 
-      return [
-        {
-          startLineNumber: token.row,
-          startColumn: token.col,
-          endLineNumber: endPos.row,
-          endColumn: endPos.col,
-          message: e.message,
-          severity: 8 // monaco.MarkerSeverity.Error
-        }
-      ]
-    } else if (startPos !== undefined) {
-      return [
-        {
-          startLineNumber: startPos.row,
-          startColumn: startPos.col,
-          endLineNumber: startPos.row,
-          endColumn: startPos.col,
-          message: e.message,
-          severity: 8 // monaco.MarkerSeverity.Error
-        }
-      ]
-    }
+  const startPos = e.position
+  if (e.position instanceof Token) {
+    const token = e.position as Token
+    const endPos = e.position.getEndPosition()
+
+    return [{
+      startLineNumber: token.row,
+      startColumn: token.col,
+      endLineNumber: endPos.row,
+      endColumn: endPos.col,
+      message: e.message,
+      severity: 8 // monaco.MarkerSeverity.Error
+    }]
+  }
+
+  if (startPos) {
+    return [{
+      startLineNumber: startPos.row,
+      startColumn: startPos.col,
+      endLineNumber: startPos.row,
+      endColumn: startPos.col,
+      message: e.message,
+      severity: 8 // monaco.MarkerSeverity.Error
+    }]
   }
 
   return []
