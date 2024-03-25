@@ -8,7 +8,7 @@ import employeeRegister   from "./employee-register";
 import recursiveSchema    from "./recursive-schema";
 import recursiveSchemaComplex from "./recursive-schema-comples";
 
-const sampleData:Array<{ doc:string, schema:string | null, name: string, }> = [
+const sampleData:Array<{ doc:string, schema:string | null, name: string, id: string }> = [
   simple,
   complex,
   json,

@@ -23,7 +23,7 @@ function App (): JSX.Element {
       <option disabled key="sep">──────────</option>
     ]
     options.push(...sampleData.map((item, index) => (
-      <option key={index} value={item.name}>{item.name}</option>
+      <option key={index} value={item.id}>{item.name}</option>
     )))
     return options
   }, [])
@@ -38,7 +38,7 @@ function App (): JSX.Element {
   useEffect(() => {
     console.log("Sample ID", sample)
 
-    const sampleInfo = sampleData.find(item => item.name === sample)
+    const sampleInfo = sampleData.find(item => item.id === sample)
     setCurrentDoc(sampleInfo?.doc || '')
     if (sampleInfo?.schema) {
       setCurrentSchema(sampleInfo.schema)

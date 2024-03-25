@@ -25,6 +25,7 @@ const exportable = {
   doc,
   schema,
   name: 'Multiple Sections',
+  id: 'multiple-sections'
 }
 
 export default exportable;

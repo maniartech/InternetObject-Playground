@@ -23,6 +23,7 @@ const exportable = {
   doc,
   schema,
   name: 'Complex Object',
+  id: 'complex-object'
 }
 
 export default exportable;

@@ -7,6 +7,7 @@ const exportable = {
   doc,
   schema: null,
   name: 'simple',
+  id: 'simple'
 }
 
 export default exportable;

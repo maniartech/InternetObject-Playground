@@ -209,6 +209,7 @@ const exportable = {
   doc,
   schema,
   name: 'Large Employee Register',
+  id: 'employee-register',
 }
 
 export default exportable;
