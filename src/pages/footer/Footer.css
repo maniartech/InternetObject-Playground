@@ -20,6 +20,11 @@
   align-items: center;
   justify-content: flex-end;
   height: inherit;
+
+  .company-logo {
+    width: 24px;
+    margin-bottom: -5px;
+  }
 }
 
 .footer p {

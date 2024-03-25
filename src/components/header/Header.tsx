@@ -3,7 +3,7 @@ import { Link }            from 'react-router-dom'
 import                          './Header.css'
 import Logo                from '../logo/Logo'
 
-export default function Header() {
+export default function Header(props: any) {
   return (
     <header className="App-header">
       <div className="left">
@@ -11,7 +11,7 @@ export default function Header() {
           <Logo />
           <h1>Playground</h1>
         </div>
-        <p className='description'>This playground demonstrates how Internet Object compares to JSON.</p>
+        <p className='description' title='This playground demonstrates how Internet Object compares to JSON.'>This playground demonstrates how Internet Object compares to JSON.</p>
       </div>
 
       <div className="right">
@@ -44,6 +44,7 @@ export default function Header() {
             </li>
           </ul>
         </div>
+        {props.children}
       </div>
     </header>
   )

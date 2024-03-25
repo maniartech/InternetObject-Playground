@@ -5,7 +5,6 @@ import                                                           './App.css'
 import Playground                                           from '../playgroud/Playground'
 import Footer                                               from '../footer/Footer'
 import Header                                               from '../../components/header/Header'
-import Tab                                                  from '../../components/tab/Tab'
 import sampleData                                           from '../../sample-data'
 
 function App (): JSX.Element {
@@ -37,10 +36,8 @@ function App (): JSX.Element {
   }, [])
 
   return (
-
       <div className="app">
-        <Header />
-        <main className='main'>
+        <Header>
           <div className='toolbar'>
             <label className='toggle' title="Separate the schema from the data document!">
               <span>Separate Schema</span>
@@ -55,9 +52,9 @@ function App (): JSX.Element {
               { options }
             </select>
           </div>
-          <Tab tabs={['IO to JSON']}>
-            <Playground showSchema={showSchema} setShowSchema={setShowSchema} document={currentDoc} schema={currentSchema} />
-          </Tab>
+        </Header>
+        <main className='main'>
+          <Playground showSchema={showSchema} setShowSchema={setShowSchema} document={currentDoc} schema={currentSchema} />
         </main>
         <Footer />
       </div>
