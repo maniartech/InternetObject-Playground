@@ -53,6 +53,7 @@ const exportable = {
   doc,
   schema: null,
   name: 'json',
+  id: 'json'
 }
 
 export default exportable;

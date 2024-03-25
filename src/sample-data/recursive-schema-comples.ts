@@ -19,6 +19,7 @@ const exportable = {
   doc,
   schema,
   name: 'Recursive Schema Complex',
+  id: 'recursive-schema-comples'
 }
 
 export default exportable;

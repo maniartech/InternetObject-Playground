@@ -1,16 +1,21 @@
-import { useCallback, useMemo, useState }                   from 'react'
-import Toggle                                               from 'react-toggle'
+import './App.css';
 
-import                                                           './App.css'
-import Playground                                           from '../playgroud/Playground'
-import Footer                                               from '../footer/Footer'
-import Header                                               from '../../components/header/Header'
-import sampleData                                           from '../../sample-data'
+import { useCallback, useEffect, useMemo, useState   } from 'react'
+import { useParams                        } from 'react-router-dom';
+import Toggle                               from 'react-toggle'
+
+import Header                               from '../../components/header/Header'
+import sampleData                           from '../../sample-data'
+import Footer                               from '../footer/Footer'
+import Playground                           from '../playgroud/Playground'
 
 function App (): JSX.Element {
   const [showSchema, setShowSchema]       = useState(false)
   const [currentDoc, setCurrentDoc]       = useState('')
   const [currentSchema, setCurrentSchema] = useState('')
+  const { sampleId }                      = useParams<{ sampleId: string }>()
+  const [ sample, setSample ]             = useState(sampleId || "")
+
 
   const options = useMemo(() => {
     const options = [
@@ -18,25 +23,35 @@ function App (): JSX.Element {
       <option disabled key="sep">──────────</option>
     ]
     options.push(...sampleData.map((item, index) => (
-      <option key={index} value={item.name}>{item.name}</option>
+      <option key={index} value={item.id}>{item.name}</option>
     )))
     return options
   }, [])
 
   const handleSampleChange = useCallback((e:any) => {
-    const sample = sampleData.find(item => item.name === e.target.value)
-    setCurrentDoc(sample?.doc || '')
-    if (sample?.schema) {
-      setCurrentSchema(sample.schema)
+    const sampleId = e.target.value
+    const url = `/${sampleId}`
+    window.history.pushState({}, '', url)
+    setSample(sampleId)
+  }, [])
+
+  useEffect(() => {
+    console.log("Sample ID", sample)
+
+    const sampleInfo = sampleData.find(item => item.id === sample)
+    setCurrentDoc(sampleInfo?.doc || '')
+    if (sampleInfo?.schema) {
+      setCurrentSchema(sampleInfo.schema)
       setShowSchema(true)
     } else {
       setCurrentSchema('')
       setShowSchema(false)
     }
-  }, [])
+  }, [sample])
 
   return (
       <div className="app">
+
         <Header>
           <div className='toolbar'>
             <label className='toggle' title="Separate the schema from the data document!">
@@ -46,10 +61,13 @@ function App (): JSX.Element {
                 onChange={(v:any) => setShowSchema(v.target.checked)}
               />
             </label>
-            <select id="sample-data-selector"
-            title="Select IO sample data"
-            onChange={ handleSampleChange }>
-              { options }
+            <select
+              id="sample-data-selector"
+              title="Select IO sample data"
+              onChange={handleSampleChange}
+              value={sample || ''}
+            >
+              {options}
             </select>
           </div>
         </Header>

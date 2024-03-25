@@ -14,6 +14,7 @@ const exportable = {
   doc,
   schema,
   name: 'Simple Deeply Nested Schema',
+  id: 'simple-deeply-nested-schema'
 }
 
 export default exportable;

@@ -36,6 +36,7 @@ const exportable = {
   doc,
   schema: null,
   name: 'simple-collection',
+  id: 'simple-collection'
 }
 
 export default exportable;
