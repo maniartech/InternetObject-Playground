@@ -11,7 +11,7 @@ export default function Header() {
           <Logo />
           <h1>Playground</h1>
         </div>
-        <p className='description'>Internet Object is a data serialization format for internet. Internet Object is a data serialization format for internet</p>
+        <p className='description'>This playground demonstrates how Internet Object compares to JSON.</p>
       </div>
 
       <div className="right">

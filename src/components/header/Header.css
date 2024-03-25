@@ -17,7 +17,10 @@
   align-items: center;
   justify-content: space-between;
   height: inherit;
-  max-width: 500px;
+  max-width: 450px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
   padding-top: 32px;
 
   .description {
