@@ -16,7 +16,7 @@ export default function Footer() {
         <p>Pos <span>{ editorPos.position }</span></p>
       </div>
       <div className="right">
-        <p><a className='highlight' rel="noreferrer" target='_blank' href='https://www.maniartech.com'><b>Maniar Technologies</b></a> An ISO 9001 & 27001 Registered Company </p>
+        <p>© 2019-2024 <img className='company-logo' src='/mt-logo.png' alt='Maniar Technologies Private Limited' /> <a className='highlight' rel="noreferrer" target='_blank' href='https://www.maniartech.com'><b>Maniar Technologies</b></a></p>
       </div>
     </footer>
   )
