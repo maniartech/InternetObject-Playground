@@ -12,7 +12,7 @@ const setupMonaco = (monaco: any) => {
         [/#[^\n]*/, 'comment'],
 
         // keywords
-        [/\b(T|true|F|false|N|null|string|email|url|datetime|date|time|bool|boolean|int|byte|int16|int2|int64|number|object|array)\b/, 'keyword'],
+        [/\b(T|true|F|false|N|null|Inf|NaN|string|email|url|datetime|date|time|bool|boolean|int|byte|int16|int2|int64|number|object|array)\b/, 'keyword'],
 
         // attributes
         [/([@\$]*[a-zA-Z_]*[?\*]{0,2}\w*)(\s*:)/, ['attribute.name', 'delimiter']],
@@ -38,11 +38,12 @@ const setupMonaco = (monaco: any) => {
     base: 'vs-dark',
     inherit: true,
     rules: [
-      { token: 'attribute.name', foreground: '#7bdcfe' },
-      { token: 'tagged-string', foreground: '#A34532' },
+      { token: 'attribute.name', foreground: '#b5997f' }, //#7bdcfe #ce9178
+      { token: 'tagged-string', foreground: '#b5997f' },
       // { token: 'comment', foreground: '#00FF00' },
       { token: 'delimiter', foreground: '#009999' },
       // { token: 'keyword', foreground: '#FF0000' }
+      { token: 'string', foreground: '#b5997f' },
     ],
     colors: {
       'editor.foreground': '#C0C0C0',

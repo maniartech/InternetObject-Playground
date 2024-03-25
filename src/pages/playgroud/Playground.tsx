@@ -151,7 +151,7 @@ const Playground = ({ showSchema, setShowSchema, document, schema }: any) => {
             >
               <Pane minSize={0}>
                 <div className="top" style={layoutCSS}>
-                  <Bar label="Schema" bytes={schemaText.length} />
+                  <Bar label="Schema & Definitions" bytes={schemaText.length} />
                   <Editor
                     onChange={handleSchemaChange}
                     value={schemaText}
