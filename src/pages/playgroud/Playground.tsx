@@ -1,17 +1,17 @@
-import 'split-pane-react/esm/themes/default.css';
+import                                                 'split-pane-react/esm/themes/default.css'
 
-import { useEffect, useState }  from 'react';
-import { useRecoilState }       from 'recoil';
-import { Pane }                 from 'split-pane-react';
+import { useEffect, useState }                    from 'react'
+import { useRecoilState }                         from 'recoil'
+import { Pane }                                   from 'split-pane-react'
 
-import Toggle     from 'react-toggle';
-import SplitPane  from 'split-pane-react/esm/SplitPane';
+import Toggle                                     from 'react-toggle'
+import SplitPane                                  from 'split-pane-react/esm/SplitPane'
 
-import Bar            from '../../components/bar/Bar';
-import Editor         from '../../components/editor/Editor';
-import Output         from '../../components/output/Output';
-import editorPosition from '../../states/editor-pos';
-import parseIO        from './compiler';
+import parseIO                                    from './compiler'
+import Bar                                        from '../../components/bar/Bar'
+import Editor                                     from '../../components/editor/Editor'
+import Output                                     from '../../components/output/Output'
+import editorPosition                             from '../../states/editor-pos'
 
 const Playground = ({ showSchema, setShowSchema, document, schema }: any) => {
   // const monaco = useMonaco()
