@@ -2,6 +2,7 @@ import { RecoilRoot }                             from 'recoil'
 import React                                      from 'react'
 import ReactDOM                                   from 'react-dom/client'
 import { BrowserRouter as Router }                from 'react-router-dom'
+import { Route, Routes, useParams         } from 'react-router-dom'
 import App                                        from './pages/app/App'
 import reportWebVitals                            from './reportWebVitals'
 import                                                 './index.css'
@@ -13,7 +14,9 @@ root.render(
   <React.StrictMode>
     <Router>
       <RecoilRoot>
-        <App />
+        <Routes>
+          <Route path="/:sampleId?" element={<App />} />
+        </Routes>
       </RecoilRoot>
     </Router>
   </React.StrictMode>
