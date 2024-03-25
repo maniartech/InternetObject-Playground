@@ -23,7 +23,7 @@
   color: var(--text-color);
   border-top-left-radius: 3px;
   border-top-right-radius: 3px;
-  visibility: hidden;
+  /* visibility: hidden; */
 }
 
 .tab-list li.active {
