@@ -13,12 +13,18 @@
 }
 
 .App-header .left {
-  display: flex;
-  flex: 1;
-  flex-direction: row;
+  display: grid;
   align-items: center;
   justify-content: space-between;
   height: inherit;
+  max-width: 500px;
+  padding-top: 32px;
+
+  .description {
+    font-size: 0.9rem;
+    color: var(--text-color);
+    padding-top: 4px;
+  }
 }
 
 .App-header .left .logo-container {
@@ -26,7 +32,6 @@
   align-items: center;
   height: inherit;
   gap: 10px;
-  margin-bottom: -32px;
 }
 
 .App-header .left img{

@@ -1,8 +1,7 @@
-import { useRecoilValue } from 'recoil'
+import { useRecoilValue }           from 'recoil'
 
-import editorPosition from '../../states/editor-pos'
-
-import './Footer.css'
+import                                   './Footer.css'
+import editorPosition               from '../../states/editor-pos'
 
 export default function Footer() {
   const editorPos = useRecoilValue(editorPosition)
