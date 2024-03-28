@@ -36,8 +36,6 @@ function App (): JSX.Element {
   }, [])
 
   useEffect(() => {
-    console.log("Sample ID", sample)
-
     const sampleInfo = sampleData.find(item => item.id === sample)
     setCurrentDoc(sampleInfo?.doc || '')
     if (sampleInfo?.schema) {
