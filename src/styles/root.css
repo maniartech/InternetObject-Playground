@@ -23,31 +23,6 @@
 
 }
 
-body {
-  background-color: var(--bg-color-primary);
-  margin: 0;
-  font-family: var(--app-font);
-  letter-spacing: 0.03em;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-p, h1, h2, h3 {
-  margin: 0;
-  padding: 0;
-}
-
 #root {
   position: relative;
 }
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
-
-}
-
-.highlight {
-  color: var(--text-color-highlight);
-}
-
-@import url('./styles/toggle')
