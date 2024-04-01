@@ -34,7 +34,8 @@ push_to_live() {
   cd "$TARGET_DIR"
 
   # Check if there are any changes to deploy
-  if git status --porcelain | grep -q '^[AM]'; then
+  # if git status --porcelain | grep -q '^[AM]'; then
+  if [ -n "$(git status --porcelain)" ]; then
     echo
     echo "Deploying the changes to the live site"
     echo "--------------------------------------"
