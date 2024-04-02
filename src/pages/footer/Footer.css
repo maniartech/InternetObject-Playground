@@ -23,12 +23,13 @@
 
   .company-logo {
     width: 24px;
-    margin-bottom: -5px;
+    margin-bottom: -8px;
   }
 }
 
 .footer p {
   margin: 0;
+  margin-bottom: 2px;
   color: var(--text-color-contrast);
   font-size: 0.785em;
 }

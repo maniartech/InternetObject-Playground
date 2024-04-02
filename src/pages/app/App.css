@@ -160,6 +160,8 @@ body {
   font-size: 0.9em;
   line-height: 20;
   box-shadow: none;
+  border: 3px solid;
+  transition: border-color 0.3s ease-in-out;
 }
 
 .toolbar label.toggle, .toggleSwtich {
@@ -222,4 +224,13 @@ body {
   to {
     opacity: 1;
   }
+}
+
+@keyframes highlight {
+  0% { border-color: var(--primary-color); }
+  50% { border-color: transparent; }
+  100% { border-color: var(--primary-color); }
+}
+.highlight {
+  animation: highlight 2s infinite;
 }
