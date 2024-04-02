@@ -1,23 +1,57 @@
 import dummyData          from "./separate-schema";
-import simple             from "./simple";
 import complex            from "./complex";
 import json               from "./json";
-import simpleCollection   from "./simple-collection";
-import multipSections     from "./multiple-sections";
+
+// Simple
+import simple             from "./simple/simple-object";
+import simpleCollection   from "./simple/simple-collection";
+import typedCollection    from "./simple/typed-collection";
+
+// Schema and Definition
+
+import multipSections     from "./sections/multiple-sections";
+import responseSection    from "./sections/response-section";
+
 import employeeRegister   from "./employee-register";
 import recursiveSchema    from "./recursive-schema";
 import recursiveSchemaComplex from "./recursive-schema-comples";
+import SampleOptions      from "./sample-options";
 
-const sampleData:Array<{ doc:string, schema:string | null, name: string, id: string }> = [
-  simple,
-  complex,
-  json,
-  recursiveSchema,
-  recursiveSchemaComplex,
-  simpleCollection,
-  employeeRegister,
-  multipSections,
-  dummyData,
+const sampleData:SampleOptions = new SampleOptions()
+sampleData.groups = [
+  {
+    group: "Simple",
+    items: [
+      simple,
+      simpleCollection,
+      typedCollection
+    ]
+  },
+  {
+    group: "Schema and Definition",
+    items: [
+      employeeRegister,
+      recursiveSchema,
+      recursiveSchemaComplex
+    ]
+  },
+  {
+    group: "Multiple Sections",
+    items: [
+      multipSections,
+      responseSection
+    ]
+  },
+  {
+    group: "JSON",
+    items: [
+      complex,
+      json,
+      dummyData
+    ]
+
+  }
 ]
+
 
 export default sampleData;

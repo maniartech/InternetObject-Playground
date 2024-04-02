@@ -19,12 +19,24 @@ function App (): JSX.Element {
 
   const options = useMemo(() => {
     const options = [
-      <option value="" key="select">Select an option</option>,
-      <option disabled key="sep">──────────</option>
+      <option value="" key="select">Blank</option>
     ]
-    options.push(...sampleData.map((item, index) => (
-      <option key={index} value={item.id}>{item.name}</option>
-    )))
+
+    for (let i=0; i<sampleData.groups.length; i++) {
+      const group = sampleData.groups[i]
+      const groupOptions:any = []
+      for (let j=0; j<group.items.length; j++) {
+        const item = group.items[j]
+        groupOptions.push(<option key={item.id} value={item.id}>{item.name}</option>)
+      }
+
+      options.push(
+        <optgroup key={i} label={group.group}>
+          {groupOptions}
+        </optgroup>
+      )
+    }
+
     return options
   }, [])
 
@@ -36,9 +48,7 @@ function App (): JSX.Element {
   }, [])
 
   useEffect(() => {
-    console.log("Sample ID", sample)
-
-    const sampleInfo = sampleData.find(item => item.id === sample)
+    const sampleInfo = sampleData.find(sample)
     setCurrentDoc(sampleInfo?.doc || '')
     if (sampleInfo?.schema) {
       setCurrentSchema(sampleInfo.schema)

@@ -35,7 +35,7 @@ const doc = `name, age, gender, joiningDt, address: {street, city, state?}, colo
 const exportable = {
   doc,
   schema: null,
-  name: 'simple-collection',
+  name: 'Simple Collection',
   id: 'simple-collection'
 }
 

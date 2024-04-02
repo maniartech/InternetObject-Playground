@@ -1,20 +1,19 @@
 import                                                 'split-pane-react/esm/themes/default.css'
 
-import { useEffect, useState }                    from 'react'
-import { useRecoilState }                         from 'recoil'
-import { Pane }                                   from 'split-pane-react'
+import { useEffect, useState }  from 'react'
+import { useRecoilState }       from 'recoil'
+import { Pane }                 from 'split-pane-react'
 
-import Toggle                                     from 'react-toggle'
-import SplitPane                                  from 'split-pane-react/esm/SplitPane'
+import Toggle                   from 'react-toggle'
+import SplitPane                from 'split-pane-react/esm/SplitPane'
 
-import parseIO                                    from './compiler'
-import Bar                                        from '../../components/bar/Bar'
-import Editor                                     from '../../components/editor/Editor'
-import Output                                     from '../../components/output/Output'
-import editorPosition                             from '../../states/editor-pos'
+import parseIO                  from './compiler'
+import Bar                      from '../../components/bar/Bar'
+import Editor                   from '../../components/editor/Editor'
+import Output                   from '../../components/output/Output'
+import editorPosition           from '../../states/editor-pos'
 
 const Playground = ({ showSchema, setShowSchema, document, schema }: any) => {
-  // const monaco = useMonaco()
   const [_, setEditorPos] = useRecoilState(editorPosition)
 
   // Note: 'sizesH' is declared with 'let' instead of 'const'. This is needed
@@ -32,30 +31,6 @@ const Playground = ({ showSchema, setShowSchema, document, schema }: any) => {
   const [error, setError]                   = useState<boolean>(false)
   const [minifiedOutput, setMinifiedOutput] = useState(
     localStorage.getItem("minifiedOutput") === "true" ? true : false)
-
-  const parse = () => {
-    const result = parseIO(documentText, showSchema ? schemaText : null)
-    if (result.defsMarkers) {
-      setDefMarkers(result.defsMarkers)
-    } else {
-      setDefMarkers([])
-    }
-
-    if (result.docMarkers) {
-      setMarkers(result.docMarkers)
-    } else {
-      setMarkers([])
-    }
-
-    if (result.output) {
-      const output = JSON.stringify(result.output, null, minifiedOutput ? 0 : 2)
-      setJsonText(output)
-      setError(false)
-    } else {
-      setJsonText(result.errorMessage || "")
-      setError(true)
-    }
-  }
 
   useEffect(() => {
     setMinifiedOutput(minifiedOutput)
@@ -85,9 +60,31 @@ const Playground = ({ showSchema, setShowSchema, document, schema }: any) => {
     }
   }, [showSchema])
 
-  const layoutCSS = {
-    height: "100%",
+  const parse = () => {
+    const result = parseIO(documentText, showSchema ? schemaText : null)
+    if (result.defsMarkers) {
+      setDefMarkers(result.defsMarkers)
+    } else {
+      setDefMarkers([])
+    }
+
+    if (result.docMarkers) {
+      setMarkers(result.docMarkers)
+    } else {
+      setMarkers([])
+    }
+
+    if (result.output) {
+      const output = JSON.stringify(result.output, null, minifiedOutput ? 0 : 2)
+      setJsonText(output)
+      setError(false)
+    } else {
+      setJsonText(result.errorMessage || "")
+      setError(true)
+    }
   }
+
+  const layoutCSS = { height: "100%" }
 
   const handleHBarDragEnd = (): void => {
     if (typeof sizesH[0] === "number") {
