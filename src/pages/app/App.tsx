@@ -73,6 +73,7 @@ function App (): JSX.Element {
             </label>
             <select
               id="sample-data-selector"
+              className="highlight"
               title="Select IO sample data"
               onChange={handleSampleChange}
               value={sample || ''}
