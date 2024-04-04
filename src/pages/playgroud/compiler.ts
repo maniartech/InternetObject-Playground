@@ -4,7 +4,6 @@ import Definitions                    from "internet-object/dist/core/definition
 import parse                          from "internet-object/dist/parser"
 import parseDefinitions               from 'internet-object/dist/parser/parse-defs';
 import InternetObjectError            from 'internet-object/dist/errors/io-error';
-import Token                          from 'internet-object/dist/tokenizer/tokens';
 import InternetObjectSyntaxError      from 'internet-object/dist/errors/io-syntax-error';
 import InternetObjectValidationError  from 'internet-object/dist/errors/io-validation-error';
 
@@ -73,31 +72,27 @@ function getErrorMessage(e: any): string {
 function getErrorMarkers(e:any): any {
   if (e instanceof InternetObjectError == false) return []
 
-  const startPos = e.position
-  if (e.position instanceof Token) {
-    const token = e.position as Token
-    const endPos = e.position.getEndPosition()
+  const startPos:any = e.positionRange?.getStartPos()
+  const endPos:any = e.positionRange?.getEndPos()
 
-    return [{
-      startLineNumber: token.row,
-      startColumn: token.col,
-      endLineNumber: endPos.row,
-      endColumn: endPos.col,
-      message: e.message,
-      severity: 8 // monaco.MarkerSeverity.Error
-    }]
+  if (!startPos && !endPos) {
+    return []
   }
+
+  const marker= {
+    message: e.message,
+    severity: 8 // monaco.MarkerSeverity.Error
+  } as any
 
   if (startPos) {
-    return [{
-      startLineNumber: startPos.row,
-      startColumn: startPos.col,
-      endLineNumber: startPos.row,
-      endColumn: startPos.col,
-      message: e.message,
-      severity: 8 // monaco.MarkerSeverity.Error
-    }]
+    marker.startLineNumber = startPos.row
+    marker.startColumn = startPos.col
   }
 
-  return []
+  if (endPos) {
+    marker.endLineNumber = endPos.row
+    marker.endColumn = endPos.col
+  }
+
+  return [marker]
 }
