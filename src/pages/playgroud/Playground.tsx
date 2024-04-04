@@ -13,7 +13,7 @@ import Editor                   from '../../components/editor/Editor'
 import Output                   from '../../components/output/Output'
 import editorPosition           from '../../states/editor-pos'
 
-const Playground = ({ showSchema, setShowSchema, document, schema }: any) => {
+const Playground = ({ showSchema, setShowSchema, document, schema, schemaPanelHeight }: any) => {
   const [_, setEditorPos] = useRecoilState(editorPosition)
 
   // Note: 'sizesH' is declared with 'let' instead of 'const'. This is needed
@@ -31,6 +31,10 @@ const Playground = ({ showSchema, setShowSchema, document, schema }: any) => {
   const [error, setError]                   = useState<boolean>(false)
   const [minifiedOutput, setMinifiedOutput] = useState(
     localStorage.getItem("minifiedOutput") === "true" ? true : false)
+
+  useEffect(() => {
+    setHSizes([schemaPanelHeight || 200, "auto"])
+  }, [schemaPanelHeight])
 
   useEffect(() => {
     setMinifiedOutput(minifiedOutput)
@@ -55,7 +59,7 @@ const Playground = ({ showSchema, setShowSchema, document, schema }: any) => {
     if (!showSchema) {
       setHSizes([0, "auto"])
     } else {
-      setHSizes([200, "auto"])
+      setHSizes([schemaPanelHeight || 200, "auto"])
     }
   }, [showSchema])
 
@@ -103,6 +107,7 @@ const Playground = ({ showSchema, setShowSchema, document, schema }: any) => {
 
   const handleHBar = (s: any): void => {
     sizesH = s
+    console.log("HBar", s)
     setHSizes(s)
   }
 
