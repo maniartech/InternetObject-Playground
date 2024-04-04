@@ -14,6 +14,10 @@ import typedCollection    from "./simple/typed-collection";
 import multipSections     from "./sections/multiple-sections";
 import responseSection    from "./sections/response-section";
 
+// Types
+
+import strings            from "./types/strings";
+
 import employeeRegister   from "./employee-register";
 import recursiveSchema    from "./recursive-schema";
 import recursiveSchemaComplex from "./recursive-schema-comples";
@@ -35,6 +39,12 @@ sampleData.groups = [
       employeeRegister,
       recursiveSchema,
       recursiveSchemaComplex
+    ]
+  },
+  {
+    group: "IO Types",
+    items: [
+      strings,
     ]
   },
   {
