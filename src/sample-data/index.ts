@@ -1,6 +1,8 @@
 import dummyData          from "./separate-schema";
 import complex            from "./complex";
-import json               from "./json";
+
+import json               from "./json/json";
+import jsonSchema         from "./json/json-schema";
 
 // Simple
 import simple             from "./simple/simple-object";
@@ -45,8 +47,9 @@ sampleData.groups = [
   {
     group: "JSON",
     items: [
-      complex,
       json,
+      jsonSchema,
+      complex,
       dummyData
     ]
 
