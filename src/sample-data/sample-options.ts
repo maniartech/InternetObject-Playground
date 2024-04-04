@@ -1,5 +1,11 @@
 
-type SampleOptionItem = { doc:string, schema:string | null, name: string, id: string }
+export type SampleOptionItem = {
+  id: string
+  name: string,
+  doc:string,
+  schema:string | null,
+  schemaPanelHeight?:number,
+}
 
 type SampleOptionGroup = { group: string, items: SampleOptionItem[] }
 
