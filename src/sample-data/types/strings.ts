@@ -11,7 +11,7 @@ const schema = `
 username: {string, pattern: r'^[a-z0-9_-]{3,16}$'}, # Pattern is defined using raw string format r'...'
 name: {string, minLen: 3, maxLen: 50},
 email: email, website: url,
-bio?: {string, minLen: 50, maxLen: 500},
+bio?: {string, minLen: 50, maxLen: 500}, # Optional field
 joiningDt: {string, pattern: r'^\\d{4}-\\d{2}-\\d{2}$'} # Here joining is NOT an io-date type. It is a string value with date like format.
 `.trim()
 
