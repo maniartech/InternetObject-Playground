@@ -45,6 +45,8 @@ push_to_live() {
     git commit -m "Deployed on $(date +'%Y-%m-%d %H:%M:%S')"
     git push origin live
 
+    echo
+    echo "--------------------------------------"
     echo "Deployment completed successfully"
     echo "Wait for a few seconds for the changes to reflect on"
     echo "https://play.internetobject.org/"
