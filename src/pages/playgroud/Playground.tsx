@@ -37,7 +37,7 @@ const Playground = ({ showSchema, setShowSchema, document, schema }: any) => {
   }, [minifiedOutput])
 
   useEffect(() => {
-    parse()
+    setTimeout(parse, 500)
   }, [schemaText, documentText, showSchema, minifiedOutput])
 
   useEffect(() => {
@@ -52,7 +52,6 @@ const Playground = ({ showSchema, setShowSchema, document, schema }: any) => {
   }, [sizesV])
 
   useEffect(() => {
-    // setShowSchema(!showSchema)
     if (!showSchema) {
       setHSizes([0, "auto"])
     } else {
