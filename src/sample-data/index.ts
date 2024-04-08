@@ -17,6 +17,7 @@ import responseSection    from "./sections/response-section";
 // Types
 
 import strings            from "./types/strings";
+import numbers            from "./types/numbers";
 
 import employeeRegister   from "./employee-register";
 import recursiveSchema    from "./recursive-schema";
@@ -45,6 +46,7 @@ sampleData.groups = [
     group: "IO Types",
     items: [
       strings,
+      numbers,
     ]
   },
   {
