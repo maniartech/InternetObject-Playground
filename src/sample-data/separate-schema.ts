@@ -33,7 +33,8 @@ const exportable = {
   doc,
   schema,
   name: 'An Object with Separate Schema',
-  id: 'separate-schema'
+  id: 'separate-schema',
+  schemaPanelHeight: 380,
 }
 
 export default exportable;
