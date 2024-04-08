@@ -78,7 +78,20 @@ const Playground = ({ showSchema, setShowSchema, document, schema, schemaPanelHe
     }
 
     if (result.output) {
-      const output = JSON.stringify(result.output, null, minifiedOutput ? 0 : 2)
+      const output = JSON.stringify(result.output, function (k, v:any) {
+        // Convert BigInt to string
+        if (typeof v === "bigint") return `io:big:${v.toString()}`
+
+        console.log(k, v, typeof v, isNaN(v))
+        if (typeof v === "number") {
+          if (isNaN(v)) return "io:number:NaN"
+        }
+
+        if (v === Infinity) return "io:number:Inf"
+        if (v === -Infinity) return "io:number:-Inf"
+
+        return v
+      }, minifiedOutput ? 0 : 2)
       setJsonText(output)
       setError(false)
     } else {
