@@ -1,5 +1,5 @@
 const schema = `
-# This examples showcases all kinds of strings supported by Internet Object
+# This example showcases all kinds of strings supported by Internet Object
 
 # a) Open b) Regular Enclosed c) Raw string
 # It also showcase built in email and url validator types
@@ -34,7 +34,7 @@ const exportable = {
   schema: schema,
   name: 'IO Strings',
   id: 'io-strings',
-  schemaPanelHeight: 310,
+  schemaPanelHeight: 320,
 }
 
 export default exportable;
