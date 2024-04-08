@@ -23,7 +23,8 @@ const exportable = {
   doc,
   schema,
   name: 'Complex Object',
-  id: 'complex-object'
+  id: 'complex-object',
+  schemaPanelHeight: 170,
 }
 
 export default exportable;
