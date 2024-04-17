@@ -9,8 +9,9 @@ const schema = `
 # https://docs.internetobject.org/the-schema/data-types/number - Number Type
 
 
-~ $notations: { hex: byte, oct: byte, bin: byte, decimal: number, scientific: {number, min:999999999}, other?: number }
-~ $ranges: { num1: byte, num2: int16, num3: int32, num4: int, num5: number }
+~ $notations: { hex: uint8, oct: uint8, bin: uint8, decimal: number, scientific: {number, min:999999999}, other?: number }
+~ $intRanges: { num1: int8, num2: int16, num3: int32, num4: int, num5: bigint }
+~ $uintRanges: { num1: uint8, num2: uint16, num3: uint32, num4: uint64, num5: number }
 `.trim()
 
 const doc = `
