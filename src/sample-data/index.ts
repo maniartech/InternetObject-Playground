@@ -16,6 +16,7 @@ import responseSection    from "./sections/response-section";
 
 // Types
 
+import any                from "./types/any";
 import strings            from "./types/strings";
 import numbers            from "./types/numbers";
 
@@ -45,6 +46,7 @@ sampleData.groups = [
   {
     group: "IO Types",
     items: [
+      any,
       strings,
       numbers,
     ]
