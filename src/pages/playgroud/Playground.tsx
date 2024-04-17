@@ -81,8 +81,6 @@ const Playground = ({ showSchema, setShowSchema, document, schema, schemaPanelHe
       const output = JSON.stringify(result.output, function (k, v:any) {
         // Convert BigInt to string
         if (typeof v === "bigint") return `io:big:${v.toString()}`
-
-        console.log(k, v, typeof v, isNaN(v))
         if (typeof v === "number") {
           if (isNaN(v)) return "io:number:NaN"
         }
@@ -120,7 +118,7 @@ const Playground = ({ showSchema, setShowSchema, document, schema, schemaPanelHe
 
   const handleHBar = (s: any): void => {
     sizesH = s
-    console.log("HBar", s)
+    // console.log("HBar", s)
     setHSizes(s)
   }
 
