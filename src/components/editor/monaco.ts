@@ -12,7 +12,7 @@ const setupMonaco = (monaco: any) => {
         [/#[^\n]*/, 'comment'],
 
         // keywords
-        [/\b(T|true|F|false|N|null|Inf|NaN|string|email|url|datetime|date|time|bool|boolean|int|byte|int16|int2|int64|number|object|array)\b/, 'keyword'],
+        [/\b(T|true|F|false|N|null|Inf|NaN|string|email|url|datetime|date|time|bool|boolean|int|float|number|big|int8|int16|int32|int64|uint8|uint16|uint32|uint64|flaot32|float64|object|array)\b/, 'keyword'],
 
         // attributes
         [/([@\$]*[a-zA-Z_]*[?\*]{0,2}\w*)(\s*:)/, ['attribute.name', 'delimiter']],
