@@ -11,7 +11,7 @@ export default function Header(props: any) {
           <Logo />
           <h1>Playground</h1>
         </div>
-        <p className='description' title='This playground demonstrates how Internet Object compares to JSON.'>This playground demonstrates how Internet Object compares to JSON.</p>
+        <p className='description' title='Internet Object vs. JSON: Try It!'>Internet Object vs. JSON: Try It!</p>
       </div>
 
       <div className="right">
