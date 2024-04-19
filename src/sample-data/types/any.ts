@@ -8,23 +8,31 @@ const schema = `
 # https://docs.internetobject.org/the-values/string - String Value Structure
 # https://docs.internetobject.org/the-schema/data-types/string - String Type
 
-~ @stringV: Hello World
-~ $schema: { test: {any, anyOf: [string, {number, min: 1000}]} }
+~ $schema: {
+  name, age, gender,                # When type is not specified, it's considered as "any"
+  address: {
+    any, anyOf: [                           # Address can be any type or any of the following
+      { string, choices:[N/A, N/R, N/M ]},  # not available, not required, not mentioned
+      { street, city, state, zip }          # Address in object format
+    ]
+  }, colors: {
+    any, anyOf: [ string, number ]  # Colors can be string or number
+  }, isActive: bool
+}
 `.trim()
 
 const doc = `
-~ @stringV
-
-~ 100
+~ John Doe, 25, m, {Bond Street, New York, NY, 10001}, [red, blue], T
+~ Jane Done, 20, f, N/A, [0xFF0000, 0x0000FF], F
+~ Jack Doe, 30, m, {Queen Rd, San Fransisco, CA, 94101}, [0xFF0000, "orange"], T
 `.trim()
-
 
 const exportable = {
   doc,
   schema: schema,
   name: 'IO Any',
   id: 'io-any',
-  schemaPanelHeight: 320,
+  schemaPanelHeight: 430,
 }
 
 export default exportable;
