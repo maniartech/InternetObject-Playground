@@ -12,6 +12,7 @@ const schema = `
 ~ $notations: { hex: uint8, oct: uint8, bin: uint8, decimal: number, scientific: {number, min:999999999}, other?: number }
 ~ $intRanges: { num1: int8, num2: int16, num3: int32, num4: int, num5: bigint }
 ~ $uintRanges: { num1: uint8, num2: uint16, num3: uint32, num4: uint64, num5: number }
+~ $bigNumbers: { num1: bigint, num2: { bigint, min:999999999999999999999999999999999999999999999999999999n }, num3:bigint }
 `.trim()
 
 const doc = `
@@ -19,6 +20,10 @@ const doc = `
 ~ 0x000011, 0o002, 0b11, 10, 4.329e+10, NaN
 ~ 0x000022, 0o003, 0b100, 20, 2.329e+20, Inf
 ~ 0x000033, 0o004, 0b101, 30, 4.345e12, -Inf
+
+--- $bigNumbers # Big numbers
+~ 100n, 999999999999999999999999999999999999999999999999999999n, 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFn
+
 
 `.trim()
 
