@@ -176,7 +176,7 @@ const Playground = ({ showSchema, setShowSchema, document, schema, schemaPanelHe
               </Pane>
               <Pane minSize={200}>
                 <div className="bottom" style={layoutCSS}>
-                  <Bar label="Internet Object" bytes={documentText.length} outputBytes={jsonText.length} minified={minifiedOutput} isError={error} />
+                  <Bar label="Internet Object Document" bytes={documentText.length} outputBytes={jsonText.length} minified={minifiedOutput} isError={error} />
                   <Editor
                     value={documentText}
                     markers={markers}
