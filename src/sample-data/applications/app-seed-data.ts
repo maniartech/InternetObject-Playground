@@ -14,23 +14,23 @@ const schema = `
 
 const doc = `
 --- $dashboard
-{ 100, 20, 99.5 }, [
+{ 100, 20, 99.5 }, # stats
+[ # recent activities
   { "johndoe", "Published artible", dt"2021-01-01T10:00:00" },
   { "johndoe", "Commented on post", dt"2021-01-01T10:15:00" },
   { "johndoe", "Shared a link", dt"2021-01-01T10:30:00" },
   { "janesmith", "Liked a post", dt"2021-01-01T10:45:00" },
-  { "janesmith", "Published artible", dt"2021-01-01T11:00:00" }
-], [
+  { "janesmith", "Published artible", dt"2021-01-01T11:00:00" } ],
+[ # pending tasks
   { 1, "Design the logo", d"2021-01-01" },
   { 2, "Create a new landing page", d"2021-01-02" },
   { 3, "Update the pricing page", d"2021-01-03" },
   { 4, "Fix the login issue", d"2021-01-04" },
-  { 5, "Update the profile page", d"2021-01-05" }
-], [
+  { 5, "Update the profile page", d"2021-01-05" } ],
+[ # leader board
   { "johndoe", 100 },
   { "janesmith", 200 },
-  { "alexjohnson", 300 }
-]
+  { "alexjohnson", 300 } ]
 
 --- users: $initialUsers
 ~ 31, johndoe, John, Doe, "johndoe.jpg", "admin"
