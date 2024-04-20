@@ -24,7 +24,9 @@ import recursiveSchemaComplex from "./recursive-schema-comples";
 import SampleOptions      from "./sample-options";
 
 // Applications
-import structuredLog      from "./applications/structured-log";
+import structuredLog      from "./applications/structured-logging";
+import mlLearningData     from "./applications/ml-learning-data";
+import appSeedData        from "./applications/app-seed-data";
 
 const sampleData:SampleOptions = new SampleOptions()
 sampleData.groups = [
@@ -69,9 +71,11 @@ sampleData.groups = [
     ]
   },
   {
-    group: "Applications",
+    group: "Applications & Use Cases",
     items: [
-      structuredLog
+      appSeedData,
+      structuredLog,
+      mlLearningData,
     ]
   }
 ]
