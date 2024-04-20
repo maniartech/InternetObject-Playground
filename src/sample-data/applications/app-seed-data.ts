@@ -51,7 +51,7 @@ const doc = `
 const exportable = {
   doc,
   schema,
-  name: 'Application Seed Data',
+  name: 'Application Seed Data REST Response',
   id: 'app-seed-data',
   schemaPanelHeight: 270,
 }
