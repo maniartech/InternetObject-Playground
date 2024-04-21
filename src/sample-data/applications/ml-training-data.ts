@@ -1,5 +1,5 @@
 const schema = `
-# For multi-task learning, where a single model is trained to predict multiple outputs,
+# For multi-task training, where a single model is trained to predict multiple outputs,
 # nested tabular data can be very useful for organizing related tasks and their respective features.
 # Here's an example in the Internet Object format, where the model needs to predict both user
 # engagement (e.g., clicks, likes) and user churn based on user behavior and demographics:
@@ -221,8 +221,8 @@ const doc = `
 const exportable = {
   doc,
   schema,
-  name: 'ML Learning Data',
-  id: 'ml-learning-data',
+  name: 'ML Training Data',
+  id: 'ml-training-data',
   schemaPanelHeight: 310,
 }
 
