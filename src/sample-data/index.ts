@@ -11,7 +11,6 @@ import typedCollection    from "./simple/typed-collection";
 
 // Schema and Definition
 import multipSections     from "./sections/multiple-sections";
-import responseSection    from "./applications/api-collection-response";
 
 // Types
 import any                from "./types/any";
@@ -24,8 +23,10 @@ import recursiveSchemaComplex from "./recursive-schema-comples";
 import SampleOptions      from "./sample-options";
 
 // Applications
+import collectionResponse from "./applications/api-collection-response";
+import multipleCollectionResponse from "./applications/api-multiple-collections-response";
 import structuredLog      from "./applications/structured-logging";
-import mlLearningData     from "./applications/ml-learning-data";
+import mlLearningData     from "./applications/ml-training-data";
 import appSeedData        from "./applications/app-seed-data";
 
 const sampleData:SampleOptions = new SampleOptions()
@@ -57,8 +58,7 @@ sampleData.groups = [
   {
     group: "Multiple Sections",
     items: [
-      multipSections,
-      responseSection
+      multipSections
     ]
   },
   {
@@ -73,6 +73,8 @@ sampleData.groups = [
   {
     group: "Applications & Use Cases",
     items: [
+      collectionResponse,
+      multipleCollectionResponse,
       appSeedData,
       structuredLog,
       mlLearningData,
