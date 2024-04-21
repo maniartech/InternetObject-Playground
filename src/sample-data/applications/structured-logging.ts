@@ -1,5 +1,7 @@
 const schema = `
-# Showcases the validated way to store nested yet tabular structured logs using internet object!
+# Showcases the validated way to store nested and tabular structured logs using
+# Internet Object! Superior to CSV and JSON, Internet Object is perfectly suited
+# for any structured data, including logs.
 ~ $log: { # The structured log object definition
   timestamp: datetime,
   level: {string, choices:[info, warn, error]},
@@ -55,7 +57,7 @@ const exportable = {
   schema,
   name: 'Logging (Structured) User Activity',
   id: 'structured-logging',
-  schemaPanelHeight: 330,
+  schemaPanelHeight: 370,
 }
 
 export default exportable;
