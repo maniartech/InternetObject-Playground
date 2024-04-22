@@ -1,24 +1,20 @@
 const schema = `
-# This example showcases values of type "any" by Internet Object
+# This example illustrates how Internet Object handles values of the "any" type,
+# allowing for flexible data representation. Additionally, it demonstrates the "anyOf"
+# feature, which enables specifying multiple possible types for a single field.
 
-# a) Open b) Regular Enclosed c) Raw string
-# It also showcase built in email and url validator types
-#
-# References:
-# https://docs.internetobject.org/the-values/string - String Value Structure
-# https://docs.internetobject.org/the-schema/data-types/string - String Type
 
-~ $schema: {
-  name, age, gender,                # When type is not specified, it's considered as "any"
-  address: {
-    any, anyOf: [                           # Address can be any type or any of the following
-      { string, choices:[N/A, N/R, N/M ]},  # not available, not required, not mentioned
-      { street, city, state, zip }          # Address in object format
-    ]
-  }, colors: {
-    any, anyOf: [ string, number ]  # Colors can be string or number
-  }, isActive: bool
-}
+name, age, gender,                # When type is not specified, it's considered as "any"
+address: {
+  any, anyOf: [                           # Address can be any type or any of the following
+    { string, choices:[N/A, N/R, N/M ]},  # not available, not required, not mentioned
+    { street, city, state, zip }          # Address in object format
+  ]
+},
+colors: {
+  any, anyOf: [ string, number ]  # Colors can be string or number
+},
+isActive: bool
 `.trim()
 
 const doc = `
@@ -32,7 +28,7 @@ const exportable = {
   schema: schema,
   name: 'IO Any',
   id: 'io-any',
-  schemaPanelHeight: 430,
+  schemaPanelHeight: 320,
 }
 
 export default exportable;
