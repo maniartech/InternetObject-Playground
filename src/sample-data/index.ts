@@ -16,6 +16,7 @@ import multipSections     from "./sections/multiple-sections";
 import any                from "./types/any";
 import strings            from "./types/strings";
 import numbers            from "./types/numbers";
+import datetimes          from "./types/datetimes";
 
 import employeeRegister   from "./employee-register";
 import recursiveSchema    from "./recursive-schema";
@@ -53,6 +54,7 @@ sampleData.groups = [
       any,
       strings,
       numbers,
+      datetimes
     ]
   },
   {
