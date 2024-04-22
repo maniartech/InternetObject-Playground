@@ -8,11 +8,11 @@ const schema = `
 # https://docs.internetobject.org/the-values/number - Number Values
 # https://docs.internetobject.org/the-schema/data-types/number - Number Type
 
-
-~ $notations: { hex: uint8, oct: uint8, bin: uint8, decimal: number, scientific: {number, min:999999999}, other?: number }
-~ $intRanges: { num1: int8, num2: int16, num3: int32, num4: int, num5: bigint }
-~ $uintRanges: { num1: uint8, num2: uint16, num3: uint32, num4: uint64, num5: number }
-~ $bigNumbers: { num1: bigint, num2: { bigint, min:999999999999999999999999999999999999999999999999999999n }, num3:bigint }
+~ $notations:   { hex: uint8, oct: uint8, bin: uint8, decimal: number, scientific: {number, min:999999999}, other?: number }
+~ $intRanges:   { num1: int8, num2: int16, num3: int32, num4: int }
+~ $uintRanges:  { num1: uint8, num2: uint16, num3: uint32, num4: uint64, num5: number }
+~ $float:       { num1: float64, num2: float }
+~ $bigNumbers:  { num1: bigint, num2: {bigint, min:999999999999999999999999999999999999999999999999999999n} }
 `.trim()
 
 const doc = `
@@ -22,7 +22,7 @@ const doc = `
 ~ 0x000033, 0o004, 0b101, 30, 4.345e12, -Inf
 
 --- $bigNumbers # Big numbers
-~ 100n, 999999999999999999999999999999999999999999999999999999n, 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFn
+~ 999999999999999999999999999999999999999999999999999999n, 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFn
 
 
 `.trim()
