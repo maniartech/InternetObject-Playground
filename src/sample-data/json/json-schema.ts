@@ -1,9 +1,9 @@
 
 const schema = `
 ~ $borrower: {userId:string, dueDate:string}
-~ $borrowedBooks: {bookIsbn:number, borrowDate:string}
+~ $borrowedBooks: {bookIsbn:string, borrowDate:string}
 ~ $users: {userId:string, name:string, membershipType:{type:string, choices:[Standard, Premium]}, currentlyBorrowedBooks:[$borrowedBooks]}
-~ $books: {title:string, author:string, isbn:number, availability:bool, categories:[string], published:number, borrowedBy?: $borrower}
+~ $books: {title:string, author:string, isbn:string, availability:bool, categories:[string], published:number, borrowedBy?: $borrower}
 ~ $library: {name: string, address: string, books: [$books], users: [$users]}
 ~ $schema: $library
 `.trim()
