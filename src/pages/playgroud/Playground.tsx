@@ -87,6 +87,7 @@ const Playground = ({ showSchema, setShowSchema, document, schema, schemaPanelHe
 
         if (v === Infinity) return "io:number:Inf"
         if (v === -Infinity) return "io:number:-Inf"
+        if (typeof v === "undefined") return "io:undefined"
 
         return v
       }, minifiedOutput ? 0 : 2)
