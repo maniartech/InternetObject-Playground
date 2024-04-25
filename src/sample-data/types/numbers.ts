@@ -23,10 +23,7 @@ const doc = `
 
 --- $bigNumbers # Big numbers
 ~ 999999999999999999999999999999999999999999999999999999n, 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFn
-
-
 `.trim()
-
 
 const exportable = {
   doc,

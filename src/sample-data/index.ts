@@ -17,6 +17,8 @@ import any                from "./types/any";
 import strings            from "./types/strings";
 import numbers            from "./types/numbers";
 import datetimes          from "./types/datetimes";
+import arrays             from "./types/arrays";
+import objects            from "./types/objects";
 
 import employeeRegister   from "./employee-register";
 import recursiveSchema    from "./recursive-schema";
@@ -54,7 +56,9 @@ sampleData.groups = [
       any,
       strings,
       numbers,
-      datetimes
+      datetimes,
+      arrays,
+      objects
     ]
   },
   {
