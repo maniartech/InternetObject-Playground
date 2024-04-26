@@ -11,9 +11,9 @@ address: {
     { street, city, state, zip }          # Address in object format
   ]
 },
-colors: {
-  any, anyOf: [ string, number ]  # Colors can be string or number
-},
+colors: [{                        # Array of colors
+  any, anyOf: [ string, number ]  # Color can be string or number
+}],
 isActive: bool
 `.trim()
 
