@@ -31,6 +31,7 @@ import multipleCollectionResponse from "./applications/api-multiple-collections-
 import structuredLog      from "./applications/structured-logging";
 import mlLearningData     from "./applications/ml-training-data";
 import appSeedData        from "./applications/app-seed-data";
+import config             from "./applications/as-config";
 
 const sampleData:SampleOptions = new SampleOptions()
 sampleData.groups = [
@@ -84,6 +85,7 @@ sampleData.groups = [
       appSeedData,
       structuredLog,
       mlLearningData,
+      config,
     ]
   }
 ]
