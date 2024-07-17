@@ -2,11 +2,11 @@
 
 setup() {
   # Load the environment variables
-  source ./.env.local
+  source ./.env
 
   # Check if TARGET_DIR is set
   if [ -z "$TARGET_DIR" ]; then
-      echo "TARGET_DIR is not set in .env.local file"
+      echo "TARGET_DIR is not set in .env file"
       exit 1
   fi
 
