@@ -1,5 +1,6 @@
 import dummyData          from "./separate-schema";
 import complex            from "./complex/complex";
+import variables          from "./complex/variables";
 
 import json               from "./json/json";
 import jsonSchema         from "./json/json-schema";
@@ -74,6 +75,7 @@ sampleData.groups = [
       json,
       jsonSchema,
       complex,
+      variables,
       dummyData
     ]
   },
