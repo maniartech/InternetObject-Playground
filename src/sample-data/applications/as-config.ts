@@ -1,5 +1,6 @@
 const schema = `
-# The configuration schema for the website
+# The configuration schema for the website. When the optional values are not provided
+# it assigns the default values. See the output JSON.
 
 name        : string,             # The name of the website
 tagLine     : string,             # The tagline of the website
@@ -44,8 +45,8 @@ features?   : {                               # Features toggles (optional)
 
 const doc = `
 {
-  name: "My Awesome Website",
-  tagLine: "Showcasing the best of the web",
+  name: My Awesome Website,
+  tagLine: Showcasing the best of the web,
   pages: [ home, about, contact, blog ],
   seo: {
     title: My Awesome Website,
@@ -54,11 +55,11 @@ const doc = `
   },
   database: {
     localhost, 5432,
-    username: "dbuser",
-    password: "securepassword",
-    name: "mywebsite_db"
+    username: dbuser,
+    password: securepassword,
+    name: mywebsite_db
   },
-  security: { "supersecretkey", true },
+  security: { supersecretkey, true },
   logging: { info,  json, stdout },
   features: {
     enableBlog: true,
