@@ -46,7 +46,7 @@ function parseDoc(doc: string, defs: Definitions | null = null): ParsingResult {
   try {
     const d = parse(doc, defs )
     return {
-      output: d.toObject(),
+      output: d.toJSON(),
     }
   } catch (e: any) {
     console.log("Error parsing document")
