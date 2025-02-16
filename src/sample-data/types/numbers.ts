@@ -13,6 +13,7 @@ const schema = `
 ~ $uintRanges:  { num1: uint8, num2: uint16, num3: uint32, num4: uint64, num5: number }
 ~ $float:       { num1: float64, num2: float }
 ~ $bigNumbers:  { num1: bigint, num2: {bigint, min:999999999999999999999999999999999999999999999999999999n} }
+~ $decimals:    { num1: decimal, num2: {decimal, min:999999999999999999999999999999999999999999999999.9999999999999999999m} }
 `.trim()
 
 const doc = `
@@ -23,6 +24,9 @@ const doc = `
 
 --- $bigNumbers # Big numbers
 ~ 999999999999999999999999999999999999999999999999999999n, 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFn
+
+--- $decimals # Decimal numbers
+~ 99.9999999999999999999999999999999999999999999m, 99999999999999999999999999999999999999999999999999999m
 `.trim()
 
 const exportable = {
