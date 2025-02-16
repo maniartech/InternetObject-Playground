@@ -1,11 +1,11 @@
 // REF: https://chat.openai.com/c/828fa9d6-981d-404a-8ef8-46e8140111ba
 //
-import Definitions                    from "internet-object/dist/core/definitions";
-import parse                          from "internet-object/dist/parser"
-import parseDefinitions               from 'internet-object/dist/parser/parse-defs';
-import InternetObjectError            from 'internet-object/dist/errors/io-error';
-import InternetObjectSyntaxError      from 'internet-object/dist/errors/io-syntax-error';
-import InternetObjectValidationError  from 'internet-object/dist/errors/io-validation-error';
+import Definitions                    from "internet-object/core/definitions";
+import parse                          from "internet-object/parser/index"
+import parseDefinitions               from 'internet-object/parser/parse-defs';
+import InternetObjectError            from 'internet-object/errors/io-error';
+import InternetObjectSyntaxError      from 'internet-object/errors/io-syntax-error';
+import InternetObjectValidationError  from 'internet-object/errors/io-validation-error';
 
 type ParsingResult = {
   errorMessage?   : string,
