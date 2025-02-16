@@ -3,6 +3,7 @@ import                                                 'split-pane-react/esm/the
 import { useEffect, useState }  from 'react'
 import { useRecoilState }       from 'recoil'
 import { Pane }                 from 'split-pane-react'
+import { Decimal }              from 'internet-object'
 
 import Toggle                   from 'react-toggle'
 import SplitPane                from 'split-pane-react/esm/SplitPane'
@@ -83,6 +84,10 @@ const Playground = ({ showSchema, setShowSchema, document, schema, schemaPanelHe
         if (typeof v === "bigint") return `io:big:${v.toString()}`
         if (typeof v === "number") {
           if (isNaN(v)) return "io:number:NaN"
+        }
+
+        if (v instanceof Decimal) {
+          return `io:decimal:${v.toString()}`
         }
 
         if (v === Infinity) return "io:number:Inf"
