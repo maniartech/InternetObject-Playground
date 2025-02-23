@@ -15,7 +15,7 @@ array_of_objects2: {array, of:{name, age, type}}
 
 const doc = `
 [1, two, 3.0, true, false],
-[one, 2, 3.0, true, false, null,, d'2021-01-01'],
+[one, 2, 3.0, true, false, null,d'2021-01-01'],
 [a, b],
 [aa, bbb, cccc],
 [aa, bb, cc],
