@@ -27,7 +27,16 @@
     "start": "cross-env PORT=4000 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "audit": "yarn audit --level info",
+    "audit:fix": "yarn audit --level moderate",
+    "audit:full": "yarn audit --level info && yarn outdated",
+    "security:check": "yarn audit --level moderate",
+    "security:fix": "yarn audit --level moderate",
+    "security:audit": "bash scripts/security-audit.sh",
+    "deps:check": "yarn outdated",
+    "deps:update": "yarn upgrade",
+    "deps:update-check": "yarn upgrade && yarn audit --level moderate"
   },
   "eslintConfig": {
     "extends": [
@@ -49,5 +58,10 @@
   },
   "devDependencies": {
     "cross-env": "^7.0.3"
+  },
+  "resolutions": {
+    "nth-check": ">=2.0.1",
+    "postcss": ">=8.4.31",
+    "webpack-dev-server": ">=5.2.1"
   }
 }
