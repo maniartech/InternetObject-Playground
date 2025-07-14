@@ -1,18 +1,17 @@
-import 'split-pane-react/esm/themes/default.css'
+import 'split-pane-react/esm/themes/default.css';
 
-import { useEffect, useState, useRef }  from 'react'
-import { useRecoilState }       from 'recoil'
-import { Pane }                 from 'split-pane-react'
-import { Decimal }              from 'internet-object'
+import { Decimal }        from 'internet-object';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import Toggle             from 'react-toggle';
+import { useRecoilState } from 'recoil';
+import { Pane }           from 'split-pane-react';
+import SplitPane          from 'split-pane-react/esm/SplitPane';
 
-import Toggle                   from 'react-toggle'
-import SplitPane                from 'split-pane-react/esm/SplitPane'
-
-import parseIO                  from './compiler'
-import Bar                      from '../../components/bar/Bar'
-import Editor                   from '../../components/editor/Editor'
-import Output                   from '../../components/output/Output'
-import editorPosition           from '../../states/editor-pos'
+import Bar            from '../../components/bar/Bar';
+import Editor         from '../../components/editor/Editor';
+import Output         from '../../components/output/Output';
+import editorPosition from '../../states/editor-pos';
+import { useParseIO, Marker } from '../../hooks/useParseIO';
 
 interface PlaygroundProps {
   showSchema: boolean;
@@ -22,143 +21,122 @@ interface PlaygroundProps {
   schemaPanelHeight?: number;
 }
 
+const DEFAULT_SCHEMA_PANEL_HEIGHT = 200;
+const MIN_PANEL_SIZE              = 100;
+const DEFAULT_VERTICAL_SIZE       = '60%';
+
 const Playground = ({
   showSchema,  setShowSchema,
   document,
   schema,
   schemaPanelHeight,
 }: PlaygroundProps) => {
-  const [_, setEditorPos] = useRecoilState(editorPosition)
 
-  const [sizesH, setHSizes] = useState<[number | string, string]>([0, "auto"])
-  const sizesHRef = useRef(sizesH)
-  // Keep the ref in sync with state
+  const [, setEditorPos] = useRecoilState(editorPosition);
+
+  // State for horizontal and vertical split sizes
+  const [sizesH, setHSizes] = useState<[number | string, string]>([0, 'auto']);
+  const sizesHRef = useRef(sizesH);
   useEffect(() => {
-    sizesHRef.current = sizesH
-  }, [sizesH])
+    sizesHRef.current = sizesH;
+  }, [sizesH]);
 
-  const [sizesV, setVSizes]                 = useState([0, "auto"])
-  const [schemaText, setSchemaText]         = useState(schema)
-  const [documentText, setDocumentText]     = useState(document)
-  const [jsonText, setJsonText]             = useState("")
-  const [markers, setMarkers]               = useState<any[]>([])
-  const [defMarkers, setDefMarkers]         = useState<any[]>([])
-  const [error, setError]                   = useState<boolean>(false)
-  const [minifiedOutput, setMinifiedOutput] = useState(
-    localStorage.getItem("minifiedOutput") === "true" ? true : false)
+  const [sizesV, setVSizes] = useState<[number | string, string]>([0, 'auto']);
+  const [schemaText, setSchemaText] = useState<string>(schema);
+  const [documentText, setDocumentText] = useState<string>(document);
+  const [jsonText, setJsonText] = useState<string>('');
+  const [minifiedOutput, setMinifiedOutput] = useState<boolean>(localStorage.getItem('minifiedOutput') === 'true');
+  // Use custom hook for parsing logic and marker state
+  const { markers, defMarkers, jsonText: parsedJsonText, error, parse } = useParseIO(documentText, schemaText, showSchema, minifiedOutput);
 
+
+  // Set initial horizontal split size when schemaPanelHeight changes
   useEffect(() => {
-    setHSizes([schemaPanelHeight || 200, "auto"])
-  }, [schemaPanelHeight])
+    setHSizes([schemaPanelHeight || DEFAULT_SCHEMA_PANEL_HEIGHT, 'auto']);
+  }, [schemaPanelHeight]);
 
+  // Debounced parse effect
   useEffect(() => {
-    setTimeout(parse, 500)
-  }, [schemaText, documentText, showSchema, minifiedOutput])
+    const timer = setTimeout(() => {
+      parse();
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [schemaText, documentText, showSchema, minifiedOutput, parse]);
 
+  // Keep jsonText in sync with parsedJsonText
   useEffect(() => {
-    setSchemaText(schema)
-    setDocumentText(document)
-  }, [schema, document])
+    setJsonText(parsedJsonText);
+  }, [parsedJsonText]);
 
+  // Sync schema and document text with props
+  useEffect(() => {
+    setSchemaText(schema);
+    setDocumentText(document);
+  }, [schema, document]);
+
+  // Set initial vertical split size
   useEffect(() => {
     if (sizesV[0] === 0) {
-      setVSizes(["60%", "auto"])
+      setVSizes([DEFAULT_VERTICAL_SIZE, 'auto']);
     }
-  }, [sizesV])
+  }, [sizesV]);
 
+  // Update horizontal split when showSchema changes
   useEffect(() => {
     if (!showSchema) {
-      setHSizes([0, "auto"])
+      setHSizes([0, 'auto']);
     } else {
-      setHSizes([schemaPanelHeight || 200, "auto"])
+      setHSizes([schemaPanelHeight || DEFAULT_SCHEMA_PANEL_HEIGHT, 'auto']);
     }
-  }, [showSchema])
-
-  const parse = () => {
-    const result = parseIO(documentText, showSchema ? schemaText : null)
-    if (result.defsMarkers) {
-      setDefMarkers(result.defsMarkers)
-    } else {
-      setDefMarkers([])
-    }
-
-    if (result.docMarkers) {
-      setMarkers(result.docMarkers)
-    } else {
-      setMarkers([])
-    }
-
-    if (result.output) {
-      const output = JSON.stringify(result.output, function (k, v:any) {
-        // Convert BigInt to string
-        if (typeof v === "bigint") return `io:big:${v.toString()}`
-        if (typeof v === "number") {
-          if (isNaN(v)) return "io:number:NaN"
-        }
-
-        if (v instanceof Decimal) {
-          return `io:decimal:${v.toString()}`
-        }
-
-        if (v === Infinity) return "io:number:Inf"
-        if (v === -Infinity) return "io:number:-Inf"
-        if (typeof v === "undefined") return "io:undefined"
-
-        return v
-      }, minifiedOutput ? 0 : 2)
-      setJsonText(output)
-      setError(false)
-    } else {
-      setJsonText(result.errorMessage || "")
-      setError(true)
-    }
-  }
+  }, [showSchema, schemaPanelHeight]);
 
   const layoutCSS = { height: "100%" }
 
-  const handleHBarDragEnd = (): void => {
-    const currentSizesH = sizesHRef.current
-    if (typeof currentSizesH[0] === "number") {
-      if (currentSizesH[0] <= 100) {
+
+  // Handlers with useCallback for stable references
+  const handleHBarDragEnd = useCallback((): void => {
+    const currentSizesH = sizesHRef.current;
+    if (typeof currentSizesH[0] === 'number') {
+      if (currentSizesH[0] <= MIN_PANEL_SIZE) {
         if (showSchema) {
-          setHSizes([0, "auto"])
-          setShowSchema(false)
+          setHSizes([0, 'auto']);
+          setShowSchema(false);
         } else {
-          setHSizes([200, "auto"])
-          setShowSchema(true)
+          setHSizes([DEFAULT_SCHEMA_PANEL_HEIGHT, 'auto']);
+          setShowSchema(true);
         }
       } else {
-        setShowSchema(currentSizesH[0] > 0)
+        setShowSchema(currentSizesH[0] > 0);
       }
     }
-  }
+  }, [showSchema, setShowSchema]);
 
-  const handleHBar = (s: any): void => {
-    setHSizes(s)
+  const handleHBar = useCallback((s: [number | string, string]): void => {
+    setHSizes(s);
     // sizesHRef will be updated by the useEffect above
-  }
+  }, []);
 
-  const handleSchemaChange = (value: string): void => {
-    setSchemaText(value)
-  }
+  const handleSchemaChange = useCallback((value: string): void => {
+    setSchemaText(value);
+  }, []);
 
-  const handleIOChange = (value: string): void => {
-    setDocumentText(value)
-  }
+  const handleIOChange = useCallback((value: string): void => {
+    setDocumentText(value);
+  }, []);
 
-  const handleCaretPositionChange = (name: string, position: any): void => {
+  const handleCaretPositionChange = useCallback((name: string, position: any): void => {
     setEditorPos({
       editorName: name,
       row: position.row,
       column: position.column,
-      position: position.position
-    })
-  }
+      position: position.position,
+    });
+  }, [setEditorPos]);
 
-  const handleOnCompressChange = (event: any): void => {
-    localStorage.setItem("minifiedOutput", event.target.checked)
-    setMinifiedOutput(event.target.checked)
-  }
+  const handleOnCompressChange = useCallback((event: React.ChangeEvent<HTMLInputElement>): void => {
+    localStorage.setItem('minifiedOutput', event.target.checked.toString());
+    setMinifiedOutput(event.target.checked);
+  }, []);
 
   return (
     <div className="editor-area">
@@ -210,7 +188,11 @@ const Playground = ({
           <Bar label="JSON Output" bytes={jsonText.length}>
             <label className="toggleSwtich" title="Compress">
               <span>Minify</span>
-              <Toggle onChange={handleOnCompressChange} checked={minifiedOutput} />
+              <Toggle
+                onChange={handleOnCompressChange}
+                checked={minifiedOutput}
+                aria-label="Toggle minified JSON output"
+              />
             </label>
           </Bar>
           <Output value={jsonText} options={{
