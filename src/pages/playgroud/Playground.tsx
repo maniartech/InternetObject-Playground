@@ -1,7 +1,6 @@
 import 'split-pane-react/esm/themes/default.css';
 
-import { Decimal }        from 'internet-object';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Toggle             from 'react-toggle';
 import { useRecoilState } from 'recoil';
 import { Pane }           from 'split-pane-react';
@@ -11,7 +10,7 @@ import Bar            from '../../components/bar/Bar';
 import Editor         from '../../components/editor/Editor';
 import Output         from '../../components/output/Output';
 import editorPosition from '../../states/editor-pos';
-import { useParseIO, Marker } from '../../hooks/useParseIO';
+import { useParseIO } from '../../hooks/useParseIO';
 
 interface PlaygroundProps {
   showSchema: boolean;
