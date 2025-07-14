@@ -1,6 +1,6 @@
 import 'split-pane-react/esm/themes/default.css'
 
-import { useEffect, useState }  from 'react'
+import { useEffect, useState, useRef }  from 'react'
 import { useRecoilState }       from 'recoil'
 import { Pane }                 from 'split-pane-react'
 import { Decimal }              from 'internet-object'
@@ -23,20 +23,20 @@ interface PlaygroundProps {
 }
 
 const Playground = ({
-  showSchema,
-  setShowSchema,
+  showSchema,  setShowSchema,
   document,
   schema,
   schemaPanelHeight,
 }: PlaygroundProps) => {
   const [_, setEditorPos] = useRecoilState(editorPosition)
 
-  // Note: 'sizesH' is declared with 'let' instead of 'const'. This is needed
-  // because somehow 'sizesH' does not update immediately after 'setHSizes' is
-  // called. When 'handleSchemaBar' is called again, 'sizesH' shows old value,
-  // preventing correct 'showSchema' updates. Using 'let' ensures 'sizesH' is
-  // updated right after 'setHSizes' is executed.
-  let   [sizesH, setHSizes]                 = useState([0, "auto"])
+  const [sizesH, setHSizes] = useState<[number | string, string]>([0, "auto"])
+  const sizesHRef = useRef(sizesH)
+  // Keep the ref in sync with state
+  useEffect(() => {
+    sizesHRef.current = sizesH
+  }, [sizesH])
+
   const [sizesV, setVSizes]                 = useState([0, "auto"])
   const [schemaText, setSchemaText]         = useState(schema)
   const [documentText, setDocumentText]     = useState(document)
@@ -117,8 +117,9 @@ const Playground = ({
   const layoutCSS = { height: "100%" }
 
   const handleHBarDragEnd = (): void => {
-    if (typeof sizesH[0] === "number") {
-      if (sizesH[0] <= 100) {
+    const currentSizesH = sizesHRef.current
+    if (typeof currentSizesH[0] === "number") {
+      if (currentSizesH[0] <= 100) {
         if (showSchema) {
           setHSizes([0, "auto"])
           setShowSchema(false)
@@ -127,15 +128,14 @@ const Playground = ({
           setShowSchema(true)
         }
       } else {
-        setShowSchema(sizesH[0] > 0)
+        setShowSchema(currentSizesH[0] > 0)
       }
     }
   }
 
   const handleHBar = (s: any): void => {
-    sizesH = s
-    // console.log("HBar", s)
     setHSizes(s)
+    // sizesHRef will be updated by the useEffect above
   }
 
   const handleSchemaChange = (value: string): void => {
