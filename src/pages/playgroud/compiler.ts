@@ -7,92 +7,97 @@ import { InternetObjectError }            from 'internet-object';
 import { InternetObjectSyntaxError }      from 'internet-object';
 import { InternetObjectValidationError }  from 'internet-object';
 
-type ParsingResult = {
-  errorMessage?   : string,
-  defs?           : Definitions | null,
-  output?         : any         | null,
-  defsMarkers?    : any[]       | null,
-  docMarkers?     : any[]       | null,
+
+/**
+ * Marker for editor error highlighting.
+ */
+export interface ErrorMarker {
+  message: string;
+  severity: number;
+  startLineNumber?: number;
+  startColumn?: number;
+  endLineNumber?: number;
+  endColumn?: number;
 }
+
+/**
+ * Result of parsing an Internet Object document and/or definitions.
+ */
+export interface ParsingResult {
+  errorMessage: string | null;
+  defs: Definitions | null;
+  output: any | null;
+  defsMarkers: ErrorMarker[];
+  docMarkers: ErrorMarker[];
+}
+
+
+/**
+ * Parses an Internet Object document and optional definitions.
+ * Returns a ParsingResult with all fields always present.
+ */
 
 export default function parseIO(document: string, defs: string | null): ParsingResult {
-  if (defs === null) {
-    return parseDoc(document, null)
-  }
-  const defsResult = parseDefs(defs)
-  if (defsResult.errorMessage) {
-    return defsResult
-  }
-
-  return parseDoc(document, defsResult.defs)
+  if (!defs) return parseDoc(document);
+  const defsResult = tryParse(defs, parseDefinitions, true);
+  if (defsResult.errorMessage) return defsResult;
+  return parseDoc(document, defsResult.defs);
 }
 
-function parseDefs(defs: string): ParsingResult {
+
+
+
+function tryParse<T>(input: string, fn: (input: string, defs?: any) => T, isDefs = false): ParsingResult {
   try {
+    const result = fn(input, null);
     return {
-      defs: parseDefinitions(defs, null),
-    }
+      errorMessage: null,
+      defs: isDefs ? result as Definitions : null,
+      output: isDefs ? null : (result as any).toJSON(),
+      defsMarkers: [],
+      docMarkers: [],
+    };
   } catch (e: any) {
-    console.log("Error parsing defs")
-    console.log(e)
+    if (process.env.NODE_ENV !== 'production') {
+      // eslint-disable-next-line no-console
+      console.error(isDefs ? 'Error parsing defs' : 'Error parsing document', e);
+    }
     return {
       errorMessage: getErrorMessage(e),
-      defsMarkers: getErrorMarkers(e)
-    }
+      defs: null,
+      output: null,
+      defsMarkers: isDefs ? getErrorMarkers(e) : [],
+      docMarkers: isDefs ? [] : getErrorMarkers(e),
+    };
   }
 }
+
+
 
 function parseDoc(doc: string, defs: Definitions | null = null): ParsingResult {
-  try {
-    const d = parse(doc, defs )
-    return {
-      output: d.toJSON(),
-    }
-  } catch (e: any) {
-    console.log("Error parsing document")
-    console.log(e)
-    return {
-      errorMessage: getErrorMessage(e),
-      docMarkers: getErrorMarkers(e)
-    }
-  }
+  return tryParse(doc, (d) => parse(d, defs));
 }
+
+
 
 function getErrorMessage(e: any): string {
-  let errType = "ERROR:"
-  if (e instanceof InternetObjectSyntaxError) {
-    errType = "SYNTAX_ERROR: "
-  } else if (e instanceof InternetObjectValidationError) {
-    errType = "VALIDATION_ERROR: "
-  }
-
-  return errType + e.message
+  if (e instanceof InternetObjectSyntaxError) return 'SYNTAX_ERROR: ' + (e?.message || String(e));
+  if (e instanceof InternetObjectValidationError) return 'VALIDATION_ERROR: ' + (e?.message || String(e));
+  return 'ERROR: ' + (e?.message || String(e));
 }
 
-function getErrorMarkers(e:any): any {
-  if (e instanceof InternetObjectError == false) return []
 
-  const startPos:any = e.positionRange?.getStartPos()
-  const endPos:any = e.positionRange?.getEndPos()
 
-  if (!startPos && !endPos) {
-    return []
-  }
-
-  const marker= {
+function getErrorMarkers(e: any): ErrorMarker[] {
+  if (!(e instanceof InternetObjectError)) return [];
+  const startPos: any = e.positionRange?.getStartPos();
+  const endPos: any = e.positionRange?.getEndPos();
+  if (!startPos && !endPos) return [];
+  const marker: ErrorMarker = {
     message: e.message,
-    severity: 8 // monaco.MarkerSeverity.Error
-  } as any
-
-  if (startPos) {
-    marker.startLineNumber = startPos.row
-    marker.startColumn = startPos.col
-  }
-
-  if (endPos) {
-    marker.endLineNumber = endPos.row
-    marker.endColumn = endPos.col
-  }
-
-  return [marker]
+    severity: 8, // monaco.MarkerSeverity.Error
+    ...(startPos && { startLineNumber: startPos.row, startColumn: startPos.col }),
+    ...(endPos && { endLineNumber: endPos.row, endColumn: endPos.col })
+  };
+  return [marker];
 }
