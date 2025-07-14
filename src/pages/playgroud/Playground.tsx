@@ -1,4 +1,4 @@
-import                                                 'split-pane-react/esm/themes/default.css'
+import 'split-pane-react/esm/themes/default.css'
 
 import { useEffect, useState }  from 'react'
 import { useRecoilState }       from 'recoil'
@@ -14,7 +14,21 @@ import Editor                   from '../../components/editor/Editor'
 import Output                   from '../../components/output/Output'
 import editorPosition           from '../../states/editor-pos'
 
-const Playground = ({ showSchema, setShowSchema, document, schema, schemaPanelHeight }: any) => {
+interface PlaygroundProps {
+  showSchema: boolean;
+  setShowSchema: (show: boolean) => void;
+  document: string;
+  schema: string;
+  schemaPanelHeight?: number;
+}
+
+const Playground = ({
+  showSchema,
+  setShowSchema,
+  document,
+  schema,
+  schemaPanelHeight,
+}: PlaygroundProps) => {
   const [_, setEditorPos] = useRecoilState(editorPosition)
 
   // Note: 'sizesH' is declared with 'let' instead of 'const'. This is needed
@@ -36,10 +50,6 @@ const Playground = ({ showSchema, setShowSchema, document, schema, schemaPanelHe
   useEffect(() => {
     setHSizes([schemaPanelHeight || 200, "auto"])
   }, [schemaPanelHeight])
-
-  useEffect(() => {
-    setMinifiedOutput(minifiedOutput)
-  }, [minifiedOutput])
 
   useEffect(() => {
     setTimeout(parse, 500)
