@@ -44,10 +44,8 @@ const Playground = ({
   const [sizesV, setVSizes] = useState<[number | string, string]>([0, 'auto']);
   const [schemaText, setSchemaText] = useState<string>(schema);
   const [documentText, setDocumentText] = useState<string>(document);
-  const [jsonText, setJsonText] = useState<string>('');
   const [minifiedOutput, setMinifiedOutput] = useState<boolean>(localStorage.getItem('minifiedOutput') === 'true');
-  // Use custom hook for parsing logic and marker state
-  const { markers, defMarkers, jsonText: parsedJsonText, error, parse } = useParseIO(documentText, schemaText, showSchema, minifiedOutput);
+  const { markers, defMarkers, jsonText, error, parse } = useParseIO(documentText, schemaText, showSchema, minifiedOutput);
 
 
   // Set initial horizontal split size when schemaPanelHeight changes
@@ -62,11 +60,6 @@ const Playground = ({
     }, 500);
     return () => clearTimeout(timer);
   }, [schemaText, documentText, showSchema, minifiedOutput, parse]);
-
-  // Keep jsonText in sync with parsedJsonText
-  useEffect(() => {
-    setJsonText(parsedJsonText);
-  }, [parsedJsonText]);
 
   // Sync schema and document text with props
   useEffect(() => {
@@ -90,53 +83,27 @@ const Playground = ({
     }
   }, [showSchema, schemaPanelHeight]);
 
-  const layoutCSS = { height: "100%" }
-
-
-  // Handlers with useCallback for stable references
-  const handleHBarDragEnd = useCallback((): void => {
+  // Handlers
+  const handleHBarDragEnd = () => {
     const currentSizesH = sizesHRef.current;
     if (typeof currentSizesH[0] === 'number') {
       if (currentSizesH[0] <= MIN_PANEL_SIZE) {
-        if (showSchema) {
-          setHSizes([0, 'auto']);
-          setShowSchema(false);
-        } else {
-          setHSizes([DEFAULT_SCHEMA_PANEL_HEIGHT, 'auto']);
-          setShowSchema(true);
-        }
+        setHSizes([showSchema ? 0 : DEFAULT_SCHEMA_PANEL_HEIGHT, 'auto']);
+        setShowSchema(!showSchema);
       } else {
         setShowSchema(currentSizesH[0] > 0);
       }
     }
-  }, [showSchema, setShowSchema]);
+  };
 
-  const handleHBar = useCallback((s: [number | string, string]): void => {
-    setHSizes(s);
-    // sizesHRef will be updated by the useEffect above
-  }, []);
-
-  const handleSchemaChange = useCallback((value: string): void => {
-    setSchemaText(value);
-  }, []);
-
-  const handleIOChange = useCallback((value: string): void => {
-    setDocumentText(value);
-  }, []);
-
-  const handleCaretPositionChange = useCallback((name: string, position: any): void => {
+  const handleCaretPositionChange = (name: string, position: any) => {
     setEditorPos({
       editorName: name,
       row: position.row,
       column: position.column,
       position: position.position,
     });
-  }, [setEditorPos]);
-
-  const handleOnCompressChange = useCallback((event: React.ChangeEvent<HTMLInputElement>): void => {
-    localStorage.setItem('minifiedOutput', event.target.checked.toString());
-    setMinifiedOutput(event.target.checked);
-  }, []);
+  };
 
   return (
     <div className="editor-area">
@@ -151,33 +118,29 @@ const Playground = ({
             <SplitPane
               split="horizontal"
               sizes={sizesH}
-              onChange={handleHBar}
+              onChange={setHSizes}
               onDragEnd={handleHBarDragEnd}
-              sashRender={(size: number) => <div className="sash" />}
+              sashRender={() => <div className="sash" />}
             >
               <Pane minSize={0}>
-                <div className="top" style={layoutCSS}>
+                <div className="top" style={{ height: '100%' }}>
                   <Bar label="Schema & Definitions" bytes={schemaText.length} />
                   <Editor
-                    onChange={handleSchemaChange}
+                    onChange={setSchemaText}
                     value={schemaText}
                     markers={defMarkers}
-                    onChangeCaretPosition={(pos) => {
-                      handleCaretPositionChange("Definitions", pos)
-                    }}
+                    onChangeCaretPosition={pos => handleCaretPositionChange("Definitions", pos)}
                   />
                 </div>
               </Pane>
               <Pane minSize={200}>
-                <div className="bottom" style={layoutCSS}>
+                <div className="bottom" style={{ height: '100%' }}>
                   <Bar label="Internet Object Document" bytes={documentText.length} outputBytes={jsonText.length} minified={minifiedOutput} isError={error} />
                   <Editor
                     value={documentText}
                     markers={markers}
-                    onChange={handleIOChange}
-                    onChangeCaretPosition={(pos) => {
-                      handleCaretPositionChange("Internet Object", pos)
-                    }}
+                    onChange={setDocumentText}
+                    onChangeCaretPosition={pos => handleCaretPositionChange("Internet Object", pos)}
                   />
                 </div>
               </Pane>
@@ -189,15 +152,13 @@ const Playground = ({
             <label className="toggleSwtich" title="Compress">
               <span>Minify</span>
               <Toggle
-                onChange={handleOnCompressChange}
+                onChange={e => { localStorage.setItem('minifiedOutput', e.target.checked.toString()); setMinifiedOutput(e.target.checked); }}
                 checked={minifiedOutput}
                 aria-label="Toggle minified JSON output"
               />
             </label>
           </Bar>
-          <Output value={jsonText} options={{
-            wordWrap: "on"
-          }} />
+          <Output value={jsonText} options={{ wordWrap: "on" }} />
         </div>
       </SplitPane>
     </div>
