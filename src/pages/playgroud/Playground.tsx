@@ -10,7 +10,7 @@ import Bar            from '../../components/bar/Bar';
 import Editor         from '../../components/editor/Editor';
 import Output         from '../../components/output/Output';
 import editorPosition from '../../states/editor-pos';
-import { useParseIO } from '../../hooks/useParseIO';
+import { useParseIO } from '../../hooks/use-parse-io';
 
 interface PlaygroundProps {
   showSchema: boolean;
