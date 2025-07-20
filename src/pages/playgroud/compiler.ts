@@ -1,11 +1,11 @@
 // REF: https://chat.openai.com/c/828fa9d6-981d-404a-8ef8-46e8140111ba
 //
-import type { Definitions }               from "internet-object";
-import { parse }                          from "internet-object"
-import { parseDefinitions }               from 'internet-object';
-import { InternetObjectError }            from 'internet-object';
-import { InternetObjectSyntaxError }      from 'internet-object';
-import { InternetObjectValidationError }  from 'internet-object';
+import type { IODefinitions }   from "internet-object";
+import { parse }                from "internet-object"
+import { parseDefinitions }     from 'internet-object';
+import { IOError }              from 'internet-object';
+import { IOSyntaxError }        from 'internet-object';
+import { IOValidationError }    from 'internet-object';
 
 
 /**
@@ -25,7 +25,7 @@ export interface ErrorMarker {
  */
 export interface ParsingResult {
   errorMessage: string | null;
-  defs: Definitions | null;
+  defs: IODefinitions | null;
   output: any | null;
   defsMarkers: ErrorMarker[];
   docMarkers: ErrorMarker[];
@@ -52,7 +52,7 @@ function tryParse<T>(input: string, fn: (input: string, defs?: any) => T, isDefs
     const result = fn(input, null);
     return {
       errorMessage: null,
-      defs: isDefs ? result as Definitions : null,
+      defs: isDefs ? result as IODefinitions : null,
       output: isDefs ? null : (result as any).toJSON(),
       defsMarkers: [],
       docMarkers: [],
@@ -74,22 +74,22 @@ function tryParse<T>(input: string, fn: (input: string, defs?: any) => T, isDefs
 
 
 
-function parseDoc(doc: string, defs: Definitions | null = null): ParsingResult {
+function parseDoc(doc: string, defs: IODefinitions | null = null): ParsingResult {
   return tryParse(doc, (d) => parse(d, defs));
 }
 
 
 
 function getErrorMessage(e: any): string {
-  if (e instanceof InternetObjectSyntaxError) return 'SYNTAX_ERROR: ' + (e?.message || String(e));
-  if (e instanceof InternetObjectValidationError) return 'VALIDATION_ERROR: ' + (e?.message || String(e));
+  if (e instanceof IOSyntaxError) return 'SYNTAX_ERROR: ' + (e?.message || String(e));
+  if (e instanceof IOValidationError) return 'VALIDATION_ERROR: ' + (e?.message || String(e));
   return 'ERROR: ' + (e?.message || String(e));
 }
 
 
 
 function getErrorMarkers(e: any): ErrorMarker[] {
-  if (!(e instanceof InternetObjectError)) return [];
+  if (!(e instanceof IOError)) return [];
   const startPos: any = e.positionRange?.getStartPos();
   const endPos: any = e.positionRange?.getEndPos();
   if (!startPos && !endPos) return [];
