@@ -6,9 +6,10 @@ import json               from "./json/json";
 import jsonSchema         from "./json/json-schema";
 
 // Simple
-import simple             from "./simple/simple-object";
-import simpleCollection   from "./simple/simple-collection";
-import typedCollection    from "./simple/typed-collection";
+import simple                     from "./simple/simple-object";
+import simpleCollection           from "./simple/simple-collection";
+import simpleCollectionWithErrors from "./simple/simple-collection-with-errors";
+import typedCollection            from "./simple/typed-collection";
 
 // Schema and Definition
 import multipSections     from "./sections/multiple-sections";
@@ -41,6 +42,7 @@ sampleData.groups = [
     items: [
       simple,
       simpleCollection,
+      simpleCollectionWithErrors,
       typedCollection
     ]
   },
