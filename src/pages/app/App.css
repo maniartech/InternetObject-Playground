@@ -170,6 +170,12 @@ body {
   gap: 10px;
 }
 
+.toggle-group {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
 .toolbar label.toggle span, .toggleSwtich span {
   color: white;
   opacity: 0.5;

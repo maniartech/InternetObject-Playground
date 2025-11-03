@@ -20,7 +20,7 @@ export interface ParseIOResult {
   parse: () => void;
 }
 
-export function useParseIO(documentText: string, schemaText: string, showSchema: boolean, minifiedOutput: boolean): ParseIOResult {
+export function useParseIO(documentText: string, schemaText: string, showSchema: boolean, minifiedOutput: boolean, skipErrors: boolean): ParseIOResult {
   const [markers, setMarkers] = useState<Marker[]>([]);
   const [defMarkers, setDefMarkers] = useState<Marker[]>([]);
   const [jsonText, setJsonText] = useState<string>('');
@@ -28,7 +28,7 @@ export function useParseIO(documentText: string, schemaText: string, showSchema:
   const [errorMessages, setErrorMessages] = useState<string[]>([]);
 
   const parse = useCallback(() => {
-    const result = parseIO(documentText, showSchema ? schemaText : null);
+    const result = parseIO(documentText, showSchema ? schemaText : null, skipErrors);
     if (result.defsMarkers) {
       setDefMarkers(result.defsMarkers);
     } else {
@@ -71,7 +71,7 @@ export function useParseIO(documentText: string, schemaText: string, showSchema:
       setJsonText('');
       setError(false);
     }
-  }, [documentText, showSchema, schemaText, minifiedOutput]);
+  }, [documentText, showSchema, schemaText, minifiedOutput, skipErrors]);
 
   return { markers, defMarkers, jsonText, error, errorMessages, parse };
 }

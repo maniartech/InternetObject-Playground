@@ -20,6 +20,7 @@ export interface EditorProps {
     endColumn: number
     className?: string
     hoverMessage?: string
+    isWholeLine?: boolean
   }>
 
   // onChange is an optional function that will be called when the editor's
@@ -82,8 +83,19 @@ function Editor (props: EditorProps): JSX.Element {
       range: new monaco.Range(d.startLineNumber, d.startColumn, d.endLineNumber, d.endColumn),
       options: {
         className: d.className || 'io-error-object-decoration',
+        linesDecorationsClassName: (d.className ? d.className + '-gutter' : undefined),
         stickiness: 1, // Never grow when typing at edges
         hoverMessage: d.hoverMessage ? { value: d.hoverMessage } : undefined,
+        isWholeLine: !!d.isWholeLine,
+        zIndex: 5,
+        overviewRuler: {
+          color: 'rgba(255, 83, 83, 0.8)',
+          position: 7, // OverviewRulerLane.Full
+        },
+        minimap: {
+          color: 'rgba(255, 83, 83, 0.8)',
+          position: 2, // MinimapPosition.Inline
+        }
       }
     }))
 

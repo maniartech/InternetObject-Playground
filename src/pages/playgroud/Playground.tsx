@@ -44,7 +44,8 @@ const Playground = ({
   const [schemaText, setSchemaText] = useState<string>(schema);
   const [documentText, setDocumentText] = useState<string>(document);
   const [minifiedOutput, setMinifiedOutput] = useState<boolean>(localStorage.getItem('minifiedOutput') === 'true');
-  const { markers, defMarkers, jsonText, error, errorMessages, parse } = useParseIO(documentText, schemaText, showSchema, minifiedOutput);
+  const [skipErrors, setSkipErrors] = useState<boolean>(localStorage.getItem('skipErrors') !== 'false');
+  const { markers, defMarkers, jsonText, error, errorMessages, parse } = useParseIO(documentText, schemaText, showSchema, minifiedOutput, skipErrors);
 
 
   // Set initial horizontal split size when schemaPanelHeight changes
@@ -58,7 +59,7 @@ const Playground = ({
       parse();
     }, 500);
     return () => clearTimeout(timer);
-  }, [schemaText, documentText, showSchema, minifiedOutput, parse]);
+  }, [schemaText, documentText, showSchema, minifiedOutput, skipErrors, parse]);
 
   // Sync schema and document text with props
   useEffect(() => {
@@ -148,14 +149,24 @@ const Playground = ({
         </Pane>
         <div className="editor-area-right">
           <Bar label="JSON Output" bytes={jsonText.length}>
-            <label className="toggleSwtich" title="Compress">
-              <span>Minify</span>
-              <Toggle
-                onChange={e => { localStorage.setItem('minifiedOutput', e.target.checked.toString()); setMinifiedOutput(e.target.checked); }}
-                checked={minifiedOutput}
-                aria-label="Toggle minified JSON output"
-              />
-            </label>
+            <div className="toggle-group">
+              <label className="toggleSwtich" title="Skip error objects in output">
+                <span>Skip Errors in Output</span>
+                <Toggle
+                  onChange={e => { localStorage.setItem('skipErrors', e.target.checked.toString()); setSkipErrors(e.target.checked); }}
+                  checked={skipErrors}
+                  aria-label="Toggle skip errors in JSON output"
+                />
+              </label>
+              <label className="toggleSwtich" title="Compress">
+                <span>Minify</span>
+                <Toggle
+                  onChange={e => { localStorage.setItem('minifiedOutput', e.target.checked.toString()); setMinifiedOutput(e.target.checked); }}
+                  checked={minifiedOutput}
+                  aria-label="Toggle minified JSON output"
+                />
+              </label>
+            </div>
           </Bar>
           <Output value={jsonText} error={error} errorMessages={errorMessages} options={{ wordWrap: "on" }} />
         </div>

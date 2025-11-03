@@ -37,17 +37,17 @@ export interface ParsingResult {
  * Returns a ParsingResult with all fields always present.
  */
 
-export default function parseIO(document: string, defs: string | null): ParsingResult {
-  if (!defs) return parseDoc(document);
-  const defsResult = tryParse(defs, parseDefinitions, true);
+export default function parseIO(document: string, defs: string | null, skipErrors = false): ParsingResult {
+  if (!defs) return parseDoc(document, null, skipErrors);
+  const defsResult = tryParse(defs, parseDefinitions, true, skipErrors);
   if (defsResult.errorMessages.length > 0) return defsResult;
-  return parseDoc(document, defsResult.defs);
+  return parseDoc(document, defsResult.defs, skipErrors);
 }
 
 
 
 
-function tryParse<T>(input: string, fn: (input: string, defs?: any) => T, isDefs = false): ParsingResult {
+function tryParse<T>(input: string, fn: (input: string, defs?: any) => T, isDefs = false, skipErrors = false): ParsingResult {
   try {
     const result = fn(input, null);
 
@@ -58,7 +58,7 @@ function tryParse<T>(input: string, fn: (input: string, defs?: any) => T, isDefs
     }
 
     // Get output and defs regardless of errors (resilient parsing)
-    const output = isDefs ? null : (result as any).toJSON();
+    const output = isDefs ? null : (result as any).toJSON({ skipErrors });
     const defs = isDefs ? result as IODefinitions : null;
 
     // If there are accumulated errors, include them with the output
@@ -96,8 +96,8 @@ function tryParse<T>(input: string, fn: (input: string, defs?: any) => T, isDefs
 
 
 
-function parseDoc(doc: string, defs: IODefinitions | null = null): ParsingResult {
-  return tryParse(doc, (d) => parse(d, defs));
+function parseDoc(doc: string, defs: IODefinitions | null = null, skipErrors = false): ParsingResult {
+  return tryParse(doc, (d) => parse(d, defs), false, skipErrors);
 }
 
 
