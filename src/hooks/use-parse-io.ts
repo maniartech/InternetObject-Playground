@@ -16,6 +16,7 @@ export interface ParseIOResult {
   defMarkers: Marker[];
   jsonText: string;
   error: boolean;
+  errorMessages: string[];  // Add error messages array
   parse: () => void;
 }
 
@@ -24,6 +25,7 @@ export function useParseIO(documentText: string, schemaText: string, showSchema:
   const [defMarkers, setDefMarkers] = useState<Marker[]>([]);
   const [jsonText, setJsonText] = useState<string>('');
   const [error, setError] = useState<boolean>(false);
+  const [errorMessages, setErrorMessages] = useState<string[]>([]);
 
   const parse = useCallback(() => {
     const result = parseIO(documentText, showSchema ? schemaText : null);
@@ -39,7 +41,12 @@ export function useParseIO(documentText: string, schemaText: string, showSchema:
       setMarkers([]);
     }
 
+    // Check if we have errors
+    const hasErrors = result.errorMessages.length > 0;
+    setErrorMessages(result.errorMessages);
+
     if (result.output) {
+      // We have output - show it even if there are accumulated errors
       const output = JSON.stringify(result.output, function (k, v: any) {
         if (typeof v === 'bigint') return `io:big:${v.toString()}`;
         if (typeof v === 'number') {
@@ -54,12 +61,17 @@ export function useParseIO(documentText: string, schemaText: string, showSchema:
         return v;
       }, minifiedOutput ? 0 : 2);
       setJsonText(output);
-      setError(false);
-    } else {
-      setJsonText(result.errorMessage || '');
+      setError(hasErrors);
+    } else if (hasErrors) {
+      // No output, but we have errors - clear JSON output
+      setJsonText('');
       setError(true);
+    } else {
+      // No output, no errors - empty
+      setJsonText('');
+      setError(false);
     }
   }, [documentText, showSchema, schemaText, minifiedOutput]);
 
-  return { markers, defMarkers, jsonText, error, parse };
+  return { markers, defMarkers, jsonText, error, errorMessages, parse };
 }

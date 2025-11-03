@@ -24,7 +24,7 @@ export interface ErrorMarker {
  * Result of parsing an Internet Object document and/or definitions.
  */
 export interface ParsingResult {
-  errorMessage: string | null;
+  errorMessages: string[];  // Changed from errorMessage to support multiple errors
   defs: IODefinitions | null;
   output: any | null;
   defsMarkers: ErrorMarker[];
@@ -40,7 +40,7 @@ export interface ParsingResult {
 export default function parseIO(document: string, defs: string | null): ParsingResult {
   if (!defs) return parseDoc(document);
   const defsResult = tryParse(defs, parseDefinitions, true);
-  if (defsResult.errorMessage) return defsResult;
+  if (defsResult.errorMessages.length > 0) return defsResult;
   return parseDoc(document, defsResult.defs);
 }
 
@@ -50,10 +50,32 @@ export default function parseIO(document: string, defs: string | null): ParsingR
 function tryParse<T>(input: string, fn: (input: string, defs?: any) => T, isDefs = false): ParsingResult {
   try {
     const result = fn(input, null);
+
+    // Check if result has getErrors method (Document/DocumentNode)
+    let accumulatedErrors: Error[] = [];
+    if (result && typeof (result as any).getErrors === 'function') {
+      accumulatedErrors = (result as any).getErrors();
+    }
+
+    // Get output and defs regardless of errors (resilient parsing)
+    const output = isDefs ? null : (result as any).toJSON();
+    const defs = isDefs ? result as IODefinitions : null;
+
+    // If there are accumulated errors, include them with the output
+    if (accumulatedErrors.length > 0) {
+      return {
+        errorMessages: accumulatedErrors.map(e => getErrorMessage(e)),
+        defs,
+        output,
+        defsMarkers: isDefs ? accumulatedErrors.flatMap(getErrorMarkers) : [],
+        docMarkers: isDefs ? [] : accumulatedErrors.flatMap(getErrorMarkers),
+      };
+    }
+
     return {
-      errorMessage: null,
-      defs: isDefs ? result as IODefinitions : null,
-      output: isDefs ? null : (result as any).toJSON(),
+      errorMessages: [],
+      defs,
+      output,
       defsMarkers: [],
       docMarkers: [],
     };
@@ -63,7 +85,7 @@ function tryParse<T>(input: string, fn: (input: string, defs?: any) => T, isDefs
       console.error(isDefs ? 'Error parsing defs' : 'Error parsing document', e);
     }
     return {
-      errorMessage: getErrorMessage(e),
+      errorMessages: [getErrorMessage(e)],
       defs: null,
       output: null,
       defsMarkers: isDefs ? getErrorMarkers(e) : [],

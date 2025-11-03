@@ -1,16 +1,16 @@
 const doc = `name, age, gender, joiningDt, address: {street, city, state?}, colors, isActive
 ---
-~ Alice Smith, 28, f, d'2021-04-15', {Elm Street, Dallas, TX}, [yellow, green], T
-~ Bob Johnson, 22, m, d'2022-02-20', {Oak Street, Chicago, IL}, [blue, black], T
+~ Alice Smith, 28, f, d'2021-04-15', {Elm Street, Dallas, TX}, [yellow, green, T
+~ Bob Johnson, 22, m, d'2022-02-20', {Oak Street, Chicago, IL, [blue, black], T
 ~ Rachel Green, 31, f, d'2021-12-11', {Sunset Boulevard, Los Angeles, CA}, [purple, pink], T
 ~ Michael Scott, 41, m, d'2021-07-22', {Pine Street, Scranton, PA}, [green, orange], F
 ~ Monica Geller, 27, f, d'2022-08-19', {Maple Street, New York, NY}, [red, yellow], T
 ~ Joey Tribbiani, 25, m, d'2023-01-10', {6th Street, Las Vegas, NV}, [black, blue], T
-~ Lisa Kudrow, 36, f, d'2021-11-05', {Broadway, Los Angeles, CA}, [pink, red], F
+~ Lisa Kudrow, 36, f, d'2021-11-05', {Broadway, Los Angeles, CA, [pink, red], F
 ~ Chandler Bing, 30, m, d'2023-03-12', {Wall Street, New York, NY}, [blue, grey], T
 ~ Ross Geller, 32, m, d'2022-06-30', {1st Avenue, New York, NY}, [green, purple], T
 ~ Phoebe Buffay, 29, f, d'2022-09-21', {Lexington Avenue, New York, NY}, [yellow, red], T
-~ Bruce Wayne, 38, m, d'2022-05-15', {Wayne Manor, Gotham City}, [black, silver], F
+~ Bruce Wayne, 38, m, d'2022-05-15', {Wayne Manor, Gotham City, [black, silver], F
 ~ Diana Prince, 29, f, d'2023-02-28', {Themyscira Drive, Washington, DC}, [blue, gold], T
 ~ Tony Stark, 34, m, d'2022-07-04', {Stark Tower, New York, NY}, [red, gold], F
 ~ Natasha Romanoff, 32, f, d'2021-08-23', {5th Avenue, New York, NY}, [black, grey], T
@@ -22,7 +22,7 @@ const doc = `name, age, gender, joiningDt, address: {street, city, state?}, colo
 ~ Scott Lang, 30, m, d'2023-03-30', {Ant Hill Road, San Francisco, CA}, [red, silver], T
 ~ Hope van Dyne, 32, f, d'2021-05-05', {Pym Lane, San Francisco, CA}, [red, gold], F
 ~ Nick Fury, 50, m, d'2021-06-09', {Shield Road, Washington, DC}, [black], T
-~ Sam Wilson, 33, m, d'2022-11-11', {Falcon Street, Harlem, NY}, [red, white], T
+~ Sam Wilson, 33, m, d'2022-11-11', {Falcon Street, Harlem, NY}, [red, white, T
 ~ James Rhodes, 38, m, d'2022-07-29', {War Machine Blvd, Philadelphia, PA}, [grey, silver], T
 ~ Pepper Potts, 37, f, d'2021-09-13', {Stark Industries, Malibu, CA}, [green, white], F
 ~ Shuri, 24, f, d'2023-01-01', {Wakanda Way, Oakland, CA}, [black, purple], T

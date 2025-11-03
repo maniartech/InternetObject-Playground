@@ -2,3 +2,20 @@
   position: relative;
   height: 100%;
 }
+
+.errors-container {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.error-separator {
+  margin: 1rem 0;
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Background highlight for JSON error objects in Monaco */
+.monaco-editor .io-error-object-decoration {
+  background-color: rgba(255, 83, 83, 0.16);
+  border-left: 3px solid rgba(255, 83, 83, 0.6);
+}

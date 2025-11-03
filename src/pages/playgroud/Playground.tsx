@@ -44,7 +44,7 @@ const Playground = ({
   const [schemaText, setSchemaText] = useState<string>(schema);
   const [documentText, setDocumentText] = useState<string>(document);
   const [minifiedOutput, setMinifiedOutput] = useState<boolean>(localStorage.getItem('minifiedOutput') === 'true');
-  const { markers, defMarkers, jsonText, error, parse } = useParseIO(documentText, schemaText, showSchema, minifiedOutput);
+  const { markers, defMarkers, jsonText, error, errorMessages, parse } = useParseIO(documentText, schemaText, showSchema, minifiedOutput);
 
 
   // Set initial horizontal split size when schemaPanelHeight changes
@@ -157,7 +157,7 @@ const Playground = ({
               />
             </label>
           </Bar>
-          <Output value={jsonText} options={{ wordWrap: "on" }} />
+          <Output value={jsonText} error={error} errorMessages={errorMessages} options={{ wordWrap: "on" }} />
         </div>
       </SplitPane>
     </div>

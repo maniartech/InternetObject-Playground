@@ -12,6 +12,16 @@ export interface EditorProps {
 
   markers?: any
 
+  // Optional Monaco decorations (background highlights, etc.)
+  decorations?: Array<{
+    startLineNumber: number
+    startColumn: number
+    endLineNumber: number
+    endColumn: number
+    className?: string
+    hoverMessage?: string
+  }>
+
   // onChange is an optional function that will be called when the editor's
   // value changes
   onChange?: (value: any, event: any) => void
@@ -39,6 +49,7 @@ export interface EditorProps {
 
 function Editor (props: EditorProps): JSX.Element {
   const [editorInstance, setEditorInstance] = useState<any>(null);
+  const [decorationIds, setDecorationIds] = useState<string[]>([]);
 
   const options: any = useMemo(() => {
     return {
@@ -60,7 +71,30 @@ function Editor (props: EditorProps): JSX.Element {
       monaco.editor.setModelMarkers(editorInstance.getModel(), 'owner', props.markers)
     }
 
-  }, [props.markers])
+  }, [props.markers, editorInstance])
+
+  // Apply Monaco decorations for background highlights
+  useEffect(() => {
+    const monaco = (window as any).monaco
+    if (!monaco || !editorInstance) return
+
+    const decorations = (props.decorations ?? []).map(d => ({
+      range: new monaco.Range(d.startLineNumber, d.startColumn, d.endLineNumber, d.endColumn),
+      options: {
+        className: d.className || 'io-error-object-decoration',
+        stickiness: 1, // Never grow when typing at edges
+        hoverMessage: d.hoverMessage ? { value: d.hoverMessage } : undefined,
+      }
+    }))
+
+    const newIds = editorInstance.deltaDecorations(decorationIds, decorations)
+    setDecorationIds(newIds)
+
+    return () => {
+      // Clean up decorations when unmounting or dependencies change
+      try { editorInstance.deltaDecorations(newIds, []) } catch {}
+    }
+  }, [props.decorations, editorInstance])
 
   const handleEditorDidMount = (editor: any, monaco: any): void => {
     setupMonaco(monaco)
@@ -88,10 +122,10 @@ function Editor (props: EditorProps): JSX.Element {
 
   return (
     <MonacoEditor
-      defaultLanguage="io"
+      defaultLanguage={props.language || "io"}
       defaultValue=""
       value={props.value ?? ''}
-      language="io"
+      language={props.language || "io"}
       theme="io-dark"
 
       // Events
