@@ -98,15 +98,41 @@ export default function Output({
         }
       }
       if (!chosen) continue;
+
+      // Extract error category to determine styling
+      // Look for "category": "syntax"|"validation"|"runtime" within the error object
+      const objText = text.substring(chosen.start, chosen.end + 1);
+      const categoryMatch = objText.match(/"category"\s*:\s*"(syntax|validation|runtime)"/);
+      const category = categoryMatch ? categoryMatch[1] : 'syntax'; // default to syntax
+
       const startLC = posToLineCol(chosen.start);
       const endLC = posToLineCol(chosen.end + 1); // make end exclusive
+
+      // Use different CSS classes based on error category
+      const className = category === 'validation'
+        ? 'io-error-object-decoration io-error-validation'
+        : 'io-error-object-decoration io-error-syntax';
+
+      const gutterClassName = category === 'validation'
+        ? 'io-gutter-validation'
+        : 'io-gutter-syntax';
+
+      const overviewRulerColor = category === 'validation'
+        ? 'rgba(255, 152, 0, 0.9)'
+        : 'rgba(255, 83, 83, 0.8)';
+
       decorations.push({
-        hoverMessage: 'Error object',
+        hoverMessage: `${category.charAt(0).toUpperCase() + category.slice(1)} error`,
         startLineNumber: startLC.row,
         startColumn: startLC.col,
         endLineNumber: endLC.row,
         endColumn: endLC.col,
-        className: 'io-error-object-decoration',
+        className,
+        glyphMarginClassName: gutterClassName,
+        overviewRuler: {
+          color: overviewRulerColor,
+          position: 7 // OverviewRulerLane.Full
+        }
       });
     }
 
@@ -122,12 +148,18 @@ export default function Output({
         onClose={() => setOverlayDismissed(true)}
       >
         <div className="errors-container">
-          {errorMessages.map((errMsg, index) => (
-            <div key={index} className="error">
-              {index > 0 && <hr className="error-separator" />}
-              {errMsg}
-            </div>
-          ))}
+          {errorMessages.map((errMsg, index) => {
+            // Determine error type from message prefix
+            const isValidation = errMsg.startsWith('VALIDATION_ERROR:');
+            const errorClass = isValidation ? 'error validation-error' : 'error';
+
+            return (
+              <div key={index} className={errorClass}>
+                {index > 0 && <hr className="error-separator" />}
+                {errMsg}
+              </div>
+            );
+          })}
         </div>
       </Overlay>
       }

@@ -115,9 +115,14 @@ function getErrorMarkers(e: any): ErrorMarker[] {
   const startPos: any = e.positionRange?.getStartPos();
   const endPos: any = e.positionRange?.getEndPos();
   if (!startPos && !endPos) return [];
+
+  // Determine severity based on error type
+  // Monaco severity: 8 = Error (red), 4 = Warning (orange/yellow)
+  const severity = e instanceof IOValidationError ? 4 : 8; // 4 for validation (orange), 8 for syntax (red)
+
   const marker: ErrorMarker = {
     message: e.message,
-    severity: 8, // monaco.MarkerSeverity.Error
+    severity,
     ...(startPos && { startLineNumber: startPos.row, startColumn: startPos.col }),
     ...(endPos && { endLineNumber: endPos.row, endColumn: endPos.col })
   };

@@ -8,6 +8,26 @@
   overflow-y: auto;
 }
 
+.error {
+  position: relative;
+  padding-left: 12px;
+}
+
+/* Error type indicator bar */
+.error::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: rgba(255, 83, 83, 0.8); /* Default: syntax error red */
+}
+
+.error.validation-error::before {
+  background: rgba(255, 152, 0, 0.9); /* Validation error orange */
+}
+
 .error-separator {
   margin: 1rem 0;
   border: none;
@@ -15,7 +35,63 @@
 }
 
 /* Background highlight for JSON error objects in Monaco */
+/* Syntax/Parser errors - red */
+.monaco-editor .io-error-syntax {
+  background-color: rgba(255, 83, 83, 0.16);
+  border-left: 3px solid rgba(255, 83, 83, 0.6);
+}
+
+/* Validation errors - orange */
+.monaco-editor .io-error-validation {
+  background-color: rgba(255, 152, 0, 0.16);
+  border-left: 3px solid rgba(255, 152, 0, 0.7);
+}
+
+/* Base decoration class (fallback) */
 .monaco-editor .io-error-object-decoration {
   background-color: rgba(255, 83, 83, 0.16);
   border-left: 3px solid rgba(255, 83, 83, 0.6);
+}
+
+/* Gutter indicators */
+.monaco-editor .io-gutter-syntax {
+  background: rgba(255, 83, 83, 0.8);
+  width: 4px !important;
+  margin-left: 3px;
+}
+
+.monaco-editor .io-gutter-validation {
+  background: rgba(255, 152, 0, 0.9);
+  width: 4px !important;
+  margin-left: 3px;
+}
+
+/* Overview ruler markers */
+.monaco-editor .io-overview-syntax {
+  background: rgba(255, 83, 83, 0.8);
+}
+
+.monaco-editor .io-overview-validation {
+  background: rgba(255, 152, 0, 0.9);
+}
+
+/* Monaco squiggle customization */
+/* Error squiggles (severity 8) - red wavy underline for syntax errors */
+.monaco-editor .squiggly-error {
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 6 3' enable-background='new 0 0 6 3' height='3' width='6'%3E%3Cg fill='%23ff5353'%3E%3Cpolygon points='5.5,0 2.5,3 1.1,3 4.1,0'/%3E%3Cpolygon points='4,0 6,2 6,0.6 5.4,0'/%3E%3Cpolygon points='0,2 1,3 2.4,3 0,0.6'/%3E%3C/g%3E%3C/svg%3E") repeat-x bottom left !important;
+}
+
+/* Warning squiggles (severity 4) - orange wavy underline for validation errors */
+.monaco-editor .squiggly-warning {
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 6 3' enable-background='new 0 0 6 3' height='3' width='6'%3E%3Cg fill='%23ff9800'%3E%3Cpolygon points='5.5,0 2.5,3 1.1,3 4.1,0'/%3E%3Cpolygon points='4,0 6,2 6,0.6 5.4,0'/%3E%3Cpolygon points='0,2 1,3 2.4,3 0,0.6'/%3E%3C/g%3E%3C/svg%3E") repeat-x bottom left !important;
+}
+
+/* Info squiggles (severity 2) - blue dotted underline */
+.monaco-editor .squiggly-info {
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 6 3' enable-background='new 0 0 6 3' height='3' width='6'%3E%3Cg fill='%2375beff'%3E%3Cpolygon points='5.5,0 2.5,3 1.1,3 4.1,0'/%3E%3Cpolygon points='4,0 6,2 6,0.6 5.4,0'/%3E%3Cpolygon points='0,2 1,3 2.4,3 0,0.6'/%3E%3C/g%3E%3C/svg%3E") repeat-x bottom left !important;
+}
+
+/* Hint squiggles (severity 1) - gray dotted underline */
+.monaco-editor .squiggly-hint {
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 6 3' enable-background='new 0 0 6 3' height='3' width='6'%3E%3Cg fill='%23888'%3E%3Cpolygon points='5.5,0 2.5,3 1.1,3 4.1,0'/%3E%3Cpolygon points='4,0 6,2 6,0.6 5.4,0'/%3E%3Cpolygon points='0,2 1,3 2.4,3 0,0.6'/%3E%3C/g%3E%3C/svg%3E") repeat-x bottom left !important;
 }
