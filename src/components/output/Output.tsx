@@ -15,11 +15,19 @@ export default function Output({
   options
 }:OutputProps) {
   const [overlayDismissed, setOverlayDismissed] = useState(false);
+  const [lastErrorContent, setLastErrorContent] = useState<string>('');
 
-  // Reset dismissed state when error messages change
+  // Reset dismissed state only when error content actually changes
   useEffect(() => {
-    setOverlayDismissed(false);
-  }, [errorMessages]);
+    const currentErrorContent = errorMessages?.join('|') || '';
+    if (currentErrorContent !== lastErrorContent) {
+      setLastErrorContent(currentErrorContent);
+      // Only show overlay if there are new/different errors
+      if (currentErrorContent) {
+        setOverlayDismissed(false);
+      }
+    }
+  }, [errorMessages, lastErrorContent]);
 
   // Build Monaco decorations that highlight error objects (those with "__error": true) in the JSON output
   const outputDecorations = useMemo(() => {
