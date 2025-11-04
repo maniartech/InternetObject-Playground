@@ -28,6 +28,11 @@
   background: rgba(255, 152, 0, 0.9); /* Validation error orange */
 }
 
+/* Make validation error text orange in the right-hand error panel */
+.error.validation-error {
+  color: #ffb74d; /* lighter orange for better contrast on dark background */
+}
+
 .error-separator {
   margin: 1rem 0;
   border: none;

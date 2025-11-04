@@ -29,6 +29,33 @@ export default function Output({
     }
   }, [errorMessages, lastErrorContent]);
 
+  // Sort errors by their starting position (line:column) parsed from message text
+  const sortedErrorMessages = useMemo(() => {
+    if (!errorMessages || errorMessages.length === 0) return [] as string[];
+
+    const parsePos = (msg: string) => {
+      // Look for a trailing " at <line>:<col>" pattern; pick the last occurrence if multiple
+      const re = / at (\d+):(\d+)/g;
+      let match: RegExpExecArray | null = null;
+      let last: RegExpExecArray | null = null;
+      while ((match = re.exec(msg)) !== null) last = match; // get last match
+      if (last) {
+        const line = parseInt(last[1], 10);
+        const col = parseInt(last[2], 10);
+        if (!Number.isNaN(line) && !Number.isNaN(col)) return { line, col };
+      }
+      // Unknown position: send to bottom keeping original order via a large sentinel
+      return { line: Number.MAX_SAFE_INTEGER, col: Number.MAX_SAFE_INTEGER };
+    };
+
+    return [...errorMessages].sort((a, b) => {
+      const pa = parsePos(a);
+      const pb = parsePos(b);
+      if (pa.line !== pb.line) return pa.line - pb.line;
+      return pa.col - pb.col;
+    });
+  }, [errorMessages]);
+
   // Build Monaco decorations that highlight error objects (those with "__error": true) in the JSON output
   const outputDecorations = useMemo(() => {
     if (!value) return [] as any[];
@@ -143,12 +170,12 @@ export default function Output({
     <div className="output">
   <Editor value={value} language="json" options={options} decorations={outputDecorations} />
       {
-      error && errorMessages && errorMessages.length > 0 && !overlayDismissed && <Overlay
-        heading={`Compiled with ${errorMessages.length} problem${errorMessages.length > 1 ? 's' : ''}:`}
+      error && sortedErrorMessages && sortedErrorMessages.length > 0 && !overlayDismissed && <Overlay
+        heading={`Compiled with ${sortedErrorMessages.length} problem${sortedErrorMessages.length > 1 ? 's' : ''}:`}
         onClose={() => setOverlayDismissed(true)}
       >
         <div className="errors-container">
-          {errorMessages.map((errMsg, index) => {
+          {sortedErrorMessages.map((errMsg, index) => {
             // Determine error type from message prefix
             const isValidation = errMsg.startsWith('VALIDATION_ERROR:');
             const errorClass = isValidation ? 'error validation-error' : 'error';
