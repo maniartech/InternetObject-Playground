@@ -76,6 +76,7 @@ npm run test:run      # CI mode
 
 ## 📚 Documentation
 
+- **[Accessibility Guide](./docs/ACCESSIBILITY.md)** - WCAG 2.1 AA compliance, keyboard navigation, screen reader support
 - **[Web Worker Implementation](./docs/WEB_WORKER.md)** - Background parsing architecture and usage
 - **[Vite Migration Guide](./docs/VITE_MIGRATION.md)** - Complete migration from Create React App
 - **[Security Audit Guidelines](./SECURITY-AUDIT.md)** - Security best practices

@@ -41,6 +41,7 @@ function App (): JSX.Element {
 
   return (
     <div className="app">
+      <a href="#main-content" className="skip-link">Skip to main content</a>
       <Header>
         <div className='toolbar'>
           <label className='toggle' title="Separate the schema from the data document!">
@@ -61,7 +62,7 @@ function App (): JSX.Element {
           </select>
         </div>
       </Header>
-      <main className='main'>
+      <main id="main-content" className='main'>
         <Playground
           showSchema={showSchema}
           schemaPanelHeight={sample?.schemaPanelHeight}
