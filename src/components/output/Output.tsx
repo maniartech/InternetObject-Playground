@@ -11,6 +11,7 @@ interface OutputProps extends EditorProps {
   errorMessages?: string[]  // Deprecated: use errorItems instead
   errorItems?: ErrorItem[]  // Structured errors with full metadata
   onNavigateToError?: (pos: { line: number; col: number }) => void
+  isParsing?: boolean       // Indicates async parsing in progress
 }
 
 export default function Output({
@@ -19,7 +20,8 @@ export default function Output({
   errorMessages,
   errorItems,
   options,
-  onNavigateToError
+  onNavigateToError,
+  isParsing
 }:OutputProps) {
   const [overlayDismissed, setOverlayDismissed] = useState(false);
   const [lastErrorContent, setLastErrorContent] = useState<string>('');

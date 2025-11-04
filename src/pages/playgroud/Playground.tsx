@@ -10,7 +10,7 @@ import Bar            from '../../components/bar/Bar';
 import Editor         from '../../components/editor/Editor';
 import Output         from '../../components/output/Output';
 import editorPosition from '../../states/editor-pos';
-import { useParseIO } from '../../hooks/use-parse-io';
+import { useParseIO } from '../../hooks/use-parse-io-v2';
 import { findMarkerForPosition } from '../../utils/errorSorting';
 
 interface PlaygroundProps {
@@ -46,7 +46,14 @@ const Playground = ({
   const [documentText, setDocumentText] = useState<string>(document);
   const [minifiedOutput, setMinifiedOutput] = useState<boolean>(localStorage.getItem('minifiedOutput') === 'true');
   const [skipErrors, setSkipErrors] = useState<boolean>(localStorage.getItem('skipErrors') !== 'false');
-  const { markers, defMarkers, jsonText, error, errorMessages, errorItems, parse } = useParseIO(documentText, schemaText, showSchema, minifiedOutput, skipErrors);
+  const { markers, defMarkers, jsonText, error, errorMessages, errorItems, parse, isParsing } = useParseIO(
+    documentText,
+    schemaText,
+    showSchema,
+    minifiedOutput,
+    skipErrors,
+    { useWorker: true, debug: false } // Enable Web Worker parsing
+  );
   const [docSelection, setDocSelection] = useState<{ startLineNumber: number; startColumn: number; endLineNumber?: number; endColumn?: number } | null>(null);
 
 
@@ -187,7 +194,15 @@ const Playground = ({
               </label>
             </div>
           </Bar>
-          <Output value={jsonText} error={error} errorMessages={errorMessages} errorItems={errorItems} options={{ wordWrap: "on" }} onNavigateToError={handleNavigateToError} />
+          <Output
+            value={jsonText}
+            error={error}
+            errorMessages={errorMessages}
+            errorItems={errorItems}
+            options={{ wordWrap: "on" }}
+            onNavigateToError={handleNavigateToError}
+            isParsing={isParsing}
+          />
         </div>
       </SplitPane>
     </div>

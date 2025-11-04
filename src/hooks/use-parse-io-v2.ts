@@ -60,6 +60,18 @@ export function useParseIO(
   // Determine if we can use worker
   const canUseWorker = useWorker && worker.isReady;
 
+  // Log worker status on initialization
+  useEffect(() => {
+    if (useWorker) {
+      console.log('[useParseIO] Worker enabled:', {
+        useWorker,
+        isReady: worker.isReady,
+        canUse: canUseWorker,
+        error: worker.workerError,
+      });
+    }
+  }, [useWorker, worker.isReady, canUseWorker, worker.workerError]);
+
   // Parse function - supports both sync (main thread) and async (worker)
   const parse = useCallback(() => {
     setParseError(undefined);

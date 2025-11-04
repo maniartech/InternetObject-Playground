@@ -62,21 +62,46 @@ export function useParserWorker(
 
   // Initialize worker
   useEffect(() => {
-    // TODO: Enable worker after Vite migration (Phase 5)
-    // CRA doesn't support modern worker syntax well
-    // For now, return without initializing worker
-    // The parse function will use fallback (main thread)
-
-    setIsReady(false);
-    setWorkerError('Worker parsing not yet enabled - waiting for Vite migration');
-
     if (debug) {
-      console.log('[ParserWorker] Worker disabled until Vite migration');
+      console.log('[ParserWorker] Initializing parser worker');
     }
 
-    return () => {
-      // Cleanup placeholder
-    };
+    try {
+      // Create worker with Vite's worker syntax
+      const worker = new Worker(
+        new URL('../workers/parser.worker.ts', import.meta.url),
+        { type: 'module' }
+      );
+
+      worker.addEventListener('message', handleMessage);
+      worker.addEventListener('error', handleError);
+
+      workerRef.current = worker;
+      setIsReady(true);
+      setWorkerError(null);
+
+      if (debug) {
+        console.log('[ParserWorker] Worker initialized successfully');
+      }
+
+      return () => {
+        if (debug) {
+          console.log('[ParserWorker] Terminating worker');
+        }
+
+        worker.removeEventListener('message', handleMessage);
+        worker.removeEventListener('error', handleError);
+        worker.terminate();
+        workerRef.current = null;
+        setIsReady(false);
+      };
+    } catch (error: any) {
+      const errorMsg = `Failed to initialize worker: ${error.message}`;
+      console.error('[ParserWorker]', errorMsg, error);
+      setWorkerError(errorMsg);
+      setIsReady(false);
+      return;
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
