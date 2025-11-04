@@ -10,18 +10,6 @@ import { ErrorItem, EditorMarker, ErrorRange, ErrorCategory, categoryToSeverity,
 
 
 /**
- * @deprecated Use EditorMarker from types/errors.ts instead
- */
-export interface ErrorMarker {
-  message: string;
-  severity: number;
-  startLineNumber?: number;
-  startColumn?: number;
-  endLineNumber?: number;
-  endColumn?: number;
-}
-
-/**
  * Result of parsing an Internet Object document and/or definitions.
  */
 export interface ParsingResult {

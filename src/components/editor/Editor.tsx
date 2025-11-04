@@ -4,13 +4,14 @@ import MonacoEditor                       from '@monaco-editor/react'
 import useDebounce                        from '../../hooks/use-debounce'
 import editorOptions                      from './editor-options'
 import setupMonaco                        from './monaco'
+import type { EditorMarker }              from '../../types/errors'
 
 // Define an interface for the Editor component's props
 export interface EditorProps {
 
   value?: string
 
-  markers?: any
+  markers?: EditorMarker[]
 
   // Optional Monaco decorations (background highlights, etc.)
   decorations?: Array<{

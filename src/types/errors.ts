@@ -99,6 +99,24 @@ export function categoryToSeverity(category: ErrorCategory): number {
 }
 
 /**
+ * JSON decoration metadata for highlighting error objects in output.
+ * Emitted by the parser alongside the JSON output to avoid brace-scanning.
+ */
+export interface JsonDecoration {
+  /** Error category for styling (syntax, validation, runtime) */
+  category: ErrorCategory;
+
+  /** Character offset in JSON string where error object starts */
+  startOffset: number;
+
+  /** Character offset in JSON string where error object ends (exclusive) */
+  endOffset: number;
+
+  /** Optional: matching ErrorItem.id for correlation */
+  errorId?: string;
+}
+
+/**
  * Generate stable error ID from range and message.
  */
 export function generateErrorId(range: ErrorRange, message: string): string {

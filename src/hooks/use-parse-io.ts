@@ -1,20 +1,11 @@
 import { useCallback, useState } from 'react';
 import { Decimal } from 'internet-object';
 import parseIO from '../pages/playgroud/compiler';
-import type { ErrorItem } from '../types/errors';
-
-export interface Marker {
-  // Define the actual marker properties here
-  // Example:
-  // start: number;
-  // end: number;
-  // message?: string;
-  [key: string]: any;
-}
+import type { ErrorItem, EditorMarker } from '../types/errors';
 
 export interface ParseIOResult {
-  markers: Marker[];
-  defMarkers: Marker[];
+  markers: EditorMarker[];
+  defMarkers: EditorMarker[];
   jsonText: string;
   error: boolean;
   errorMessages: string[];  // Deprecated: use errorItems instead
@@ -23,8 +14,8 @@ export interface ParseIOResult {
 }
 
 export function useParseIO(documentText: string, schemaText: string, showSchema: boolean, minifiedOutput: boolean, skipErrors: boolean): ParseIOResult {
-  const [markers, setMarkers] = useState<Marker[]>([]);
-  const [defMarkers, setDefMarkers] = useState<Marker[]>([]);
+  const [markers, setMarkers] = useState<EditorMarker[]>([]);
+  const [defMarkers, setDefMarkers] = useState<EditorMarker[]>([]);
   const [jsonText, setJsonText] = useState<string>('');
   const [error, setError] = useState<boolean>(false);
   const [errorMessages, setErrorMessages] = useState<string[]>([]);
