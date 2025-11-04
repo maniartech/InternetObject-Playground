@@ -6,21 +6,13 @@ Welcome to the Internet Object Playground! This interactive platform is designed
 
 ## ✨ Features
 
-- **Interactive Editor:** Experiment with IO syntax in real-time with Monaco editor
-- **Schema Validation:** Test how IO schemas validate and structure data
-- **Background Parsing:** Web Worker-based parsing keeps UI responsive
-- **Error Tracking:** Structured error handling with Monaco markers and navigation
+- **Interactive Editor:** Experiment with IO syntax in real-time using Monaco editor
+- **Schema Validation:** Test how IO schemas validate and structure your data
+- **Instant Feedback:** See parsing results, validation errors, and schema enforcement live
+- **Error Navigation:** Click errors to jump directly to the problem in your code
 - **Performance Benchmarks:** Compare IO's efficiency against JSON and other formats
-- **Examples Library:** Access a variety of examples to learn common and advanced use cases
-
-## 🚀 Performance
-
-Built with Vite for blazing-fast development and optimized production builds:
-
-- **Dev Server:** <1 second startup (20x faster than CRA)
-- **HMR:** ~50ms hot module replacement (10x faster than CRA)
-- **Bundle Size:** ~151 kB gzipped (optimized with code splitting)
-- **Background Parsing:** Web Worker offloads parsing to prevent UI blocking
+- **Examples Library:** Learn from a variety of common and advanced use cases
+- **Non-blocking Parsing:** Large documents parse in the background keeping the UI responsive
 
 ## 🔒 Security
 
@@ -65,66 +57,22 @@ For detailed security guidelines, see [SECURITY-AUDIT.md](./SECURITY-AUDIT.md) o
 
 ## 🏗️ Architecture
 
-### Build System: Vite 6
+The playground provides a modern, responsive environment for experimenting with Internet Object:
 
-Migrated from Create React App to Vite for:
-- ⚡ **20x faster** dev server startup (<1s vs 15-20s)
-- 🔥 **10x faster** HMR (~50ms vs 500ms)
-- 📦 **40% smaller** node_modules (229 packages vs 1400+)
-- 🎯 Modern ESM-first architecture
-
-### Web Worker Parsing
-
-Parser runs in a separate thread to keep UI responsive:
-
-```typescript
-// Enabled by default in Playground component
-const { parse, isParsing } = useParseIO(
-  documentText,
-  schemaText,
-  showSchema,
-  minifiedOutput,
-  skipErrors,
-  { useWorker: true } // Background parsing enabled
-);
-```
-
-**Benefits:**
-- ✅ Non-blocking UI during complex parses
-- ✅ Automatic timeout protection (5s default)
-- ✅ Graceful cancellation on navigation
-- ✅ Fallback to main thread if worker unavailable
-
-### Package Structure
-
-The playground uses the local `internet-object` package with dual ESM/CommonJS support:
-
-```json
-{
-  "dependencies": {
-    "internet-object": "file:../io-js2"
-  }
-}
-```
-
-The `io-js2` package exports both formats:
-- `dist/esm/` - ES modules (used by Vite/browsers)
-- `dist/cjs/` - CommonJS (Node.js compatibility)
+- **Fast Development:** Quick startup and instant hot-reload for rapid iteration
+- **Background Parsing:** Complex parses run in background threads, keeping the editor responsive
+- **Dual Output Modes:** View parsed results as formatted JSON or minified data
+- **Error Handling:** Clear error messages with one-click navigation to problem locations
 
 ## 🧪 Testing
 
-Uses Vitest with happy-dom for fast, modern testing:
+Run the test suite to ensure everything works correctly:
 
 ```bash
 npm test              # Watch mode
 npm run test:ui       # Interactive UI
 npm run test:run      # CI mode
 ```
-
-**Coverage:**
-- ✅ Error sorting utilities (14 tests)
-- ✅ JSON decoration generation (12 tests)
-- 🎯 26/26 tests passing
 
 ## 📚 Documentation
 
