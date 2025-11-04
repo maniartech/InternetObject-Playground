@@ -6,10 +6,11 @@ import { parseDefinitions }     from 'internet-object';
 import { IOError }              from 'internet-object';
 import { IOSyntaxError }        from 'internet-object';
 import { IOValidationError }    from 'internet-object';
+import { ErrorItem, EditorMarker, ErrorRange, ErrorCategory, categoryToSeverity, generateErrorId } from '../../types/errors';
 
 
 /**
- * Marker for editor error highlighting.
+ * @deprecated Use EditorMarker from types/errors.ts instead
  */
 export interface ErrorMarker {
   message: string;
@@ -24,11 +25,12 @@ export interface ErrorMarker {
  * Result of parsing an Internet Object document and/or definitions.
  */
 export interface ParsingResult {
-  errorMessages: string[];  // Changed from errorMessage to support multiple errors
+  errorMessages: string[];  // Deprecated: use errorItems instead
+  errorItems: ErrorItem[];   // Structured errors with full metadata
   defs: IODefinitions | null;
   output: any | null;
-  defsMarkers: ErrorMarker[];
-  docMarkers: ErrorMarker[];
+  defsMarkers: EditorMarker[];
+  docMarkers: EditorMarker[];
 }
 
 
@@ -63,8 +65,12 @@ function tryParse<T>(input: string, fn: (input: string, defs?: any) => T, isDefs
 
     // If there are accumulated errors, include them with the output
     if (accumulatedErrors.length > 0) {
+      const source = isDefs ? 'defs' : 'doc';
+      const errorItems = accumulatedErrors.map(e => errorToErrorItem(e, source)).filter((item): item is ErrorItem => item !== null);
+
       return {
         errorMessages: accumulatedErrors.map(e => getErrorMessage(e)),
+        errorItems,
         defs,
         output,
         defsMarkers: isDefs ? accumulatedErrors.flatMap(getErrorMarkers) : [],
@@ -74,6 +80,7 @@ function tryParse<T>(input: string, fn: (input: string, defs?: any) => T, isDefs
 
     return {
       errorMessages: [],
+      errorItems: [],
       defs,
       output,
       defsMarkers: [],
@@ -84,8 +91,13 @@ function tryParse<T>(input: string, fn: (input: string, defs?: any) => T, isDefs
       // eslint-disable-next-line no-console
       console.error(isDefs ? 'Error parsing defs' : 'Error parsing document', e);
     }
+
+    const source = isDefs ? 'defs' : 'doc';
+    const errorItem = errorToErrorItem(e, source);
+
     return {
       errorMessages: [getErrorMessage(e)],
+      errorItems: errorItem ? [errorItem] : [],
       defs: null,
       output: null,
       defsMarkers: isDefs ? getErrorMarkers(e) : [],
@@ -108,23 +120,61 @@ function getErrorMessage(e: any): string {
   return 'ERROR: ' + (e?.message || String(e));
 }
 
+function getErrorCategory(e: any): ErrorCategory {
+  if (e instanceof IOSyntaxError) return 'syntax';
+  if (e instanceof IOValidationError) return 'validation';
+  return 'runtime';
+}
 
-
-function getErrorMarkers(e: any): ErrorMarker[] {
-  if (!(e instanceof IOError)) return [];
+function errorToRange(e: any): ErrorRange | null {
+  if (!(e instanceof IOError)) return null;
   const startPos: any = e.positionRange?.getStartPos();
   const endPos: any = e.positionRange?.getEndPos();
-  if (!startPos && !endPos) return [];
+  if (!startPos || !endPos) return null;
 
-  // Determine severity based on error type
-  // Monaco severity: 8 = Error (red), 4 = Warning (orange/yellow)
-  const severity = e instanceof IOValidationError ? 4 : 8; // 4 for validation (orange), 8 for syntax (red)
+  return {
+    startLine: startPos.row,
+    startColumn: startPos.col,
+    endLine: endPos.row,
+    endColumn: endPos.col,
+  };
+}
 
-  const marker: ErrorMarker = {
-    message: e.message,
+function errorToErrorItem(e: any, source: 'doc' | 'defs'): ErrorItem | null {
+  const range = errorToRange(e);
+  if (!range) return null;
+
+  const category = getErrorCategory(e);
+  const message = e?.message || String(e);
+
+  return {
+    id: generateErrorId(range, message),
+    code: (e as any).code, // IOError may have a code property
+    category,
+    message,
+    range,
+    source,
+  };
+}
+
+function getErrorMarkers(e: any): EditorMarker[] {
+  if (!(e instanceof IOError)) return [];
+  const range = errorToRange(e);
+  if (!range) return [];
+
+  const category = getErrorCategory(e);
+  const severity = categoryToSeverity(category) as 1 | 2 | 4 | 8;
+  const message = e?.message || String(e);
+
+  const marker: EditorMarker = {
+    message,
     severity,
-    ...(startPos && { startLineNumber: startPos.row, startColumn: startPos.col }),
-    ...(endPos && { endLineNumber: endPos.row, endColumn: endPos.col })
+    startLineNumber: range.startLine,
+    startColumn: range.startColumn,
+    endLineNumber: range.endLine,
+    endColumn: range.endColumn,
+    id: generateErrorId(range, message),
+    category,
   };
   return [marker];
 }

@@ -11,6 +11,7 @@ import Editor         from '../../components/editor/Editor';
 import Output         from '../../components/output/Output';
 import editorPosition from '../../states/editor-pos';
 import { useParseIO } from '../../hooks/use-parse-io';
+import { findMarkerForPosition } from '../../utils/errorSorting';
 
 interface PlaygroundProps {
   showSchema: boolean;
@@ -45,7 +46,7 @@ const Playground = ({
   const [documentText, setDocumentText] = useState<string>(document);
   const [minifiedOutput, setMinifiedOutput] = useState<boolean>(localStorage.getItem('minifiedOutput') === 'true');
   const [skipErrors, setSkipErrors] = useState<boolean>(localStorage.getItem('skipErrors') !== 'false');
-  const { markers, defMarkers, jsonText, error, errorMessages, parse } = useParseIO(documentText, schemaText, showSchema, minifiedOutput, skipErrors);
+  const { markers, defMarkers, jsonText, error, errorMessages, errorItems, parse } = useParseIO(documentText, schemaText, showSchema, minifiedOutput, skipErrors);
   const [docSelection, setDocSelection] = useState<{ startLineNumber: number; startColumn: number; endLineNumber?: number; endColumn?: number } | null>(null);
 
 
@@ -109,30 +110,8 @@ const Playground = ({
   const handleNavigateToError = ({ line, col }: { line: number; col: number }) => {
     if (!markers || markers.length === 0) return;
 
-    // Prefer markers that cover the position, fallback to nearest on the same line, then nearest by line distance
-    const covers = markers.filter(m =>
-      (m.startLineNumber != null && m.endLineNumber != null && m.startColumn != null && m.endColumn != null) &&
-      (line >= m.startLineNumber && line <= m.endLineNumber) &&
-      (line !== m.startLineNumber || col >= m.startColumn!) &&
-      (line !== m.endLineNumber || col <= m.endColumn!)
-    );
-
-    let chosen: any = covers[0];
-    if (!chosen) {
-      const sameLine = markers.filter(m => m.startLineNumber === line);
-      if (sameLine.length > 0) {
-        sameLine.sort((a, b) => Math.abs((a.startColumn ?? 1) - col) - Math.abs((b.startColumn ?? 1) - col));
-        chosen = sameLine[0];
-      } else {
-        // Fallback: closest by line number
-        chosen = markers.reduce((best: any, m: any) => {
-          if (!best) return m;
-          const d1 = Math.abs((m.startLineNumber ?? line) - line);
-          const d2 = Math.abs((best.startLineNumber ?? line) - line);
-          return d1 < d2 ? m : best;
-        }, null as any);
-      }
-    }
+    // Use tested utility to find best matching marker
+    const chosen = findMarkerForPosition(markers, { line, col });
 
     if (chosen) {
       setDocSelection({
@@ -208,7 +187,7 @@ const Playground = ({
               </label>
             </div>
           </Bar>
-          <Output value={jsonText} error={error} errorMessages={errorMessages} options={{ wordWrap: "on" }} onNavigateToError={handleNavigateToError} />
+          <Output value={jsonText} error={error} errorMessages={errorMessages} errorItems={errorItems} options={{ wordWrap: "on" }} onNavigateToError={handleNavigateToError} />
         </div>
       </SplitPane>
     </div>

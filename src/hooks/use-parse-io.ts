@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react';
 import { Decimal } from 'internet-object';
 import parseIO from '../pages/playgroud/compiler';
+import type { ErrorItem } from '../types/errors';
 
 export interface Marker {
   // Define the actual marker properties here
@@ -16,7 +17,8 @@ export interface ParseIOResult {
   defMarkers: Marker[];
   jsonText: string;
   error: boolean;
-  errorMessages: string[];  // Add error messages array
+  errorMessages: string[];  // Deprecated: use errorItems instead
+  errorItems: ErrorItem[];  // Structured errors with full metadata
   parse: () => void;
 }
 
@@ -26,6 +28,7 @@ export function useParseIO(documentText: string, schemaText: string, showSchema:
   const [jsonText, setJsonText] = useState<string>('');
   const [error, setError] = useState<boolean>(false);
   const [errorMessages, setErrorMessages] = useState<string[]>([]);
+  const [errorItems, setErrorItems] = useState<ErrorItem[]>([]);
 
   const parse = useCallback(() => {
     const result = parseIO(documentText, showSchema ? schemaText : null, skipErrors);
@@ -44,6 +47,7 @@ export function useParseIO(documentText: string, schemaText: string, showSchema:
     // Check if we have errors
     const hasErrors = result.errorMessages.length > 0;
     setErrorMessages(result.errorMessages);
+    setErrorItems(result.errorItems);
 
     if (result.output) {
       // We have output - show it even if there are accumulated errors
@@ -73,5 +77,5 @@ export function useParseIO(documentText: string, schemaText: string, showSchema:
     }
   }, [documentText, showSchema, schemaText, minifiedOutput, skipErrors]);
 
-  return { markers, defMarkers, jsonText, error, errorMessages, parse };
+  return { markers, defMarkers, jsonText, error, errorMessages, errorItems, parse };
 }

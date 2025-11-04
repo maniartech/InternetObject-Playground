@@ -2,10 +2,13 @@ import { useState, useEffect, useMemo }         from 'react'
 import                                          './Output.css'
 import Editor, { EditorProps }             from '../editor/Editor'
 import Overlay                             from '../overlay/Overlay'
+import { sortErrorMessages, parseErrorPosition } from '../../utils/errorSorting'
+import type { ErrorItem }                      from '../../types/errors'
 
 interface OutputProps extends EditorProps {
   error?: boolean
-  errorMessages?: string[]
+  errorMessages?: string[]  // Deprecated: use errorItems instead
+  errorItems?: ErrorItem[]  // Structured errors with full metadata
   onNavigateToError?: (pos: { line: number; col: number }) => void
 }
 
@@ -13,6 +16,7 @@ export default function Output({
   value,
   error,
   errorMessages,
+  errorItems,
   options,
   onNavigateToError
 }:OutputProps) {
@@ -21,7 +25,11 @@ export default function Output({
 
   // Reset dismissed state only when error content actually changes
   useEffect(() => {
-    const currentErrorContent = errorMessages?.join('|') || '';
+    // Use errorItems if available, otherwise fall back to errorMessages
+    const currentErrorContent = errorItems
+      ? errorItems.map(e => e.id).join('|')
+      : errorMessages?.join('|') || '';
+
     if (currentErrorContent !== lastErrorContent) {
       setLastErrorContent(currentErrorContent);
       // Only show overlay if there are new/different errors
@@ -29,34 +37,27 @@ export default function Output({
         setOverlayDismissed(false);
       }
     }
-  }, [errorMessages, lastErrorContent]);
+  }, [errorItems, errorMessages, lastErrorContent]);
 
-  // Sort errors by their starting position (line:column) parsed from message text
-  const sortedErrorMessages = useMemo(() => {
-    if (!errorMessages || errorMessages.length === 0) return [] as string[];
+  // Sort errors by their starting position using structured ErrorItem data
+  const sortedErrors = useMemo(() => {
+    if (errorItems && errorItems.length > 0) {
+      // Use structured ErrorItem[] - sort by range directly
+      return [...errorItems].sort((a, b) => {
+        if (a.range.startLine !== b.range.startLine) {
+          return a.range.startLine - b.range.startLine;
+        }
+        return a.range.startColumn - b.range.startColumn;
+      });
+    }
 
-    const parsePos = (msg: string) => {
-      // Look for a trailing " at <line>:<col>" pattern; pick the last occurrence if multiple
-      const re = / at (\d+):(\d+)/g;
-      let match: RegExpExecArray | null = null;
-      let last: RegExpExecArray | null = null;
-      while ((match = re.exec(msg)) !== null) last = match; // get last match
-      if (last) {
-        const line = parseInt(last[1], 10);
-        const col = parseInt(last[2], 10);
-        if (!Number.isNaN(line) && !Number.isNaN(col)) return { line, col };
-      }
-      // Unknown position: send to bottom keeping original order via a large sentinel
-      return { line: Number.MAX_SAFE_INTEGER, col: Number.MAX_SAFE_INTEGER };
-    };
+    // Fall back to legacy string-based sorting
+    if (errorMessages && errorMessages.length > 0) {
+      return sortErrorMessages(errorMessages);
+    }
 
-    return [...errorMessages].sort((a, b) => {
-      const pa = parsePos(a);
-      const pb = parsePos(b);
-      if (pa.line !== pb.line) return pa.line - pb.line;
-      return pa.col - pb.col;
-    });
-  }, [errorMessages]);
+    return [];
+  }, [errorItems, errorMessages]);
 
   // Build Monaco decorations that highlight error objects (those with "__error": true) in the JSON output
   const outputDecorations = useMemo(() => {
@@ -172,28 +173,57 @@ export default function Output({
     <div className="output">
   <Editor value={value} language="json" options={options} decorations={outputDecorations} />
       {
-      error && sortedErrorMessages && sortedErrorMessages.length > 0 && !overlayDismissed && <Overlay
-        heading={`Compiled with ${sortedErrorMessages.length} problem${sortedErrorMessages.length > 1 ? 's' : ''}:`}
+      error && sortedErrors && sortedErrors.length > 0 && !overlayDismissed && <Overlay
+        heading={`Compiled with ${sortedErrors.length} problem${sortedErrors.length > 1 ? 's' : ''}:`}
         onClose={() => setOverlayDismissed(true)}
       >
         <div className="errors-container">
-          {sortedErrorMessages.map((errMsg, index) => {
-            // Determine error type from message prefix
-            const isValidation = errMsg.startsWith('VALIDATION_ERROR:');
-            const errorClass = isValidation ? 'error validation-error' : 'error';
-            const posMatch = (() => {
-              const re = / at (\d+):(\d+)/g; let m: RegExpExecArray | null; let last: RegExpExecArray | null = null; while ((m = re.exec(errMsg)) !== null) last = m; return last;
-            })();
-            const onClick = onNavigateToError && posMatch
-              ? () => onNavigateToError!({ line: parseInt(posMatch![1], 10), col: parseInt(posMatch![2], 10) })
-              : undefined;
+          {sortedErrors.map((item, index) => {
+            // Handle both ErrorItem and string types
+            const isErrorItem = typeof item === 'object' && 'category' in item;
 
-            return (
-              <div key={index} className={onClick ? `${errorClass} clickable` : errorClass} onClick={onClick} title={onClick ? 'Click to jump to source' : undefined}>
-                {index > 0 && <hr className="error-separator" />}
-                {errMsg}
-              </div>
-            );
+            if (isErrorItem) {
+              // Use structured ErrorItem
+              const errorItem = item as ErrorItem;
+              const isValidation = errorItem.category === 'validation';
+              const errorClass = isValidation ? 'error validation-error' : 'error';
+
+              const onClick = onNavigateToError
+                ? () => onNavigateToError!({ line: errorItem.range.startLine, col: errorItem.range.startColumn })
+                : undefined;
+
+              // Format message with category prefix for consistency
+              const prefix = errorItem.category === 'syntax' ? 'SYNTAX_ERROR: '
+                           : errorItem.category === 'validation' ? 'VALIDATION_ERROR: '
+                           : 'ERROR: ';
+              const displayMessage = `${prefix}${errorItem.message} at ${errorItem.range.startLine}:${errorItem.range.startColumn}`;
+
+              return (
+                <div key={errorItem.id} className={onClick ? `${errorClass} clickable` : errorClass} onClick={onClick} title={onClick ? 'Click to jump to source' : undefined}>
+                  {index > 0 && <hr className="error-separator" />}
+                  {displayMessage}
+                </div>
+              );
+            } else {
+              // Legacy string-based error
+              const errMsg = item as string;
+              const isValidation = errMsg.startsWith('VALIDATION_ERROR:');
+              const errorClass = isValidation ? 'error validation-error' : 'error';
+
+              // Parse position using tested utility
+              const pos = parseErrorPosition(errMsg);
+              const hasPosition = pos.line !== Number.MAX_SAFE_INTEGER;
+              const onClick = onNavigateToError && hasPosition
+                ? () => onNavigateToError!(pos)
+                : undefined;
+
+              return (
+                <div key={index} className={onClick ? `${errorClass} clickable` : errorClass} onClick={onClick} title={onClick ? 'Click to jump to source' : undefined}>
+                  {index > 0 && <hr className="error-separator" />}
+                  {errMsg}
+                </div>
+              );
+            }
           })}
         </div>
       </Overlay>
