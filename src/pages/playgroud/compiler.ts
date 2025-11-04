@@ -75,7 +75,7 @@ function tryParse<T>(input: string, fn: (input: string, defs?: any) => T, isDefs
       docMarkers: [],
     };
   } catch (e: any) {
-    if (process.env.NODE_ENV !== 'production') {
+    if (import.meta.env.MODE !== 'production') {
       // eslint-disable-next-line no-console
       console.error(isDefs ? 'Error parsing defs' : 'Error parsing document', e);
     }
