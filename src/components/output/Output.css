@@ -33,6 +33,14 @@
   color: #ffb74d; /* lighter orange for better contrast on dark background */
 }
 
+/* Indicate clickable error entries */
+.error.clickable {
+  cursor: pointer;
+}
+.error.clickable:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
 .error-separator {
   margin: 1rem 0;
   border: none;

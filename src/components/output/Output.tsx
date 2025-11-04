@@ -6,13 +6,15 @@ import Overlay                             from '../overlay/Overlay'
 interface OutputProps extends EditorProps {
   error?: boolean
   errorMessages?: string[]
+  onNavigateToError?: (pos: { line: number; col: number }) => void
 }
 
 export default function Output({
   value,
   error,
   errorMessages,
-  options
+  options,
+  onNavigateToError
 }:OutputProps) {
   const [overlayDismissed, setOverlayDismissed] = useState(false);
   const [lastErrorContent, setLastErrorContent] = useState<string>('');
@@ -179,9 +181,15 @@ export default function Output({
             // Determine error type from message prefix
             const isValidation = errMsg.startsWith('VALIDATION_ERROR:');
             const errorClass = isValidation ? 'error validation-error' : 'error';
+            const posMatch = (() => {
+              const re = / at (\d+):(\d+)/g; let m: RegExpExecArray | null; let last: RegExpExecArray | null = null; while ((m = re.exec(errMsg)) !== null) last = m; return last;
+            })();
+            const onClick = onNavigateToError && posMatch
+              ? () => onNavigateToError!({ line: parseInt(posMatch![1], 10), col: parseInt(posMatch![2], 10) })
+              : undefined;
 
             return (
-              <div key={index} className={errorClass}>
+              <div key={index} className={onClick ? `${errorClass} clickable` : errorClass} onClick={onClick} title={onClick ? 'Click to jump to source' : undefined}>
                 {index > 0 && <hr className="error-separator" />}
                 {errMsg}
               </div>

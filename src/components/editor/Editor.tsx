@@ -46,6 +46,14 @@ export interface EditorProps {
   // options is an optional record that can contain any additional
   // options for the editor
   options?: Record<string, any>
+
+  // Optional selection to programmatically select/reveal a range in the editor
+  selection?: {
+    startLineNumber: number
+    startColumn: number
+    endLineNumber?: number
+    endColumn?: number
+  } | null
 }
 
 function Editor (props: EditorProps): JSX.Element {
@@ -107,6 +115,26 @@ function Editor (props: EditorProps): JSX.Element {
       try { editorInstance.deltaDecorations(newIds, []) } catch {}
     }
   }, [props.decorations, editorInstance])
+
+  // Apply programmatic selection/reveal when selection prop changes
+  useEffect(() => {
+    const monaco = (window as any).monaco
+    if (!monaco || !editorInstance) return
+    const sel = props.selection
+    if (!sel) return
+
+    const startLn = sel.startLineNumber
+    const startCol = sel.startColumn
+    const endLn = sel.endLineNumber ?? sel.startLineNumber
+    const endCol = sel.endColumn ?? (sel.startColumn + 1)
+
+    try {
+      const range = new monaco.Range(startLn, startCol, endLn, endCol)
+      editorInstance.setSelection(range)
+      editorInstance.revealRangeInCenter(range)
+      editorInstance.focus()
+    } catch {}
+  }, [props.selection, editorInstance])
 
   const handleEditorDidMount = (editor: any, monaco: any): void => {
     setupMonaco(monaco)
