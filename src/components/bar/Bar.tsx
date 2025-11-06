@@ -8,16 +8,17 @@ interface BarProps {
   outputBytes?  : number;
   minified?   : boolean;
   isError?      : boolean;
+  title?        : string;
 }
 
-const Bar = ({ label, bgColor, children, bytes, outputBytes, minified, isError}: BarProps) => {
+const Bar = ({ label, bgColor, children, bytes, title, outputBytes, minified, isError}: BarProps) => {
   bytes     = bytes || 0
   const perc = 100 - (outputBytes ? (bytes / outputBytes) * 100 : 0)
   const percText = perc > 0 ? `${perc.toFixed(2)}% Smaller` : `${Math.abs(perc).toFixed(2)}% Larger`
 
    const showBar = !!bytes && !isError
   return (
-    <div className='bar' style={{backgroundColor: bgColor}}>
+    <div className='bar' style={{backgroundColor: bgColor}} title={title}>
       <p>{label} {showBar && <span className="count" title={`${bytes} bytes in ${label}`}>{bytes} Bytes</span>}
       &nbsp;
       </p>

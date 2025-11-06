@@ -1,4 +1,5 @@
-const doc = `# This example deliberately includes errors to show how Internet Object—unlike plain JSON—validates schemas, reports issues clearly, and lets you process each record independently.
+const doc = `# This example deliberately includes errors to show how Internet Object—unlike plain JSON—validates schemas,
+# reports issues clearly, and lets you process each record independently.
 # Age must be ≥ 30 (some rows violate), plus some syntax errors.
 # Orange = validation; Red = syntax/parsing.
 

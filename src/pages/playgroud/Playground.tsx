@@ -174,7 +174,7 @@ const Playground = ({
           </div>
         </Pane>
         <div className="editor-area-right">
-          <Bar label="JSON Output" bytes={jsonText.length}>
+          <Bar label="JSON Output" bytes={jsonText.length} title="Shows the comparable JSON output generated from the Internet Object document">
             <div className="toggle-group">
               <label className="toggleSwtich" title="Skip error objects in output">
                 <span>Skip Errors in Output</span>
