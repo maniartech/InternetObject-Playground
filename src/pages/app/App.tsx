@@ -1,6 +1,6 @@
 import './App.css';
 
-import { useCallback, useMemo, useState   } from 'react';
+import { useCallback, useMemo, useState, useEffect } from 'react';
 import { useParams, useNavigate           } from 'react-router-dom';
 import Toggle                               from 'react-toggle'
 
@@ -8,12 +8,16 @@ import Header                               from '../../components/header/Header
 import sampleData                           from '../../sample-data'
 import Footer                               from '../footer/Footer'
 import Playground                           from '../playgroud/Playground'
+import WelcomeNotification                  from '../../components/welcome-notification/WelcomeNotification'
 
 function App (): JSX.Element {
   const { sampleId } = useParams<{ sampleId: string }>();
   const navigate = useNavigate();
   const [sample, setSample] = useState(() => sampleData.find(sampleId || ""));
   const [showSchema, setShowSchema] = useState(!!sample?.schema);
+  const [hasVisited, setHasVisited] = useState(() => {
+    return localStorage.getItem('io-playground-visited') === 'true';
+  });
 
   const options = useMemo(() => [
     <option value="" key="select">Blank</option>,
@@ -34,6 +38,10 @@ function App (): JSX.Element {
     navigate(`/${newSampleId}`);
   }, [navigate]);
 
+  const handleWelcomeClose = useCallback(() => {
+    setHasVisited(true);
+  }, []);
+
   // Keep showSchema in sync if sample changes (e.g. via back/forward navigation)
   // but do not override user toggling
   // (If you want to always auto-toggle, uncomment below)
@@ -41,6 +49,7 @@ function App (): JSX.Element {
 
   return (
     <div className="app">
+      <WelcomeNotification onClose={handleWelcomeClose} />
       <a href="#main-content" className="skip-link">Skip to main content</a>
       <Header>
         <div className='toolbar'>
@@ -53,7 +62,7 @@ function App (): JSX.Element {
           </label>
           <select
             id="sample-data-selector"
-            className="highlight"
+            className={hasVisited ? '' : 'highlight'}
             title="Select IO sample data"
             onChange={handleSampleChange}
             value={sample?.id || ''}

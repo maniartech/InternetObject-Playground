@@ -195,7 +195,7 @@ body {
   font-size: 0.9em;
   line-height: 20;
   box-shadow: none;
-  border: 2px solid;
+  border: 2px solid transparent;
   transition: border-color 0.3s ease-in-out;
 }
 
