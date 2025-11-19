@@ -32,8 +32,8 @@ const schema = `
 const exportable = {
   doc,
   schema,
-  name: 'An Object with Separate Schema',
-  id: 'separate-schema',
+  name: 'Variables and Schema References',
+  id: 'variable-and-schema-refs',
   schemaPanelHeight: 380,
 }
 

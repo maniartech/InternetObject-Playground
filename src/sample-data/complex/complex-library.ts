@@ -22,8 +22,8 @@ users: [
 const exportable = {
   doc,
   schema,
-  name: 'Complex Object',
-  id: 'complex-object',
+  name: 'Nested Schema',
+  id: 'nested-schema',
   schemaPanelHeight: 170,
 }
 

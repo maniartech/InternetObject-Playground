@@ -52,7 +52,7 @@ const doc = `
 const exportable = {
   doc,
   schema: null,
-  name: 'json',
+  name: 'JSON Format',
   id: 'json'
 }
 
