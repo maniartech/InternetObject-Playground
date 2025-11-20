@@ -98,9 +98,9 @@ export default function ShareDialog({
                 className="shorten-btn"
                 onClick={handleShorten}
                 disabled={isShortening}
-                title="Shorten URL using TinyURL"
+                data-tooltip="Note: Shortening service powered by TinyURL. It may display an intermediary preview page before redirecting back to the IO Playground."
               >
-                {isShortening ? '...' : 'Shorten'}
+                {isShortening ? <div className="spinner" /> : 'Shorten'}
               </button>
             )}
             <button
@@ -110,6 +110,12 @@ export default function ShareDialog({
               {copied ? 'Copied!' : 'Copy Link'}
             </button>
           </div>
+
+          {!shortUrl && (
+            <p className="share-large-data-hint">
+              Tip: For large datasets, use the <strong>Shorten</strong> button to generate a compact link.
+            </p>
+          )}
 
           <div className="share-options">
             <span className="share-options-label">Included Settings:</span>
