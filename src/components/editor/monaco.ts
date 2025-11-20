@@ -47,7 +47,7 @@ const setupMonaco = (monaco: any) => {
     ],
     colors: {
       'editor.foreground': '#C0C0C0',
-      // 'editor.background': '#0f0f11',
+      'editor.background': '#000000',
     }
   });
 
