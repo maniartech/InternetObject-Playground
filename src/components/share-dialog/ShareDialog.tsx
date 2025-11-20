@@ -131,7 +131,7 @@ export default function ShareDialog({
               </span>
             </div>
             <p className="share-options-hint">
-              To update these settings, close the dialog, modify the editor configuration, and regenerate the link.
+              To update these settings, close the dialog, modify the playground configuration, and click the share button again.
             </p>
           </div>
         </div>
