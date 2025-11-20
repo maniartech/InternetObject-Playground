@@ -47,6 +47,18 @@ function App (): JSX.Element {
     return !!sample?.schema;
   });
 
+  const [minifiedOutput, setMinifiedOutput] = useState(() => {
+    const sharedMin = searchParams.get('min');
+    if (sharedMin !== null) return sharedMin === 'true';
+    return localStorage.getItem('minifiedOutput') === 'true';
+  });
+
+  const [skipErrors, setSkipErrors] = useState(() => {
+    const sharedSkip = searchParams.get('skip');
+    if (sharedSkip !== null) return sharedSkip === 'true';
+    return localStorage.getItem('skipErrors') !== 'false';
+  });
+
   const [hasVisited, setHasVisited] = useState(() => {
     return localStorage.getItem('io-playground-visited') === 'true';
   });
@@ -122,8 +134,10 @@ function App (): JSX.Element {
     const compressedDoc = LZString.compressToEncodedURIComponent(document);
     const compressedSchema = LZString.compressToEncodedURIComponent(schema);
     const sep = showSchema ? 'true' : 'false';
+    const min = minifiedOutput ? 'true' : 'false';
+    const skip = skipErrors ? 'true' : 'false';
 
-    const newParams = { d: compressedDoc, s: compressedSchema, sep };
+    const newParams = { d: compressedDoc, s: compressedSchema, sep, min, skip };
 
     // Construct full URL pointing to root
     const url = new URL(window.location.origin + '/');
@@ -131,7 +145,7 @@ function App (): JSX.Element {
 
     setShareUrl(url.toString());
     setIsShareDialogOpen(true);
-  }, [document, schema, showSchema]);
+  }, [document, schema, showSchema, minifiedOutput, skipErrors]);
 
   return (
     <div className="app">
@@ -140,6 +154,9 @@ function App (): JSX.Element {
         isOpen={isShareDialogOpen}
         onClose={() => setIsShareDialogOpen(false)}
         url={shareUrl}
+        showSchema={showSchema}
+        minifiedOutput={minifiedOutput}
+        skipErrors={skipErrors}
       />
       <WarningDialog
         isOpen={warningDialog.isOpen}
@@ -187,6 +204,10 @@ function App (): JSX.Element {
           setDocument={setDocument}
           schema={schema}
           setSchema={setSchema}
+          minifiedOutput={minifiedOutput}
+          setMinifiedOutput={setMinifiedOutput}
+          skipErrors={skipErrors}
+          setSkipErrors={setSkipErrors}
         />
       </main>
       <Footer />

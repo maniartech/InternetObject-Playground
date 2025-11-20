@@ -21,6 +21,10 @@ interface PlaygroundProps {
   schema: string;
   setSchema: (schema: string) => void;
   schemaPanelHeight?: number;
+  minifiedOutput: boolean;
+  setMinifiedOutput: (val: boolean) => void;
+  skipErrors: boolean;
+  setSkipErrors: (val: boolean) => void;
 }
 
 const DEFAULT_SCHEMA_PANEL_HEIGHT = 200;
@@ -32,6 +36,8 @@ const Playground = ({
   document, setDocument,
   schema, setSchema,
   schemaPanelHeight,
+  minifiedOutput, setMinifiedOutput,
+  skipErrors, setSkipErrors,
 }: PlaygroundProps) => {
 
   const [, setEditorPos] = useRecoilState(editorPosition);
@@ -46,8 +52,6 @@ const Playground = ({
   const [sizesV, setVSizes] = useState<[number | string, string]>([0, 'auto']);
   // const [schemaText, setSchemaText] = useState<string>(schema);
   // const [documentText, setDocumentText] = useState<string>(document);
-  const [minifiedOutput, setMinifiedOutput] = useState<boolean>(localStorage.getItem('minifiedOutput') === 'true');
-  const [skipErrors, setSkipErrors] = useState<boolean>(localStorage.getItem('skipErrors') !== 'false');
   const { markers, defMarkers, jsonText, error, errorMessages, errorItems, parse, isParsing } = useParseIO(
     document,
     schema,

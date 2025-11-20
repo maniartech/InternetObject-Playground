@@ -5,27 +5,57 @@ interface ShareDialogProps {
   isOpen: boolean;
   onClose: () => void;
   url: string;
+  showSchema: boolean;
+  minifiedOutput: boolean;
+  skipErrors: boolean;
 }
 
-export default function ShareDialog({ isOpen, onClose, url }: ShareDialogProps) {
+export default function ShareDialog({
+  isOpen,
+  onClose,
+  url,
+  showSchema,
+  minifiedOutput,
+  skipErrors
+}: ShareDialogProps) {
   const [copied, setCopied] = useState(false);
+  const [shortUrl, setShortUrl] = useState('');
+  const [isShortening, setIsShortening] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const displayUrl = shortUrl || url;
 
   useEffect(() => {
     if (isOpen) {
+      setShortUrl('');
       setCopied(false);
       // Focus input when opened
       setTimeout(() => {
         inputRef.current?.select();
       }, 100);
     }
-  }, [isOpen]);
+  }, [isOpen, url]);
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(url).then(() => {
+    navigator.clipboard.writeText(displayUrl).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     });
+  };
+
+  const handleShorten = async () => {
+    setIsShortening(true);
+    try {
+      const response = await fetch(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(url)}`);
+      if (response.ok) {
+        const text = await response.text();
+        setShortUrl(text);
+      }
+    } catch (error) {
+      console.error('Failed to shorten URL:', error);
+    } finally {
+      setIsShortening(false);
+    }
   };
 
   if (!isOpen) return null;
@@ -45,7 +75,7 @@ export default function ShareDialog({ isOpen, onClose, url }: ShareDialogProps) 
               <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
             </svg>
           </div>
-          <h2>Share Code</h2>
+          <h2>Share Internet Object Code</h2>
         </div>
 
         <div className="share-dialog-body">
@@ -58,17 +88,45 @@ export default function ShareDialog({ isOpen, onClose, url }: ShareDialogProps) 
             <input
               ref={inputRef}
               type="text"
-              value={url}
+              value={displayUrl}
               readOnly
               aria-label="Share URL"
               onClick={(e) => e.currentTarget.select()}
             />
+            {!shortUrl && (
+              <button
+                className="shorten-btn"
+                onClick={handleShorten}
+                disabled={isShortening}
+                title="Shorten URL using TinyURL"
+              >
+                {isShortening ? '...' : 'Shorten'}
+              </button>
+            )}
             <button
               className={`copy-btn ${copied ? 'copied' : ''}`}
               onClick={handleCopy}
             >
               {copied ? 'Copied!' : 'Copy Link'}
             </button>
+          </div>
+
+          <div className="share-options">
+            <span className="share-options-label">Included Settings:</span>
+            <div className="share-option-tags">
+              <span className={`share-option-tag ${showSchema ? 'active' : ''}`}>
+                {showSchema ? '✓' : '○'} Separate Schema
+              </span>
+              <span className={`share-option-tag ${minifiedOutput ? 'active' : ''}`}>
+                {minifiedOutput ? '✓' : '○'} Minified
+              </span>
+              <span className={`share-option-tag ${skipErrors ? 'active' : ''}`}>
+                {skipErrors ? '✓' : '○'} Skip Errors
+              </span>
+            </div>
+            <p className="share-options-hint">
+              To update these settings, close the dialog, modify the editor configuration, and regenerate the link.
+            </p>
           </div>
         </div>
       </div>
