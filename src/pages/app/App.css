@@ -276,7 +276,7 @@ body {
   animation: highlight 2s infinite;
 }
 
-.share-btn {
+.share-btn, .reset-btn {
   background-color: var(--bg-color-secondary);
   color: var(--text-color);
   border: 1px solid var(--border-color);
@@ -292,13 +292,57 @@ body {
   gap: 6px;
 }
 
-.share-btn svg {
+.share-btn svg, .reset-btn svg {
   width: 14px;
   height: 14px;
 }
 
-.share-btn:hover {
+.share-btn:hover, .reset-btn:hover {
   background-color: var(--primary-color);
   border-color: var(--primary-color);
   color: white;
+}
+
+.reset-btn {
+  padding: 4px 8px; /* Square-ish for icon only */
+}
+
+.reset-btn:hover {
+  background-color: #d32f2f; /* Red hover for reset */
+  border-color: #d32f2f;
+}
+
+.reset-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: var(--bg-color-secondary);
+  border-color: var(--border-color);
+  color: var(--text-color);
+}
+
+.reset-btn:disabled:hover {
+  background-color: var(--bg-color-secondary);
+  border-color: var(--border-color);
+  color: var(--text-color);
+}
+
+/* Sample Data Group */
+.sample-group {
+  display: flex;
+  align-items: center;
+}
+
+.sample-group select {
+  border: 1px solid var(--border-color);
+  border-right: 0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  height: 28px; /* Match button height */
+  margin: 0;
+}
+
+.sample-group .reset-btn {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  margin: 0;
 }

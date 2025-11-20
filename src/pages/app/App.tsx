@@ -1,6 +1,6 @@
 import './App.css';
 
-import { useCallback, useMemo, useState, useEffect } from 'react';
+import { useCallback, useMemo, useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import Toggle                               from 'react-toggle'
 import LZString                             from 'lz-string';
@@ -22,28 +22,57 @@ function App (): JSX.Element {
   const [shareUrl, setShareUrl] = useState('');
   const [warningDialog, setWarningDialog] = useState<{ isOpen: boolean; message: string }>({ isOpen: false, message: '' });
 
-  // Initialize state from URL (query params) or sample data
+  // Track the previous sampleId to detect navigation vs refresh
+  const prevSampleIdRef = useRef<string | undefined>(sampleId);
+
+  // Initialize state from URL (query params), Session Storage, or sample data
   const [sample, setSample] = useState(() => {
     const sharedDoc = searchParams.get('d');
-    if (sharedDoc) return null; // If sharing, no specific sample is selected initially (or it's custom)
+    if (sharedDoc) return null;
     return sampleData.find(sampleId || "");
   });
 
   const [document, setDocument] = useState(() => {
     const sharedDoc = searchParams.get('d');
     if (sharedDoc) return LZString.decompressFromEncodedURIComponent(sharedDoc) || '';
+
+    // Check session storage first (if it matches the current sample context)
+    const sessionSampleId = sessionStorage.getItem('io-playground-sample-id');
+    const sessionDoc = sessionStorage.getItem('io-playground-doc');
+
+    // If we have session data and it matches the current URL sampleId (or both are empty/root)
+    if (sessionDoc !== null && (sessionSampleId === (sampleId || ''))) {
+      return sessionDoc;
+    }
+
     return sample?.doc || '';
   });
 
   const [schema, setSchema] = useState(() => {
     const sharedSchema = searchParams.get('s');
     if (sharedSchema) return LZString.decompressFromEncodedURIComponent(sharedSchema) || '';
+
+    const sessionSampleId = sessionStorage.getItem('io-playground-sample-id');
+    const sessionSchema = sessionStorage.getItem('io-playground-schema');
+
+    if (sessionSchema !== null && (sessionSampleId === (sampleId || ''))) {
+      return sessionSchema;
+    }
+
     return sample?.schema || '';
   });
 
   const [showSchema, setShowSchema] = useState(() => {
     const sharedSep = searchParams.get('sep');
     if (sharedSep !== null) return sharedSep === 'true';
+
+    const sessionSampleId = sessionStorage.getItem('io-playground-sample-id');
+    const sessionShowSchema = sessionStorage.getItem('io-playground-show-schema');
+
+    if (sessionShowSchema !== null && (sessionSampleId === (sampleId || ''))) {
+      return sessionShowSchema === 'true';
+    }
+
     return !!sample?.schema;
   });
 
@@ -63,35 +92,33 @@ function App (): JSX.Element {
     return localStorage.getItem('io-playground-visited') === 'true';
   });
 
+  // Persist to Session Storage
+  useEffect(() => {
+    // Only save if we are not in "shared" mode (no query params)
+    const d = searchParams.get('d');
+    if (!d) {
+      sessionStorage.setItem('io-playground-sample-id', sampleId || '');
+      sessionStorage.setItem('io-playground-doc', document);
+      sessionStorage.setItem('io-playground-schema', schema);
+      sessionStorage.setItem('io-playground-show-schema', String(showSchema));
+    }
+  }, [document, schema, showSchema, sampleId, searchParams]);
+
   // Effect to handle sampleId changes (navigation)
   useEffect(() => {
-    // Only update if NO query params are present (or if we want sample selection to override query params)
-    // Usually if user clicks a sample in the dropdown, we want to load that sample.
-    // But if we just loaded the page with query params, we don't want sampleId to override it.
-    // The initial state logic handles the page load.
-    // This effect handles subsequent navigation.
-
-    // However, handleSampleChange already updates state.
-    // But if user uses browser back/forward buttons?
-
-    // If query params exist, we might want to ignore sampleId updates unless the user explicitly changed sample.
-    // But checking "explicitly" is hard.
-
-    // Let's rely on handleSampleChange for explicit changes.
-    // For back/forward, we might need to sync.
-
-    // If the URL has query params, we assume it's a shared state.
-    // If the URL matches a sample ID and NO query params, it's a sample.
-
     const d = searchParams.get('d');
     const s = searchParams.get('s');
 
     if (!d && !s) {
-      const found = sampleData.find(sampleId || "");
-      setSample(found);
-      setDocument(found?.doc || '');
-      setSchema(found?.schema || '');
-      setShowSchema(!!found?.schema);
+      // Only reset if the sampleId actually CHANGED (navigation), not on initial render/refresh
+      if (sampleId !== prevSampleIdRef.current) {
+        const found = sampleData.find(sampleId || "");
+        setSample(found);
+        setDocument(found?.doc || '');
+        setSchema(found?.schema || '');
+        setShowSchema(!!found?.schema);
+        prevSampleIdRef.current = sampleId;
+      }
     }
   }, [sampleId, searchParams]);
 
@@ -121,6 +148,36 @@ function App (): JSX.Element {
   const handleWelcomeClose = useCallback(() => {
     setHasVisited(true);
   }, []);
+
+  const isDirty = useMemo(() => {
+    const initialDoc = sample?.doc || '';
+    const initialSchema = sample?.schema || '';
+    const initialShowSchema = !!sample?.schema;
+
+    return (
+      document !== initialDoc ||
+      schema !== initialSchema ||
+      showSchema !== initialShowSchema
+    );
+  }, [document, schema, showSchema, sample]);
+
+  const handleReset = useCallback(() => {
+    // Clear session storage
+    sessionStorage.removeItem('io-playground-sample-id');
+    sessionStorage.removeItem('io-playground-doc');
+    sessionStorage.removeItem('io-playground-schema');
+    sessionStorage.removeItem('io-playground-show-schema');
+
+    // Reset to current sample
+    const found = sampleData.find(sampleId || "");
+    setSample(found);
+    setDocument(found?.doc || '');
+    setSchema(found?.schema || '');
+    setShowSchema(!!found?.schema);
+
+    // Also clear query params if any (effectively resetting to clean sample state)
+    setSearchParams({});
+  }, [sampleId, setSearchParams]);
 
   const handleShare = useCallback(() => {
     if (!document.trim() && !schema.trim()) {
@@ -184,15 +241,28 @@ function App (): JSX.Element {
               onChange={e => setShowSchema(e.target.checked)}
             />
           </label>
-          <select
-            id="sample-data-selector"
-            className={hasVisited ? '' : 'highlight'}
-            title="Select IO sample data"
-            onChange={handleSampleChange}
-            value={sample?.id || ''}
-          >
-            {options}
-          </select>
+          <div className="sample-group">
+            <select
+              id="sample-data-selector"
+              className={hasVisited ? '' : 'highlight'}
+              title="Select IO sample data"
+              onChange={handleSampleChange}
+              value={sample?.id || ''}
+            >
+              {options}
+            </select>
+            <button
+              className="reset-btn"
+              onClick={handleReset}
+              title={isDirty ? "Reset to Sample Data" : "No changes to reset. Use this button when you have made changes to the document or schema."}
+              disabled={!isDirty}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                <path d="M3 3v5h5"></path>
+              </svg>
+            </button>
+          </div>
         </div>
       </Header>
       <main id="main-content" className='main'>
