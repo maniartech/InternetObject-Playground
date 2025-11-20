@@ -22,6 +22,7 @@ export default function ShareDialog({
   const [shortUrl, setShortUrl] = useState('');
   const [isShortening, setIsShortening] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   const displayUrl = shortUrl || url;
 
@@ -29,10 +30,18 @@ export default function ShareDialog({
     if (isOpen) {
       setShortUrl('');
       setCopied(false);
+      setIsShortening(false);
       // Focus input when opened
       setTimeout(() => {
         inputRef.current?.select();
       }, 100);
+    } else {
+      // Cancel any ongoing requests when closed
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+        abortControllerRef.current = null;
+      }
+      setIsShortening(false);
     }
   }, [isOpen, url]);
 
@@ -44,21 +53,88 @@ export default function ShareDialog({
   };
 
   const handleShorten = async () => {
-    setIsShortening(true);
-    try {
-      const response = await fetch(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(url)}`);
-      if (response.ok) {
-        const text = await response.text();
-        setShortUrl(text);
-      }
-    } catch (error) {
-      console.error('Failed to shorten URL:', error);
-    } finally {
-      setIsShortening(false);
+    // Cancel previous request if any
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
     }
-  };
 
-  if (!isOpen) return null;
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
+    const signal = controller.signal;
+
+    setIsShortening(true);
+
+    try {
+      // Try da.gd first (supports CORS and POST, no preview page)
+      try {
+        const response = await fetch('https://da.gd/s', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: new URLSearchParams({ url: url }),
+          signal
+        });
+
+        if (response.ok) {
+          const text = await response.text();
+          if (!signal.aborted) {
+            setShortUrl(text.trim());
+            return;
+          }
+        }
+      } catch (error) {
+        if (signal.aborted) throw error;
+        console.warn('Primary shortener (da.gd) failed:', error);
+      }
+
+      // Fallback 1: clck.ru (supports CORS and POST, no preview page)
+      try {
+        const response = await fetch('https://clck.ru/--', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: new URLSearchParams({ url: url }),
+          signal
+        });
+
+        if (response.ok) {
+          const text = await response.text();
+          if (!signal.aborted) {
+            setShortUrl(text.trim());
+            return;
+          }
+        }
+      } catch (error) {
+        if (signal.aborted) throw error;
+        console.warn('Fallback shortener (clck.ru) failed:', error);
+      }
+
+      // Fallback 2: TinyURL (reliable but has preview page)
+      try {
+        const response = await fetch(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(url)}`, { signal });
+        if (response.ok) {
+          const text = await response.text();
+          if (!signal.aborted) {
+            setShortUrl(text);
+          }
+        }
+      } catch (fallbackError) {
+        if (signal.aborted) throw fallbackError;
+        console.error('All shorteners failed:', fallbackError);
+      }
+    } catch (error: any) {
+      if (error.name === 'AbortError') {
+        console.log('Shortening aborted');
+      }
+    } finally {
+      if (!signal.aborted) {
+        setIsShortening(false);
+        abortControllerRef.current = null;
+      }
+    }
+  };  if (!isOpen) return null;
 
   return (
     <div className="share-dialog-overlay" onClick={onClose}>
@@ -98,7 +174,7 @@ export default function ShareDialog({
                 className="shorten-btn"
                 onClick={handleShorten}
                 disabled={isShortening}
-                data-tooltip="Note: Shortening service powered by TinyURL. It may display an intermediary preview page before redirecting back to the IO Playground."
+                data-tooltip="Generate a short link for easier sharing."
               >
                 {isShortening ? <div className="spinner" /> : 'Shorten'}
               </button>
