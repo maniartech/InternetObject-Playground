@@ -44,9 +44,8 @@ export interface EditorProps {
   // theme is an optional string that specifies the theme of the editor
   theme?: string
 
-  // options is an optional record that can contain any additional
-  // options for the editor
-  options?: Record<string, any>
+  // debounce is an optional number that specifies the debounce delay
+  debounce?: number
 
   // Optional selection to programmatically select/reveal a range in the editor
   selection?: {
@@ -159,7 +158,7 @@ function Editor (props: EditorProps): JSX.Element {
     if (props.onChange) {
       props.onChange(value, event)
     }
-  }, 500)
+  }, props.debounce ?? 0)
 
   return (
     <MonacoEditor

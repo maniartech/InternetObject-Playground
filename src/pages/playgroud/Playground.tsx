@@ -17,7 +17,9 @@ interface PlaygroundProps {
   showSchema: boolean;
   setShowSchema: (show: boolean) => void;
   document: string;
+  setDocument: (doc: string) => void;
   schema: string;
+  setSchema: (schema: string) => void;
   schemaPanelHeight?: number;
 }
 
@@ -27,8 +29,8 @@ const DEFAULT_VERTICAL_SIZE       = '60%';
 
 const Playground = ({
   showSchema,  setShowSchema,
-  document,
-  schema,
+  document, setDocument,
+  schema, setSchema,
   schemaPanelHeight,
 }: PlaygroundProps) => {
 
@@ -42,13 +44,13 @@ const Playground = ({
   }, [sizesH]);
 
   const [sizesV, setVSizes] = useState<[number | string, string]>([0, 'auto']);
-  const [schemaText, setSchemaText] = useState<string>(schema);
-  const [documentText, setDocumentText] = useState<string>(document);
+  // const [schemaText, setSchemaText] = useState<string>(schema);
+  // const [documentText, setDocumentText] = useState<string>(document);
   const [minifiedOutput, setMinifiedOutput] = useState<boolean>(localStorage.getItem('minifiedOutput') === 'true');
   const [skipErrors, setSkipErrors] = useState<boolean>(localStorage.getItem('skipErrors') !== 'false');
   const { markers, defMarkers, jsonText, error, errorMessages, errorItems, parse, isParsing } = useParseIO(
-    documentText,
-    schemaText,
+    document,
+    schema,
     showSchema,
     minifiedOutput,
     skipErrors,
@@ -68,13 +70,13 @@ const Playground = ({
       parse();
     }, 500);
     return () => clearTimeout(timer);
-  }, [schemaText, documentText, showSchema, minifiedOutput, skipErrors, parse]);
+  }, [schema, document, showSchema, minifiedOutput, skipErrors, parse]);
 
   // Sync schema and document text with props
-  useEffect(() => {
-    setSchemaText(schema);
-    setDocumentText(document);
-  }, [schema, document]);
+  // useEffect(() => {
+  //   setSchemaText(schema);
+  //   setDocumentText(document);
+  // }, [schema, document]);
 
   // Set initial vertical split size
   useEffect(() => {
@@ -149,10 +151,10 @@ const Playground = ({
             >
               <Pane minSize={0}>
                 <div className="top" style={{ height: '100%' }}>
-                  <Bar label="Schema & Definitions" bytes={schemaText.length} />
+                  <Bar label="Schema & Definitions" bytes={schema.length} />
                   <Editor
-                    onChange={setSchemaText}
-                    value={schemaText}
+                    onChange={setSchema}
+                    value={schema}
                     markers={defMarkers}
                     onChangeCaretPosition={pos => handleCaretPositionChange("Definitions", pos)}
                   />
@@ -160,11 +162,11 @@ const Playground = ({
               </Pane>
               <Pane minSize={200}>
                 <div className="bottom" style={{ height: '100%' }}>
-                  <Bar label="Internet Object Document" bytes={documentText.length} outputBytes={jsonText.length} minified={minifiedOutput} isError={error} />
+                  <Bar label="Internet Object Document" bytes={document.length} outputBytes={jsonText.length} minified={minifiedOutput} isError={error} />
                   <Editor
-                    value={documentText}
+                    value={document}
                     markers={markers}
-                    onChange={setDocumentText}
+                    onChange={setDocument}
                     onChangeCaretPosition={pos => handleCaretPositionChange("Internet Object", pos)}
                     selection={docSelection}
                   />
