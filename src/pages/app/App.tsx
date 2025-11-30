@@ -246,13 +246,14 @@ function App (): JSX.Element {
       <a href="#main-content" className="skip-link">Skip to main content</a>
       <Header>
         <div className='toolbar'>
-          <button className="import-json-btn" onClick={() => setIsImportJSONDialogOpen(true)} title="Import JSON data and infer schema">
+          <button className="import-json-btn" onClick={() => setIsImportJSONDialogOpen(true)} title="Convert JSON to IO format with inferred schema">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-              <polyline points="17 8 12 3 7 8"></polyline>
-              <line x1="12" y1="3" x2="12" y2="15"></line>
+              <path d="M17 2.1l4 4-4 4"></path>
+              <path d="M3 12.2v-2a4 4 0 0 1 4-4h12.8"></path>
+              <path d="M7 21.9l-4-4 4-4"></path>
+              <path d="M21 11.8v2a4 4 0 0 1-4 4H4.2"></path>
             </svg>
-            <span>Import JSON</span>
+            <span>JSON to IO</span>
           </button>
           <button className="share-btn" onClick={handleShare} title="Share Code">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

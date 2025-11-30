@@ -255,20 +255,24 @@ ${isLargeJson ? '\n⚠️ **Note:** A JSON file was downloaded to your computer.
         <div className="import-json-dialog-header">
           <div className="import-icon-large">
             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-              <polyline points="17 8 12 3 7 8"></polyline>
-              <line x1="12" y1="3" x2="12" y2="15"></line>
+              <path d="M17 2.1l4 4-4 4"></path>
+              <path d="M3 12.2v-2a4 4 0 0 1 4-4h12.8"></path>
+              <path d="M7 21.9l-4-4 4-4"></path>
+              <path d="M21 11.8v2a4 4 0 0 1-4 4H4.2"></path>
             </svg>
           </div>
           <div className="import-json-title-group">
-            <h2>Import JSON</h2>
+            <h2>JSON to IO</h2>
             <span className="experimental-badge">Experimental</span>
           </div>
         </div>
 
         <p className="import-json-promo">
-          Paste or type your JSON data below. <br />
-          <span className="highlight-text">Internet Object will automatically infer the schema and convert it to IO format.</span>
+          While Internet Object supports JSON syntax natively, use this tool to convert your JSON to IO's native format by <span className="highlight-text">inferring schemas and separating data from structure</span> for a more compact representation.
+        </p>
+
+        <p className="import-json-instruction">
+          Paste or type JSON in the following code block.
         </p>
 
         <div className="import-json-editor-container">
@@ -344,11 +348,12 @@ ${isLargeJson ? '\n⚠️ **Note:** A JSON file was downloaded to your computer.
             disabled={!jsonText.trim()}
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-              <polyline points="17 8 12 3 7 8"></polyline>
-              <line x1="12" y1="3" x2="12" y2="15"></line>
+              <path d="M17 2.1l4 4-4 4"></path>
+              <path d="M3 12.2v-2a4 4 0 0 1 4-4h12.8"></path>
+              <path d="M7 21.9l-4-4 4-4"></path>
+              <path d="M21 11.8v2a4 4 0 0 1-4 4H4.2"></path>
             </svg>
-            Import JSON
+            Convert
           </button>
         </div>
       </div>

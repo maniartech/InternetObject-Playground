@@ -109,6 +109,12 @@
   font-weight: 500;
 }
 
+.import-json-instruction {
+  color: #888;
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
 .import-json-editor-container {
   height: 350px;
   min-height: 300px;
@@ -259,6 +265,7 @@
   font-size: 12px;
   color: #777;
   margin-top: 8px;
+  margin-bottom: 16px;
   line-height: 1.4;
 }
 
