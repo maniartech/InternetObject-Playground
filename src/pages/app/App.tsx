@@ -12,6 +12,7 @@ import Playground                           from '../playgroud/Playground'
 import WelcomeNotification                  from '../../components/welcome-notification/WelcomeNotification'
 import ShareDialog                          from '../../components/share-dialog/ShareDialog';
 import WarningDialog                        from '../../components/warning-dialog/WarningDialog';
+import ImportJSONDialog                     from '../../components/import-json-dialog/ImportJSONDialog';
 
 function App (): JSX.Element {
   const { sampleId } = useParams<{ sampleId: string }>();
@@ -19,6 +20,7 @@ function App (): JSX.Element {
   const navigate = useNavigate();
 
   const [isShareDialogOpen, setIsShareDialogOpen] = useState(false);
+  const [isImportJSONDialogOpen, setIsImportJSONDialogOpen] = useState(false);
   const [shareUrl, setShareUrl] = useState('');
   const [warningDialog, setWarningDialog] = useState<{ isOpen: boolean; message: string }>({ isOpen: false, message: '' });
 
@@ -204,6 +206,21 @@ function App (): JSX.Element {
     setIsShareDialogOpen(true);
   }, [document, schema, showSchema, minifiedOutput, skipErrors]);
 
+  const handleImportJSON = useCallback((importedSchema: string, importedDocument: string) => {
+    // Set the imported schema and document
+    setSchema(importedSchema);
+    setDocument(importedDocument);
+
+    // If schema is provided, show the schema panel
+    if (importedSchema.trim()) {
+      setShowSchema(true);
+    }
+
+    // Clear query params and navigate to root
+    setSearchParams({});
+    setSample(null);
+  }, [setSearchParams]);
+
   return (
     <div className="app">
       <WelcomeNotification onClose={handleWelcomeClose} />
@@ -215,6 +232,11 @@ function App (): JSX.Element {
         minifiedOutput={minifiedOutput}
         skipErrors={skipErrors}
       />
+      <ImportJSONDialog
+        isOpen={isImportJSONDialogOpen}
+        onClose={() => setIsImportJSONDialogOpen(false)}
+        onImport={handleImportJSON}
+      />
       <WarningDialog
         isOpen={warningDialog.isOpen}
         onClose={() => setWarningDialog({ ...warningDialog, isOpen: false })}
@@ -224,6 +246,14 @@ function App (): JSX.Element {
       <a href="#main-content" className="skip-link">Skip to main content</a>
       <Header>
         <div className='toolbar'>
+          <button className="import-json-btn" onClick={() => setIsImportJSONDialogOpen(true)} title="Import JSON data and infer schema">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="17 8 12 3 7 8"></polyline>
+              <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+            <span>Import JSON</span>
+          </button>
           <button className="share-btn" onClick={handleShare} title="Share Code">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="18" cy="5" r="3"></circle>
