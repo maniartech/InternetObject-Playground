@@ -13,6 +13,8 @@ interface JsonError {
   message: string;
   line?: number;
   column?: number;
+  isIOError?: boolean; // true if it's an Internet Object error, not JSON parsing error
+  jsonInput?: string;  // original JSON input for bug reports
 }
 
 const SAMPLE_JSON = `{
@@ -20,6 +22,9 @@ const SAMPLE_JSON = `{
   "age": 30,
   "email": "john@example.com"
 }`;
+
+// TODO: Set to false before production release
+const DEBUG_TEST_IO_ERROR = false;
 
 export default function ImportJSONDialog({
   isOpen,
@@ -158,9 +163,60 @@ export default function ImportJSONDialog({
       onImport(schemaPart, cleanDataPart);
       onClose();
     } catch (e: any) {
-      setError({ message: `Failed to infer schema: ${e.message}` });
+      setError({
+        message: `Failed to infer schema: ${e.message}`,
+        isIOError: true,
+        jsonInput: jsonText,
+      });
     }
   }, [jsonText, onImport, onClose, parseJsonError]);
+
+  const handleReportIssue = useCallback(() => {
+    if (!error?.isIOError) return;
+
+    const issueTitle = encodeURIComponent(`[Import JSON] Schema inference error`);
+    const jsonSnippet = error.jsonInput
+      ? error.jsonInput.length > 500
+        ? error.jsonInput.substring(0, 500) + '\n... (truncated)'
+        : error.jsonInput
+      : 'N/A';
+
+    const issueBody = encodeURIComponent(
+`## Description
+Error occurred while importing JSON and inferring schema in the IO Playground.
+
+## Error Message
+\`\`\`
+${error.message}
+\`\`\`
+
+## JSON Input
+\`\`\`json
+${jsonSnippet}
+\`\`\`
+
+## Environment
+- Source: IO Playground Import JSON
+- Date: ${new Date().toISOString()}
+- User Agent: ${navigator.userAgent}
+
+## Additional Context
+<!-- Please add any additional context about the problem here -->
+`
+    );
+
+    const githubUrl = `https://github.com/maniartech/InternetObject-js/issues/new?title=${issueTitle}&body=${issueBody}&labels=bug,import-json`;
+    window.open(githubUrl, '_blank');
+  }, [error]);
+
+  // Test function to simulate IO error (for debugging)
+  const handleTestIOError = useCallback(() => {
+    setError({
+      message: 'Failed to infer schema: Test error - Unable to process nested object structure at path "data.items[0].value"',
+      isIOError: true,
+      jsonInput: jsonText,
+    });
+  }, [jsonText]);
 
   const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
     if (e.key === 'Escape') {
@@ -190,7 +246,10 @@ export default function ImportJSONDialog({
               <line x1="12" y1="3" x2="12" y2="15"></line>
             </svg>
           </div>
-          <h2>Import JSON</h2>
+          <div className="import-json-title-group">
+            <h2>Import JSON</h2>
+            <span className="experimental-badge">Experimental</span>
+          </div>
         </div>
 
         <p className="import-json-promo">
@@ -221,30 +280,47 @@ export default function ImportJSONDialog({
         </div>
 
         {error && (
-          <div
-            className={`import-json-error ${error.line ? 'clickable' : ''}`}
-            onClick={error.line ? handleErrorClick : undefined}
-            title={error.line ? 'Click to go to error location' : undefined}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="12" cy="12" r="10"></circle>
-              <line x1="12" y1="8" x2="12" y2="12"></line>
-              <line x1="12" y1="16" x2="12.01" y2="16"></line>
-            </svg>
-            <span>{error.message}</span>
-            {error.line && (
-              <svg className="goto-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="9 18 15 12 9 6"></polyline>
+          <div className="import-json-error-container">
+            <div
+              className={`import-json-error ${error.line ? 'clickable' : ''}`}
+              onClick={error.line ? handleErrorClick : undefined}
+              title={error.line ? 'Click to go to error location' : undefined}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
               </svg>
+              <span>{error.message}</span>
+              {error.line && (
+                <svg className="goto-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+              )}
+            </div>
+            {error.isIOError && (
+              <button className="report-issue-btn" onClick={handleReportIssue} title="Report this issue on GitHub">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+                </svg>
+                Report Issue
+              </button>
             )}
           </div>
-        )}
-
-        <p className="import-json-hint">
+        )}        <p className="import-json-hint">
           <strong>Tip:</strong> You can import JSON objects or arrays. The schema will be automatically inferred from your data structure.
         </p>
 
         <div className="import-json-button-group">
+          {DEBUG_TEST_IO_ERROR && (
+            <button
+              className="import-json-cancel-btn"
+              onClick={handleTestIOError}
+              style={{ color: '#f59e0b', borderColor: '#f59e0b' }}
+            >
+              Test IO Error
+            </button>
+          )}
           <button className="import-json-cancel-btn" onClick={onClose}>
             Cancel
           </button>
