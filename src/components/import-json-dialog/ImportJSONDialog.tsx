@@ -174,12 +174,30 @@ export default function ImportJSONDialog({
   const handleReportIssue = useCallback(() => {
     if (!error?.isIOError) return;
 
+    const jsonInput = error.jsonInput || '';
+    const isLargeJson = jsonInput.length > 500;
+
+    // For large JSON, create a downloadable file
+    if (isLargeJson) {
+      // Create and download the JSON file
+      const blob = new Blob([jsonInput], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `io-import-error-${Date.now()}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
     const issueTitle = encodeURIComponent(`[Import JSON] Schema inference error`);
-    const jsonSnippet = error.jsonInput
-      ? error.jsonInput.length > 500
-        ? error.jsonInput.substring(0, 500) + '\n... (truncated)'
-        : error.jsonInput
-      : 'N/A';
+    const jsonSection = isLargeJson
+      ? `**JSON Input:** _Large file (${jsonInput.length} characters) - Please attach the downloaded \`io-import-error-*.json\` file to this issue._`
+      : `## JSON Input
+\`\`\`json
+${jsonInput}
+\`\`\``;
 
     const issueBody = encodeURIComponent(
 `## Description
@@ -190,10 +208,7 @@ Error occurred while importing JSON and inferring schema in the IO Playground.
 ${error.message}
 \`\`\`
 
-## JSON Input
-\`\`\`json
-${jsonSnippet}
-\`\`\`
+${jsonSection}
 
 ## Environment
 - Source: IO Playground Import JSON
@@ -202,14 +217,13 @@ ${jsonSnippet}
 
 ## Additional Context
 <!-- Please add any additional context about the problem here -->
+${isLargeJson ? '\n⚠️ **Note:** A JSON file was downloaded to your computer. Please drag and drop it into this issue to attach it.' : ''}
 `
     );
 
     const githubUrl = `https://github.com/maniartech/InternetObject-js/issues/new?title=${issueTitle}&body=${issueBody}&labels=bug,import-json`;
     window.open(githubUrl, '_blank');
-  }, [error]);
-
-  // Test function to simulate IO error (for debugging)
+  }, [error]);  // Test function to simulate IO error (for debugging)
   const handleTestIOError = useCallback(() => {
     setError({
       message: 'Failed to infer schema: Test error - Unable to process nested object structure at path "data.items[0].value"',
