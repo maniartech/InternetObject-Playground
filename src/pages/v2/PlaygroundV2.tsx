@@ -41,13 +41,13 @@ export default function PlaygroundV2({
       {/* Mobile Layout */}
       <div className="flex flex-col h-full md:hidden">
         {/* Tabs */}
-        <div className="flex bg-muted/5 border-b border-border">
+        <div className="flex border-b border-border bg-muted/5">
           <button
             className={cn(
-              "flex-1 p-3 text-sm font-medium flex items-center justify-center gap-2 transition-colors rounded-t-md border-t-2 relative",
+              "flex-1 p-3 text-sm font-medium flex items-center justify-center gap-2 transition-all rounded-t-md border-t-2 relative",
               activeTab === 'document'
-                ? "border-t-primary bg-background border-x border-border border-b-background mb-[-1px] text-primary"
-                : "border-transparent text-muted-foreground hover:text-foreground hover:bg-muted/10 border-b-transparent"
+                ? "border-t-primary bg-background text-primary border-x border-border border-b-background mb-[-1px] z-10"
+                : "border-t-transparent bg-transparent text-muted-foreground border-b-transparent hover:bg-muted/5 hover:text-foreground"
             )}
             onClick={() => setActiveTab('document')}
           >
@@ -56,10 +56,10 @@ export default function PlaygroundV2({
           </button>
           <button
             className={cn(
-              "flex-1 p-3 text-sm font-medium flex items-center justify-center gap-2 transition-colors rounded-t-md border-t-2 relative",
+              "flex-1 p-3 text-sm font-medium flex items-center justify-center gap-2 transition-all rounded-t-md border-t-2 relative",
               activeTab === 'schema'
-                ? "border-t-primary bg-background border-x border-border border-b-background mb-[-1px] text-primary"
-                : "border-transparent text-muted-foreground hover:text-foreground hover:bg-muted/10 border-b-transparent"
+                ? "border-t-primary bg-background text-primary border-x border-border border-b-background mb-[-1px] z-10"
+                : "border-t-transparent bg-transparent text-muted-foreground border-b-transparent hover:bg-muted/5 hover:text-foreground"
             )}
             onClick={() => setActiveTab('schema')}
           >
