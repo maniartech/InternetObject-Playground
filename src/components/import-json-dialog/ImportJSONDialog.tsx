@@ -50,7 +50,7 @@ export default function ImportJSONDialog({
     // Format: "... at position X" or "... at line Y column Z"
     const positionMatch = errorMessage.match(/at position (\d+)/i);
     const lineColMatch = errorMessage.match(/line (\d+) column (\d+)/i);
-    
+
     if (lineColMatch) {
       return {
         message: errorMessage,
@@ -58,7 +58,7 @@ export default function ImportJSONDialog({
         column: parseInt(lineColMatch[2], 10),
       };
     }
-    
+
     if (positionMatch) {
       const position = parseInt(positionMatch[1], 10);
       // Calculate line and column from position
@@ -66,14 +66,14 @@ export default function ImportJSONDialog({
       const lines = textUpToError.split('\n');
       const line = lines.length;
       const column = lines[lines.length - 1].length + 1;
-      
+
       return {
         message: `${errorMessage} (line ${line} column ${column})`,
         line,
         column,
       };
     }
-    
+
     return { message: errorMessage };
   }, [jsonText]);
 
@@ -82,12 +82,12 @@ export default function ImportJSONDialog({
       const editor = editorRef.current;
       const line = error.line;
       const column = error.column || 1;
-      
+
       // Set cursor position and reveal the line
       editor.setPosition({ lineNumber: line, column });
       editor.revealLineInCenter(line);
       editor.focus();
-      
+
       // Optionally select the line to highlight it
       editor.setSelection({
         startLineNumber: line,
@@ -221,7 +221,7 @@ export default function ImportJSONDialog({
         </div>
 
         {error && (
-          <div 
+          <div
             className={`import-json-error ${error.line ? 'clickable' : ''}`}
             onClick={error.line ? handleErrorClick : undefined}
             title={error.line ? 'Click to go to error location' : undefined}
