@@ -115,13 +115,21 @@ export default function ImportJSONDialog({
       return;
     }
 
+    // Determine if input is a single object or a collection (array)
+    const isCollection = Array.isArray(jsonData);
+
     // Use loadInferred to infer schema and load data
     try {
       const doc = loadInferred(jsonData);
 
       // Stringify the document to get schema and data parts
-      // Get schema/definitions part
-      const schemaText = stringifyDocument(doc, { includeHeader: true });
+      // For single objects, use formatting (indent: 2)
+      // For collections, keep compact (no indent)
+      const stringifyOptions = isCollection
+        ? { includeHeader: true }
+        : { includeHeader: true, indent: 2 };
+
+      const schemaText = stringifyDocument(doc, stringifyOptions);
 
       // Extract schema (header) and data parts
       // The stringifyDocument output format is:
