@@ -92,10 +92,11 @@ export default function Output({
                 : undefined;
 
               // Format message with category prefix for consistency
+              // Note: errorItem.message already contains position info from the library
               const prefix = errorItem.category === 'syntax' ? 'SYNTAX_ERROR: '
                            : errorItem.category === 'validation' ? 'VALIDATION_ERROR: '
                            : 'ERROR: ';
-              const displayMessage = `${prefix}${errorItem.message} at ${errorItem.range.startLine}:${errorItem.range.startColumn}`;
+              const displayMessage = `${prefix}${errorItem.message}`;
 
               return (
                 <div key={errorItem.id} className={onClick ? `${errorClass} clickable` : errorClass} onClick={onClick} title={onClick ? 'Click to jump to source' : undefined}>

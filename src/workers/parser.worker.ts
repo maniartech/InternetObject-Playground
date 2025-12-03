@@ -205,12 +205,14 @@ function parseDoc(
 
 // Helper functions
 function getErrorMessage(e: any): string {
-  if (e instanceof IOSyntaxError) return 'SYNTAX_ERROR: ' + (e?.message || String(e));
-  if (e instanceof IOValidationError) return 'VALIDATION_ERROR: ' + (e?.message || String(e));
-  return 'ERROR: ' + (e?.message || String(e));
-}
+  // Include collection index (row number) if available
+  const rowInfo = typeof e?.collectionIndex === 'number' ? ` [Row ${e.collectionIndex + 1}]` : '';
+  // console.log('[WORKER] getErrorMessage:', { msg: e?.message?.slice(0, 30), collectionIndex: e?.collectionIndex, rowInfo });
 
-function getErrorCategory(e: any): ErrorCategory {
+  if (e instanceof IOSyntaxError) return 'SYNTAX_ERROR:' + rowInfo + ' ' + (e?.message || String(e));
+  if (e instanceof IOValidationError) return 'VALIDATION_ERROR:' + rowInfo + ' ' + (e?.message || String(e));
+  return 'ERROR:' + rowInfo + ' ' + (e?.message || String(e));
+}function getErrorCategory(e: any): ErrorCategory {
   if (e instanceof IOSyntaxError) return 'syntax';
   if (e instanceof IOValidationError) return 'validation';
   return 'runtime';
@@ -235,7 +237,9 @@ function errorToErrorItem(e: any, source: 'doc' | 'defs'): ErrorItem | null {
   if (!range) return null;
 
   const category = getErrorCategory(e);
-  const message = e?.message || String(e);
+  // Include collection index (row number) if available
+  const rowInfo = typeof e?.collectionIndex === 'number' ? `[Row ${e.collectionIndex + 1}] ` : '';
+  const message = rowInfo + (e?.message || String(e));
 
   return {
     id: generateErrorId(range, message),

@@ -58,7 +58,7 @@ const Playground = ({
     showSchema,
     minifiedOutput,
     skipErrors,
-    { useWorker: true, debug: false } // Enable Web Worker parsing
+    { debug: false }
   );
   const [docSelection, setDocSelection] = useState<{ startLineNumber: number; startColumn: number; endLineNumber?: number; endColumn?: number } | null>(null);
 
