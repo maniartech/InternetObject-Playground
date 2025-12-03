@@ -1,17 +1,19 @@
-import { useState, useEffect, useMemo }         from 'react'
-import                                          './Output.css'
-import Editor, { EditorProps }             from '../editor/Editor'
-import Overlay                             from '../overlay/Overlay'
+import { useState, useEffect, useMemo, useCallback } from 'react'
+import './Output.css'
+import Editor from '../editor/Editor'
+import Overlay from '../overlay/Overlay'
 import { sortErrorMessages, parseErrorPosition } from '../../utils/errorSorting'
-import { generateJsonErrorDecorations }         from '../../utils/jsonDecorations'
-import type { ErrorItem }                      from '../../types/errors'
+import { generateJsonErrorDecorations } from '../../utils/jsonDecorations'
+import type { ErrorItem } from '../../types/errors'
 
-interface OutputProps extends EditorProps {
+interface OutputProps {
+  value?: string
   error?: boolean
   errorMessages?: string[]  // Deprecated: use errorItems instead
   errorItems?: ErrorItem[]  // Structured errors with full metadata
   onNavigateToError?: (pos: { line: number; col: number }) => void
   isParsing?: boolean       // Indicates async parsing in progress
+  options?: Record<string, unknown>
 }
 
 export default function Output({
@@ -19,10 +21,8 @@ export default function Output({
   error,
   errorMessages,
   errorItems,
-  options,
   onNavigateToError,
-  isParsing
-}:OutputProps) {
+}: OutputProps) {
   const [overlayDismissed, setOverlayDismissed] = useState(false);
   const [lastErrorContent, setLastErrorContent] = useState<string>('');
 
@@ -62,72 +62,86 @@ export default function Output({
     return [];
   }, [errorItems, errorMessages]);
 
-  // Build Monaco decorations that highlight error objects (those with "__error": true) in the JSON output
-  // Uses extracted utility function with comprehensive test coverage
+  // Build Monaco decorations that highlight error objects in the JSON output
   const outputDecorations = useMemo(() => {
     return generateJsonErrorDecorations(value || '');
   }, [value]);
 
+  const handleDismissOverlay = useCallback(() => {
+    setOverlayDismissed(true);
+  }, []);
+
+  const showOverlay = error && sortedErrors.length > 0 && !overlayDismissed;
+
   return (
     <div className="output">
-  <Editor value={value} language="json" options={options} decorations={outputDecorations} />
-      {
-      error && sortedErrors && sortedErrors.length > 0 && !overlayDismissed && <Overlay
-        heading={`Compiled with ${sortedErrors.length} problem${sortedErrors.length > 1 ? 's' : ''}:`}
-        onClose={() => setOverlayDismissed(true)}
-      >
-        <div className="errors-container">
-          {sortedErrors.map((item, index) => {
-            // Handle both ErrorItem and string types
-            const isErrorItem = typeof item === 'object' && 'category' in item;
+      <Editor value={value} language="json" decorations={outputDecorations} />
+      {showOverlay && (
+        <Overlay
+          heading={`Compiled with ${sortedErrors.length} problem${sortedErrors.length > 1 ? 's' : ''}:`}
+          onClose={handleDismissOverlay}
+        >
+          <div className="errors-container">
+            {sortedErrors.map((item, index) => {
+              // Handle both ErrorItem and string types
+              const isErrorItem = typeof item === 'object' && 'category' in item;
 
-            if (isErrorItem) {
-              // Use structured ErrorItem
-              const errorItem = item as ErrorItem;
-              const isValidation = errorItem.category === 'validation';
-              const errorClass = isValidation ? 'error validation-error' : 'error';
+              if (isErrorItem) {
+                // Use structured ErrorItem
+                const errorItem = item as ErrorItem;
+                const isValidation = errorItem.category === 'validation';
+                const errorClass = isValidation ? 'error validation-error' : 'error';
 
-              const onClick = onNavigateToError
-                ? () => onNavigateToError!({ line: errorItem.range.startLine, col: errorItem.range.startColumn })
-                : undefined;
+                const onClick = onNavigateToError
+                  ? () => onNavigateToError({ line: errorItem.range.startLine, col: errorItem.range.startColumn })
+                  : undefined;
 
-              // Format message with category prefix for consistency
-              // Note: errorItem.message already contains position info from the library
-              const prefix = errorItem.category === 'syntax' ? 'SYNTAX_ERROR: '
-                           : errorItem.category === 'validation' ? 'VALIDATION_ERROR: '
-                           : 'ERROR: ';
-              const displayMessage = `${prefix}${errorItem.message}`;
+                // Format message with category prefix for consistency
+                const prefix = errorItem.category === 'syntax' ? 'SYNTAX_ERROR: '
+                             : errorItem.category === 'validation' ? 'VALIDATION_ERROR: '
+                             : 'ERROR: ';
+                const displayMessage = `${prefix}${errorItem.message}`;
 
-              return (
-                <div key={errorItem.id} className={onClick ? `${errorClass} clickable` : errorClass} onClick={onClick} title={onClick ? 'Click to jump to source' : undefined}>
-                  {index > 0 && <hr className="error-separator" />}
-                  {displayMessage}
-                </div>
-              );
-            } else {
-              // Legacy string-based error
-              const errMsg = item as string;
-              const isValidation = errMsg.startsWith('VALIDATION_ERROR:');
-              const errorClass = isValidation ? 'error validation-error' : 'error';
+                return (
+                  <div
+                    key={errorItem.id}
+                    className={onClick ? `${errorClass} clickable` : errorClass}
+                    onClick={onClick}
+                    title={onClick ? 'Click to jump to source' : undefined}
+                  >
+                    {index > 0 && <hr className="error-separator" />}
+                    {displayMessage}
+                  </div>
+                );
+              } else {
+                // Legacy string-based error
+                const errMsg = item as string;
+                const isValidation = errMsg.startsWith('VALIDATION_ERROR:');
+                const errorClass = isValidation ? 'error validation-error' : 'error';
 
-              // Parse position using tested utility
-              const pos = parseErrorPosition(errMsg);
-              const hasPosition = pos.line !== Number.MAX_SAFE_INTEGER;
-              const onClick = onNavigateToError && hasPosition
-                ? () => onNavigateToError!(pos)
-                : undefined;
+                // Parse position using tested utility
+                const pos = parseErrorPosition(errMsg);
+                const hasPosition = pos.line !== Number.MAX_SAFE_INTEGER;
+                const onClick = onNavigateToError && hasPosition
+                  ? () => onNavigateToError(pos)
+                  : undefined;
 
-              return (
-                <div key={index} className={onClick ? `${errorClass} clickable` : errorClass} onClick={onClick} title={onClick ? 'Click to jump to source' : undefined}>
-                  {index > 0 && <hr className="error-separator" />}
-                  {errMsg}
-                </div>
-              );
-            }
-          })}
-        </div>
-      </Overlay>
-      }
+                return (
+                  <div
+                    key={index}
+                    className={onClick ? `${errorClass} clickable` : errorClass}
+                    onClick={onClick}
+                    title={onClick ? 'Click to jump to source' : undefined}
+                  >
+                    {index > 0 && <hr className="error-separator" />}
+                    {errMsg}
+                  </div>
+                );
+              }
+            })}
+          </div>
+        </Overlay>
+      )}
     </div>
   )
 }

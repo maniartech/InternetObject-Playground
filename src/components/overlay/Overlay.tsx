@@ -3,7 +3,7 @@ import                                     './Overlay.css'
 interface OverlayProps {
   heading?: string;
   onClose: () => void;
-  children?: any;
+  children?: React.ReactNode;
 }
 
 const Overlay: React.FC<OverlayProps> = ({ onClose, children, heading }) => {

@@ -277,6 +277,7 @@ function App (): JSX.Element {
               id="sample-data-selector"
               className={hasVisited ? '' : 'highlight'}
               title="Select IO sample data"
+              aria-label="Select sample data"
               onChange={handleSampleChange}
               value={sample?.id || ''}
             >

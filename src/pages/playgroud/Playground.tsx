@@ -1,4 +1,5 @@
 import 'split-pane-react/esm/themes/default.css';
+import './styles.css';
 
 import { useEffect, useRef, useState } from 'react';
 import Toggle             from 'react-toggle';
@@ -154,7 +155,7 @@ const Playground = ({
               sashRender={() => <div className="sash" />}
             >
               <Pane minSize={0}>
-                <div className="top" style={{ height: '100%' }}>
+                <div className="top pane-full-height">
                   <Bar label="Schema & Definitions" bytes={schema.length} />
                   <Editor
                     onChange={setSchema}
@@ -165,7 +166,7 @@ const Playground = ({
                 </div>
               </Pane>
               <Pane minSize={200}>
-                <div className="bottom" style={{ height: '100%' }}>
+                <div className="bottom pane-full-height">
                   <Bar label="Internet Object Document" bytes={document.length} outputBytes={jsonText.length} minified={minifiedOutput} isError={error} />
                   <Editor
                     value={document}

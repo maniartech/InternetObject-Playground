@@ -52,6 +52,7 @@
     ]
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.9.1",
     "@types/node": "^22.19.0",
     "@vitejs/plugin-react": "^5.1.0",
     "@vitest/ui": "^4.0.6",

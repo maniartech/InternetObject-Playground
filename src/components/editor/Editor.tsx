@@ -1,16 +1,22 @@
-import { useEffect, useMemo, useState }   from 'react'
-import MonacoEditor                       from '@monaco-editor/react'
+import { useEffect, useMemo, useState, useCallback } from 'react'
+import MonacoEditor from '@monaco-editor/react'
 
-import useDebounce                        from '../../hooks/use-debounce'
-import editorOptions                      from './editor-options'
-import setupMonaco                        from './monaco'
-import type { EditorMarker }              from '../../types/errors'
+import useDebounce from '../../hooks/use-debounce'
+import editorOptions from './editor-options'
+import setupMonaco from './monaco'
+import type { EditorMarker } from '../../types/errors'
+
+/**
+ * Monaco editor instance type.
+ * Using 'any' here is intentional as Monaco's internal types are complex
+ * and the @monaco-editor/react package doesn't export proper types.
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type MonacoInstance = any
 
 // Define an interface for the Editor component's props
 export interface EditorProps {
-
   value?: string
-
   markers?: EditorMarker[]
 
   // Optional Monaco decorations (background highlights, etc.)
@@ -24,9 +30,8 @@ export interface EditorProps {
     isWholeLine?: boolean
   }>
 
-  // onChange is an optional function that will be called when the editor's
-  // value changes
-  onChange?: (value: any, event: any) => void
+  // onChange is called when the editor's value changes
+  onChange?: (value: string | undefined) => void
 
   onChangeCaretPosition?: (position: {
     row: number
@@ -34,20 +39,16 @@ export interface EditorProps {
     position: number
   }) => void
 
-  // onMount is an optional function that will be called when the
-  // editor is mounted
-  onMount?: (editor: any, monaco: any) => void
-
-  // language is an optional string that specifies the language of the editor
+  // language specifies the editor language mode
   language?: string
 
-  // theme is an optional string that specifies the theme of the editor
-  theme?: string
-
-  // debounce is an optional number that specifies the debounce delay
+  // debounce delay in milliseconds for onChange
   debounce?: number
 
-  // Optional selection to programmatically select/reveal a range in the editor
+  // Optional Monaco editor options override
+  options?: Record<string, unknown>
+
+  // Optional selection to programmatically select/reveal a range
   selection?: {
     startLineNumber: number
     startColumn: number
@@ -56,42 +57,43 @@ export interface EditorProps {
   } | null
 }
 
-function Editor (props: EditorProps): JSX.Element {
-  const [editorInstance, setEditorInstance] = useState<any>(null);
-  const [decorationIds, setDecorationIds] = useState<string[]>([]);
+function Editor({
+  value,
+  markers,
+  decorations,
+  onChange,
+  onChangeCaretPosition,
+  language = 'io',
+  debounce = 0,
+  options: optionsOverride,
+  selection,
+}: EditorProps): JSX.Element {
+  const [editorInstance, setEditorInstance] = useState<MonacoInstance>(null)
+  const [decorationIds, setDecorationIds] = useState<string[]>([])
 
-  const options: any = useMemo(() => {
-    return {
-      ...editorOptions,
-      ...(props.options ?? {})
-    }
-  }, [props.options])
+  const options = useMemo(() => ({
+    ...editorOptions,
+    ...(optionsOverride ?? {})
+  }), [optionsOverride])
 
-
+  // Set markers on editor model
   useEffect(() => {
-    const monaco = (window as any).monaco
-    if (!monaco) {
-      return
-    }
+    const monaco = (window as MonacoInstance).monaco
+    if (!monaco || !editorInstance) return
 
-
-    // Set the model markers
-    if (editorInstance && props.markers) {
-      monaco.editor.setModelMarkers(editorInstance.getModel(), 'owner', props.markers)
-    }
-
-  }, [props.markers, editorInstance])
+    monaco.editor.setModelMarkers(editorInstance.getModel(), 'owner', markers ?? [])
+  }, [markers, editorInstance])
 
   // Apply Monaco decorations for background highlights
   useEffect(() => {
-    const monaco = (window as any).monaco
+    const monaco = (window as MonacoInstance).monaco
     if (!monaco || !editorInstance) return
 
-    const decorations = (props.decorations ?? []).map(d => ({
+    const newDecorations = (decorations ?? []).map(d => ({
       range: new monaco.Range(d.startLineNumber, d.startColumn, d.endLineNumber, d.endColumn),
       options: {
         className: d.className || 'io-error-object-decoration',
-        linesDecorationsClassName: (d.className ? d.className + '-gutter' : undefined),
+        linesDecorationsClassName: d.className ? `${d.className}-gutter` : undefined,
         stickiness: 1, // Never grow when typing at edges
         hoverMessage: d.hoverMessage ? { value: d.hoverMessage } : undefined,
         isWholeLine: !!d.isWholeLine,
@@ -107,43 +109,48 @@ function Editor (props: EditorProps): JSX.Element {
       }
     }))
 
-    const newIds = editorInstance.deltaDecorations(decorationIds, decorations)
+    const newIds = editorInstance.deltaDecorations(decorationIds, newDecorations)
     setDecorationIds(newIds)
 
     return () => {
       // Clean up decorations when unmounting or dependencies change
-      try { editorInstance.deltaDecorations(newIds, []) } catch {}
+      try {
+        editorInstance.deltaDecorations(newIds, [])
+      } catch {
+        // Ignore cleanup errors (editor may be disposed)
+      }
     }
-  }, [props.decorations, editorInstance])
+    // Note: decorationIds intentionally excluded to avoid infinite loop
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [decorations, editorInstance])
 
   // Apply programmatic selection/reveal when selection prop changes
   useEffect(() => {
-    const monaco = (window as any).monaco
-    if (!monaco || !editorInstance) return
-    const sel = props.selection
-    if (!sel) return
+    const monaco = (window as MonacoInstance).monaco
+    if (!monaco || !editorInstance || !selection) return
 
-    const startLn = sel.startLineNumber
-    const startCol = sel.startColumn
-    const endLn = sel.endLineNumber ?? sel.startLineNumber
-    const endCol = sel.endColumn ?? (sel.startColumn + 1)
+    const { startLineNumber, startColumn, endLineNumber, endColumn } = selection
+    const endLn = endLineNumber ?? startLineNumber
+    const endCol = endColumn ?? (startColumn + 1)
 
     try {
-      const range = new monaco.Range(startLn, startCol, endLn, endCol)
+      const range = new monaco.Range(startLineNumber, startColumn, endLn, endCol)
       editorInstance.setSelection(range)
       editorInstance.revealRangeInCenter(range)
       editorInstance.focus()
-    } catch {}
-  }, [props.selection, editorInstance])
+    } catch {
+      // Ignore errors if editor is not ready
+    }
+  }, [selection, editorInstance])
 
-  const handleEditorDidMount = (editor: any, monaco: any): void => {
+  const handleEditorDidMount = useCallback((editor: MonacoInstance, monaco: MonacoInstance): void => {
     setupMonaco(monaco)
     setEditorInstance(editor)
 
-    editor.onDidChangeCursorPosition((event: any) => {
-      if (props.onChangeCaretPosition) {
+    editor.onDidChangeCursorPosition((event: MonacoInstance) => {
+      if (onChangeCaretPosition) {
         const position = editor.getModel().getOffsetAt(event.position)
-        props.onChangeCaretPosition({
+        onChangeCaretPosition({
           row: event.position.lineNumber,
           column: event.position.column,
           position,
@@ -152,28 +159,22 @@ function Editor (props: EditorProps): JSX.Element {
     })
 
     editor.focus()
-  }
+  }, [onChangeCaretPosition])
 
-  const handleOnChange = useDebounce((value, event) => {
-    if (props.onChange) {
-      props.onChange(value, event)
-    }
-  }, props.debounce ?? 0)
+  const handleOnChange = useDebounce((newValue: string | undefined) => {
+    onChange?.(newValue)
+  }, debounce)
 
   return (
     <MonacoEditor
-      defaultLanguage={props.language || "io"}
+      defaultLanguage={language}
       defaultValue=""
-      value={props.value ?? ''}
-      language={props.language || "io"}
+      value={value ?? ''}
+      language={language}
       theme="io-dark"
-
-      // Events
       onMount={handleEditorDidMount}
       onChange={handleOnChange}
-
-      // Options
-      options= {options}
+      options={options}
     />
   )
 }

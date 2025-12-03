@@ -3,7 +3,11 @@ import { Link }            from 'react-router-dom'
 import                          './Header.css'
 import Logo                from '../logo/Logo'
 
-export default function Header(props: any) {
+interface HeaderProps {
+  children?: React.ReactNode;
+}
+
+export default function Header({ children }: HeaderProps) {
   return (
     <header className="App-header">
       <div className="left">
@@ -42,9 +46,9 @@ export default function Header(props: any) {
                 Specification
               </Link>
             </li>
-          </ul>
+            </ul>
         </div>
-        {props.children}
+        {children}
       </div>
     </header>
   )

@@ -1,7 +1,7 @@
 .bar {
   padding: 8px 16px;
   /* background-color: var(--bg-color-primary); */
-  background-color: #2f1b26;
+  background-color: var(--bar-bg-color, #2f1b26);
   color: var(--text-color);
   min-height: 18px;
 

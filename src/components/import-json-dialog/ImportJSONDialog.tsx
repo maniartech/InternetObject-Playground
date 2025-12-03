@@ -23,9 +23,6 @@ const SAMPLE_JSON = `{
   "email": "john@example.com"
 }`;
 
-// TODO: Set to false before production release
-const DEBUG_TEST_IO_ERROR = false;
-
 export default function ImportJSONDialog({
   isOpen,
   onClose,
@@ -231,14 +228,7 @@ ${isLargeJson ? '\n⚠️ **Note:** A JSON file was downloaded to your computer.
 
     const githubUrl = `https://github.com/maniartech/InternetObject-js/issues/new?title=${issueTitle}&body=${issueBody}&labels=bug,import-json`;
     window.open(githubUrl, '_blank');
-  }, [error]);  // Test function to simulate IO error (for debugging)
-  const handleTestIOError = useCallback(() => {
-    setError({
-      message: 'Failed to infer schema: Test error - Unable to process nested object structure at path "data.items[0].value"',
-      isIOError: true,
-      jsonInput: jsonText,
-    });
-  }, [jsonText]);
+  }, [error]);
 
   const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
     if (e.key === 'Escape') {
@@ -338,15 +328,6 @@ ${isLargeJson ? '\n⚠️ **Note:** A JSON file was downloaded to your computer.
         </p>
 
         <div className="import-json-button-group">
-          {DEBUG_TEST_IO_ERROR && (
-            <button
-              className="import-json-cancel-btn"
-              onClick={handleTestIOError}
-              style={{ color: '#f59e0b', borderColor: '#f59e0b' }}
-            >
-              Test IO Error
-            </button>
-          )}
           <button className="import-json-cancel-btn" onClick={onClose}>
             Cancel
           </button>
