@@ -3,7 +3,7 @@
  * Logs metrics in development mode only to help track parse/render performance.
  */
 
-const isDev = process.env.NODE_ENV === 'development';
+const isDev = import.meta.env.DEV;
 
 export interface PerfMetrics {
   parseDuration?: number;
@@ -27,21 +27,21 @@ export function perfStart(label: string): void {
  */
 export function perfEnd(label: string): number | undefined {
   if (!isDev) return undefined;
-  
+
   const startMark = `${label}-start`;
   const endMark = `${label}-end`;
-  
+
   performance.mark(endMark);
-  
+
   try {
     const measure = performance.measure(label, startMark, endMark);
     const duration = measure.duration;
-    
+
     // Clean up marks
     performance.clearMarks(startMark);
     performance.clearMarks(endMark);
     performance.clearMeasures(label);
-    
+
     return duration;
   } catch (e) {
     // Mark might not exist; return undefined
@@ -54,9 +54,9 @@ export function perfEnd(label: string): number | undefined {
  */
 export function logPerfMetrics(context: string, metrics: PerfMetrics): void {
   if (!isDev) return;
-  
+
   const entries: string[] = [];
-  
+
   if (metrics.parseDuration !== undefined) {
     entries.push(`parse: ${metrics.parseDuration.toFixed(2)}ms`);
   }
@@ -72,7 +72,7 @@ export function logPerfMetrics(context: string, metrics: PerfMetrics): void {
   if (metrics.decorationCount !== undefined) {
     entries.push(`${metrics.decorationCount} decorations`);
   }
-  
+
   if (entries.length > 0) {
     console.log(`[Perf] ${context}: ${entries.join(', ')}`);
   }
@@ -85,11 +85,11 @@ export function measureSync<T>(label: string, fn: () => T): T {
   perfStart(label);
   const result = fn();
   const duration = perfEnd(label);
-  
+
   if (duration !== undefined && isDev) {
     console.log(`[Perf] ${label}: ${duration.toFixed(2)}ms`);
   }
-  
+
   return result;
 }
 
@@ -100,10 +100,10 @@ export async function measureAsync<T>(label: string, fn: () => Promise<T>): Prom
   perfStart(label);
   const result = await fn();
   const duration = perfEnd(label);
-  
+
   if (duration !== undefined && isDev) {
     console.log(`[Perf] ${label}: ${duration.toFixed(2)}ms`);
   }
-  
+
   return result;
 }

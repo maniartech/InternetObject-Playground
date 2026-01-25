@@ -158,7 +158,7 @@ const Playground = ({
                 <div className="top pane-full-height">
                   <Bar label="Schema & Definitions" bytes={schema.length} />
                   <Editor
-                    onChange={setSchema}
+                    onChange={(value) => setSchema(value ?? '')}
                     value={schema}
                     markers={defMarkers}
                     onChangeCaretPosition={pos => handleCaretPositionChange("Definitions", pos)}
@@ -171,7 +171,7 @@ const Playground = ({
                   <Editor
                     value={document}
                     markers={markers}
-                    onChange={setDocument}
+                    onChange={(value) => setDocument(value ?? '')}
                     onChangeCaretPosition={pos => handleCaretPositionChange("Internet Object", pos)}
                     selection={docSelection}
                   />

@@ -1,4 +1,6 @@
-const editorOptions = {
+import type { editor } from 'monaco-editor'
+
+const editorOptions: editor.IStandaloneEditorConstructionOptions = {
   selectOnLineNumbers: true,
   minimap: {
     enabled: false
@@ -8,7 +10,7 @@ const editorOptions = {
   autoIndent: 'full',
   matchBrackets: 'always',
   fixedOverflowWidgets: true,
-  scrollbars: {
+  scrollbar: {
     vertical: 'visible',
     horizontal: 'visible'
   },
