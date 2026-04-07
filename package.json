@@ -59,7 +59,7 @@
     "@vitest/ui": "^4.0.6",
     "cross-env": "^7.0.3",
     "happy-dom": "^20.0.10",
-    "vite": "^6.4.1",
+    "vite": "^6.4.2",
     "vite-plugin-monaco-editor": "^1.1.0",
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^4.0.6"
