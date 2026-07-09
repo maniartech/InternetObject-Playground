@@ -60,8 +60,8 @@ export function MobileWorkspace(props: Props) {
   const activeTab: MobileTab = !props.showSchema && props.tab === 'schema' ? 'document' : props.tab;
 
   const tabs: { key: MobileTab; label: string }[] = [
-    ...(props.showSchema ? [{ key: 'schema' as const, label: 'Schema' }] : []),
-    { key: 'document', label: 'Document' },
+    ...(props.showSchema ? [{ key: 'schema' as const, label: 'IO Schema' }] : []),
+    { key: 'document', label: 'IO Document' },
     { key: 'json', label: 'JSON' },
   ];
 
