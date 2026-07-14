@@ -74,7 +74,21 @@ npm run test:ui       # Interactive UI
 npm run test:run      # CI mode
 ```
 
-## 📚 Documentation
+## �️ Development Setup
+
+### Configuring Internet Object Library Path
+
+By default, the playground expects the `internet-object` library in the sibling folder (`../io-js2`). If you have the library in a different location or want to switch to a different version, you can configure the path:
+
+```bash
+# Configure to use a specific path
+npm run config-io -- <path-to-library>
+
+# Example: Point to a sibling folder named 'io-js'
+npm run config-io -- ../io-js
+```
+
+## �📚 Documentation
 
 - **[Accessibility Guide](./docs/ACCESSIBILITY.md)** - WCAG 2.1 AA compliance, keyboard navigation, screen reader support
 - **[Web Worker Implementation](./docs/WEB_WORKER.md)** - Background parsing architecture and usage
