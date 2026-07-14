@@ -19,6 +19,14 @@ Write a schema, write a document, and watch it parse, validate, and expand into 
 
 It stays responsive on large documents by parsing in a Web Worker, works on mobile, and follows your system's light or dark theme.
 
+## JSON to IO
+
+The fastest way to understand Internet Object is to see it hold *your* data.
+
+Hit **JSON to IO**, paste any JSON object or array, and the playground works out a schema from the shape of your data, then rewrites the document against it — keys lifted out into the schema, values left as a compact positional row. You get back a working Internet Object document and the schema that describes it, ready to edit, plus the size difference against the JSON you started from.
+
+It handles nested objects, arrays, and collections, and infers types (string, number, bool, date) from the values it finds. The feature is marked *Experimental*: schema inference is a best guess at intent, so treat the result as a strong first draft rather than a finished schema — you will often want to tighten a type, mark a member optional, or name things better.
+
 ## Run it locally
 
 ```bash
