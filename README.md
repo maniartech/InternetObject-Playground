@@ -1,104 +1,61 @@
 # Internet Object Playground
 
-Welcome to the Internet Object Playground! This interactive platform is designed to let you explore and experiment with the Internet Object (IO) format, a new-age, schema-first, tiny serialization alternative aimed at overcoming the limitations of JSON. Whether you're a developer, a data enthusiast, or just curious about data serialization, this playground offers a hands-on experience to understand and appreciate the capabilities of Internet Object.
+An interactive editor for [Internet Object](https://www.internetobject.org) — a schema-first, JSON-compatible data format that carries the same data in a fraction of the bytes.
 
-![image](https://github.com/maniartech/InternetObject-Playground/assets/134134/300a2868-6831-49bc-b71f-ff02084bf3f1)
+Write a schema, write a document, and watch it parse, validate, and expand into JSON as you type. No install, no signup.
 
-## ✨ Features
+**▶ [play.internetobject.org](https://play.internetobject.org/)**
 
-- **Interactive Editor:** Experiment with IO syntax in real-time using Monaco editor
-- **Schema Validation:** Test how IO schemas validate and structure your data
-- **Instant Feedback:** See parsing results, validation errors, and schema enforcement live
-- **Error Navigation:** Click errors to jump directly to the problem in your code
-- **Performance Benchmarks:** Compare IO's efficiency against JSON and other formats
-- **Examples Library:** Learn from a variety of common and advanced use cases
-- **Non-blocking Parsing:** Large documents parse in the background keeping the UI responsive
+![The Internet Object Playground: schema and document editors on the left, JSON output on the right](public/screenshot.jpeg)
 
-## 🔒 Security
+## What you can do here
 
-This project follows strict security practices:
+- **See the savings.** Every document shows how much smaller it is than the equivalent JSON — the example above is 71.95% smaller.
+- **Convert JSON to IO.** Paste any JSON and the playground infers a schema and rewrites it in Internet Object form.
+- **Separate schema from data.** Toggle the schema into its own pane to see how IO keeps structure out of the payload.
+- **Catch errors as you type.** Parse and validation errors are listed as you go; click one to jump straight to it in the editor.
+- **Share what you build.** Any document can be turned into a link that restores the exact editor state.
+- **Learn from examples.** A library of samples covers the basics through to schemas, collections, and edge cases.
 
-- **Daily**: Run `npm run audit` before commits
-- **Weekly**: Run `npm run security:audit` for comprehensive checks
-- **Automated**: GitHub Actions and Dependabot for continuous monitoring
+It stays responsive on large documents by parsing in a Web Worker, works on mobile, and follows your system's light or dark theme.
 
-### Quick Security Commands
+## Run it locally
+
 ```bash
-# Check for vulnerabilities
-npm run audit
-
-# Fix auto-resolvable issues
-npm run audit:fix
-
-# Comprehensive security audit
-npm run security:audit
-
-# Check outdated dependencies
-npm run deps:check
+npm install
+npm run dev          # http://localhost:4000
 ```
 
-For detailed security guidelines, see [SECURITY-AUDIT.md](./SECURITY-AUDIT.md) or [SECURITY-QUICK-REF.md](./SECURITY-QUICK-REF.md) for quick reference.
+The playground builds against the [`internet-object`](https://github.com/maniartech/InternetObject-js) library in a sibling folder (`../io-js2`). To point it somewhere else:
 
-## 📜 Development Scripts
+```bash
+npm run config-io -- ../path/to/library
+```
+
+> **Note:** the library is a local `file:` dependency, which package managers *copy* rather than link. After changing the library, rebuild it and re-install here (`npm install --force`) or the playground will keep bundling the previous copy.
+
+## Development
 
 | Script | Purpose |
-|--------|---------|
-| `npm run dev` | Start Vite dev server (port 4000, fallback to next available) |
-| `npm start` | Alias for `npm run dev` |
-| `npm run build` | Production build with TypeScript check |
-| `npm run build:check` | Build with full type checking |
-| `npm run preview` | Preview production build locally |
-| `npm test` | Run tests in watch mode with Vitest |
-| `npm run test:ui` | Run tests with interactive UI |
-| `npm run test:run` | Run tests once (CI mode) |
-| `npm run audit` | Check for security vulnerabilities |
-| `npm run security:audit` | Run comprehensive security audit |
-| `npm run deps:check` | Check for outdated dependencies |
+| ------ | ------- |
+| `npm run dev` | Start the dev server on port 4000 |
+| `npm run build` | Production build into `build/` |
+| `npm run build:check` | Type-check, then build |
+| `npm run preview` | Serve the production build locally |
+| `npm test` | Run tests in watch mode |
+| `npm run test:run` | Run tests once (CI) |
+| `npm run audit` | Check dependencies for vulnerabilities |
+| `npm run security:audit` | Full security audit |
 
-## 🏗️ Architecture
+Built with React 19, TypeScript, MUI, Monaco, and Vite. The playground is versioned by publish date (`YYYYMMDD`), stamped into the build and printed in the browser console.
 
-The playground provides a modern, responsive environment for experimenting with Internet Object:
+## Documentation
 
-- **Fast Development:** Quick startup and instant hot-reload for rapid iteration
-- **Background Parsing:** Complex parses run in background threads, keeping the editor responsive
-- **Dual Output Modes:** View parsed results as formatted JSON or minified data
-- **Error Handling:** Clear error messages with one-click navigation to problem locations
+- **[Accessibility](./docs/ACCESSIBILITY.md)** — WCAG 2.1 AA, keyboard navigation, screen readers
+- **[Web Worker](./docs/WEB_WORKER.md)** — how background parsing keeps the editor responsive
+- **[Security](./SECURITY-AUDIT.md)** — audit guidelines, and the [quick reference](./SECURITY-QUICK-REF.md)
 
-## 🧪 Testing
-
-Run the test suite to ensure everything works correctly:
-
-```bash
-npm test              # Watch mode
-npm run test:ui       # Interactive UI
-npm run test:run      # CI mode
-```
-
-## �️ Development Setup
-
-### Configuring Internet Object Library Path
-
-By default, the playground expects the `internet-object` library in the sibling folder (`../io-js2`). If you have the library in a different location or want to switch to a different version, you can configure the path:
-
-```bash
-# Configure to use a specific path
-npm run config-io -- <path-to-library>
-
-# Example: Point to a sibling folder named 'io-js'
-npm run config-io -- ../io-js
-```
-
-## �📚 Documentation
-
-- **[Accessibility Guide](./docs/ACCESSIBILITY.md)** - WCAG 2.1 AA compliance, keyboard navigation, screen reader support
-- **[Web Worker Implementation](./docs/WEB_WORKER.md)** - Background parsing architecture and usage
-- **[Vite Migration Guide](./docs/VITE_MIGRATION.md)** - Complete migration from Create React App
-- **[Security Audit Guidelines](./SECURITY-AUDIT.md)** - Security best practices
-- **[Phase 6: Web Worker Plan](./docs/phase-6-web-worker-plan.md)** - Original worker implementation plan
-
-## Specification
-
-For a deep dive into the Internet Object format, visit the [official documentation](https://docs.internetobject.org). You'll find comprehensive guides, detailed API documentation, and much more to help you get the most out of Internet Object.
+For the format itself, see the [specification](https://docs.internetobject.org).
 
 ## License
 
