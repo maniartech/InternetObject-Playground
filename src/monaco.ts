@@ -1,6 +1,22 @@
+import * as monacoEditor from 'monaco-editor';
+import { loader } from '@monaco-editor/react';
+import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
+import jsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker';
 import { palette, type Tokens } from './theme/muiTheme';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
+
+// Use the Monaco we bundle, not the one @monaco-editor/react fetches from jsDelivr by default.
+// The CDN default pulls an arbitrary Monaco version at runtime (the editor is the whole app, so
+// a blocked or unreachable CDN means a blank playground), and it silently drifts away from the
+// version pinned in package.json — which is the one the io language and themes are built against.
+(self as any).MonacoEnvironment = {
+  getWorker(_workerId: string, label: string) {
+    return label === 'json' ? new jsonWorker() : new editorWorker();
+  },
+};
+
+loader.config({ monaco: monacoEditor });
 
 let languageRegistered = false;
 
