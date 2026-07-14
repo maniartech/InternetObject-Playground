@@ -27,6 +27,7 @@
     "build": "vite build",
     "build:check": "tsc && vite build",
     "preview": "vite preview",
+    "config-io": "node scripts/set-io-path.js",
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:run": "vitest run",
