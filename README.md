@@ -104,6 +104,7 @@ host it freely, but give your changes back.
 > Internet Object in your own application places no obligations on you — commercial or
 > closed-source use is fine, and it carries an explicit patent grant.
 
-The names *Internet Object*, *ManiarTech*, and their logos are trademarks and are not
-licensed for use in derivative works. If you publish a fork, please give it your own
-name and branding.
+*Internet Object* is a trade name and unregistered (common-law) trademark of Maniar
+Technologies. The AGPL grants rights to the *code*, not to the name or the logos — so if
+you publish a fork or host a modified instance, please give it your own name and
+branding.
