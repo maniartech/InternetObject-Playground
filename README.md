@@ -88,4 +88,22 @@ For a deep dive into the Internet Object format, visit the [official documentati
 
 ## License
 
-This project is licensed under the `MIT License`.
+Copyright © 2019–2026 ManiarTech® (Maniar Technologies).
+
+The **Internet Object Playground** is licensed under the
+[GNU Affero General Public License v3.0](LICENSE) (AGPL-3.0-only).
+
+You are free to use, study, modify, and self-host it. The one condition: if you run a
+modified version of the playground and let anyone else use it over a network, you must
+make your modified source available to those users under the same license. In short —
+host it freely, but give your changes back.
+
+> **Note:** this copyleft applies to the *playground* only. The `internet-object`
+> library itself is separately licensed under the permissive
+> [Apache License 2.0](https://github.com/maniartech/InternetObject-js), so using
+> Internet Object in your own application places no obligations on you — commercial or
+> closed-source use is fine, and it carries an explicit patent grant.
+
+The names *Internet Object*, *ManiarTech*, and their logos are trademarks and are not
+licensed for use in derivative works. If you publish a fork, please give it your own
+name and branding.
