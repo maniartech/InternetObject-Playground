@@ -5,6 +5,10 @@ import path from 'path'
 
 export default defineConfig({
   plugins: [react(), tsconfigPaths()],
+  // Mirrors the build-time stamp from vite.config.ts so modules using it work under test.
+  define: {
+    __APP_VERSION__: JSON.stringify('00000000'),
+  },
   test: {
     globals: true,
     environment: 'happy-dom',

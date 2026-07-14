@@ -12,3 +12,6 @@ interface ImportMetaEnv {
 interface ImportMeta {
   readonly env: ImportMetaEnv
 }
+
+/** Publish date of this build, YYYYMMDD. Injected by vite.config.ts — see `buildVersion()`. */
+declare const __APP_VERSION__: string

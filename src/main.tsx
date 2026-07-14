@@ -5,10 +5,13 @@ import '@fontsource-variable/inter';
 import './styles/global.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { printConsoleBanner } from './console-banner';
+
+printConsoleBanner();
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <Router>
+    <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <Routes>
         <Route path="/:sampleId?" element={<App />} />
       </Routes>
