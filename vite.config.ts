@@ -22,7 +22,8 @@ export default defineConfig({
         manualChunks: {
           monaco: ['monaco-editor', '@monaco-editor/react'],
           react: ['react', 'react-dom', 'react-router-dom'],
-          vendor: ['recoil', 'split-pane-react']
+          mui: ['@mui/material', '@mui/icons-material', '@emotion/react', '@emotion/styled'],
+          vendor: ['react-resizable-panels', 'lz-string']
         }
       }
     }
