@@ -5,7 +5,7 @@ import SyncAltRoundedIcon from '@mui/icons-material/SyncAltRounded';
 import ErrorOutlineRoundedIcon from '@mui/icons-material/ErrorOutlineRounded';
 import BugReportRoundedIcon from '@mui/icons-material/BugReportRounded';
 import { Editor } from '@monaco-editor/react';
-import { loadInferred, stringifyDocument } from 'internet-object';
+import { loadInferred, stringifyDocument, stringifyHeader } from 'internet-object';
 import { setupMonaco } from '../../monaco';
 import { MONO, useTokens } from '../../theme/muiTheme';
 
@@ -87,21 +87,14 @@ export function ImportJsonDialog({ isOpen, onClose, onImport, monacoTheme }: Pro
     const isCollection = Array.isArray(jsonData);
     try {
       const doc = loadInferred(jsonData);
-      const stringifyOptions = isCollection ? { includeHeader: true } : { includeHeader: true, indent: 2 };
-      const schemaText = stringifyDocument(doc, stringifyOptions as any);
-
-      const parts = schemaText.split('\n---\n');
-      let schemaPart = '';
-      let dataPart = '';
-      if (parts.length >= 2) {
-        schemaPart = parts[0];
-        dataPart = parts.slice(1).join('\n---\n');
-      } else if (parts.length === 1) {
-        const trimmed = parts[0].trim();
-        if (trimmed.startsWith('~') && !trimmed.includes('$schema')) dataPart = trimmed;
-        else if (trimmed.startsWith('~')) schemaPart = trimmed;
-        else dataPart = trimmed;
-      }
+      // The library owns the header/data separation: `stringifyHeader` gives just the
+      // definitions, `includeHeader: false` gives just the data (section markers like
+      // `--- accounting: $accounting` stay with the data, where they belong). No text
+      // splitting — the old `split('\n---\n')` + `$schema` heuristics broke for
+      // multi-section documents, which have no bare `---` and no default `$schema`.
+      const dataOptions = isCollection ? { includeHeader: false } : { includeHeader: false, indent: 2 };
+      const schemaPart = stringifyHeader(doc).trim();
+      const dataPart = stringifyDocument(doc, dataOptions as any).trim();
 
       let cleanDataPart = dataPart.trim();
       if (cleanDataPart.startsWith('~ ') && !cleanDataPart.includes('\n~')) cleanDataPart = cleanDataPart.substring(2);
