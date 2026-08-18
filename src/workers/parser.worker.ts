@@ -124,9 +124,7 @@ function tryParse<T>(
 
     if (accumulatedErrors.length > 0) {
       const source = isDefs ? 'defs' : 'doc';
-      const errorItems = accumulatedErrors
-        .map((e) => errorToErrorItem(e, source))
-        .filter((item): item is ErrorItem => item !== null);
+      const errorItems = accumulatedErrors.map((e) => errorToErrorItem(e, source));
 
       return {
         errorMessages: accumulatedErrors.map((e) => getErrorMessage(e)),
@@ -152,7 +150,7 @@ function tryParse<T>(
 
     return {
       errorMessages: [getErrorMessage(e)],
-      errorItems: errorItem ? [errorItem] : [],
+      errorItems: [errorItem],
       defs: null,
       output: null,
       defsMarkers: isDefs ? getErrorMarkers(e) : [],
@@ -232,9 +230,31 @@ function errorToRange(e: any): ErrorRange | null {
   };
 }
 
-function errorToErrorItem(e: any, source: 'doc' | 'defs'): ErrorItem | null {
-  const range = errorToRange(e);
-  if (!range) return null;
+/**
+ * Where an error is shown when it reports no position of its own.
+ *
+ * Anchoring at the start of the document is imprecise, but it is the only safe default: an error
+ * the user cannot see is far worse than one pointing at the wrong line. A structural error (two
+ * sections sharing a name, say) is about the document as a whole, so the top of it is a defensible
+ * home.
+ */
+const DOCUMENT_START_RANGE: ErrorRange = {
+  startLine: 1,
+  startColumn: 1,
+  endLine: 1,
+  endColumn: 1,
+};
+
+/**
+ * Build a problem-list entry for an error.
+ *
+ * NEVER returns null. This used to drop any error without a position, which meant a real parse
+ * failure could be reported by the parser and yet never reach the user - the document rendered as
+ * though it were perfectly valid. Positionless errors are now listed at the top of the document
+ * rather than discarded.
+ */
+function errorToErrorItem(e: any, source: 'doc' | 'defs'): ErrorItem {
+  const range = errorToRange(e) ?? DOCUMENT_START_RANGE;
 
   const category = getErrorCategory(e);
   // Include collection index (row number) if available
@@ -243,7 +263,8 @@ function errorToErrorItem(e: any, source: 'doc' | 'defs'): ErrorItem | null {
 
   return {
     id: generateErrorId(range, message),
-    code: (e as any).code,
+    // io-js2 names this `errorCode`; `code` is kept as a fallback for non-IO errors.
+    code: (e as any).errorCode ?? (e as any).code,
     category,
     message,
     range,
