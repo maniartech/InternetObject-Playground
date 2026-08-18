@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Box, Button, Chip, Dialog, IconButton, Stack, Typography } from '@mui/material';
+import { Box, Button, Chip, IconButton, Stack, Typography } from '@mui/material';
+import { FocusSafeDialog } from './FocusSafeDialog';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import SyncAltRoundedIcon from '@mui/icons-material/SyncAltRounded';
 import ErrorOutlineRoundedIcon from '@mui/icons-material/ErrorOutlineRounded';
@@ -132,7 +133,7 @@ export function ImportJsonDialog({ isOpen, onClose, onImport, monacoTheme }: Pro
   }, [error]);
 
   return (
-    <Dialog open={isOpen} onClose={onClose} maxWidth="sm" fullWidth PaperProps={{ sx: { bgcolor: t.surface, backgroundImage: 'none', border: `1px solid ${t.border}`, borderRadius: '12px' } }}>
+    <FocusSafeDialog open={isOpen} onClose={onClose} maxWidth="sm" fullWidth PaperProps={{ sx: { bgcolor: t.surface, backgroundImage: 'none', border: `1px solid ${t.border}`, borderRadius: '12px' } }}>
       <Box sx={{ p: 3, display: 'flex', flexDirection: 'column', maxHeight: '85vh' }}>
         <IconButton size="small" onClick={onClose} sx={{ position: 'absolute', top: 12, right: 12, color: t.inkFaint }} aria-label="Close"><CloseRoundedIcon fontSize="small" /></IconButton>
 
@@ -191,6 +192,6 @@ export function ImportJsonDialog({ isOpen, onClose, onImport, monacoTheme }: Pro
           <Button variant="contained" onClick={handleImport} disabled={!jsonText.trim()} startIcon={<SyncAltRoundedIcon />}>Convert</Button>
         </Stack>
       </Box>
-    </Dialog>
+    </FocusSafeDialog>
   );
 }

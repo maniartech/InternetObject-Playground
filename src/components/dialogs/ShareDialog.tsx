@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import { Box, Button, CircularProgress, Dialog, IconButton, InputBase, Stack, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, IconButton, InputBase, Stack, Typography } from '@mui/material';
+import { FocusSafeDialog } from './FocusSafeDialog';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import ShareRoundedIcon from '@mui/icons-material/ShareRounded';
 import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
@@ -107,7 +108,7 @@ export function ShareDialog({ isOpen, onClose, url, showSchema, minifiedOutput, 
   );
 
   return (
-    <Dialog open={isOpen} onClose={onClose} maxWidth="sm" fullWidth PaperProps={{ sx: { bgcolor: t.surface, backgroundImage: 'none', border: `1px solid ${t.border}`, borderRadius: '12px', m: { xs: 2, sm: 4 }, width: { xs: 'calc(100% - 32px)', sm: '100%' } } }}>
+    <FocusSafeDialog open={isOpen} onClose={onClose} maxWidth="sm" fullWidth PaperProps={{ sx: { bgcolor: t.surface, backgroundImage: 'none', border: `1px solid ${t.border}`, borderRadius: '12px', m: { xs: 2, sm: 4 }, width: { xs: 'calc(100% - 32px)', sm: '100%' } } }}>
       <Box sx={{ p: { xs: 2, sm: 3 } }}>
         <IconButton size="small" onClick={onClose} sx={{ position: 'absolute', top: 12, right: 12, color: t.inkFaint }} aria-label="Close"><CloseRoundedIcon fontSize="small" /></IconButton>
 
@@ -157,6 +158,6 @@ export function ShareDialog({ isOpen, onClose, url, showSchema, minifiedOutput, 
           {tag(skipErrors, 'Skip Errors')}
         </Stack>
       </Box>
-    </Dialog>
+    </FocusSafeDialog>
   );
 }

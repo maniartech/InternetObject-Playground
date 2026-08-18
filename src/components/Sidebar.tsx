@@ -27,13 +27,23 @@ export function Sidebar({ groups, activeId, onSelect, onReset, canReset, showNav
     ? { border: `1px solid ${t.border}`, borderRadius: '8px' }
     : { borderRight: `1px solid ${t.border}` };
 
+  // A real <button>, not a clickable <div>: samples must be reachable and selectable by keyboard,
+  // and announced as controls. aria-current marks the loaded one for screen readers.
   const item = (id: string, name: string) => {
     const active = id === activeId;
     return (
       <Box
         key={id || '__blank'}
+        component="button"
+        type="button"
         onClick={() => onSelect(id)}
+        aria-current={active ? 'true' : undefined}
         sx={{
+          display: 'block',
+          width: 'calc(100% - 12px)',
+          textAlign: 'left',
+          font: 'inherit',
+          border: 0,
           px: 1.25,
           py: 0.75,
           mx: 0.75,
@@ -44,6 +54,7 @@ export function Sidebar({ groups, activeId, onSelect, onReset, canReset, showNav
           bgcolor: active ? t.accentSoft : 'transparent',
           fontWeight: active ? 600 : 400,
           '&:hover': { bgcolor: active ? t.accentSoft : t.surface3, color: active ? t.accentBright : t.ink },
+          '&:focus-visible': { outline: `2px solid ${t.accent}`, outlineOffset: '-2px' },
         }}
       >
         {name}

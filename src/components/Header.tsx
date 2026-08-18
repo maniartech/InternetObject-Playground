@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Box, Button, Divider, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Stack, Switch, Tooltip, Typography, useMediaQuery, useTheme } from '@mui/material';
 import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
 import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded';
@@ -36,6 +36,9 @@ export function Header({ mode, isMobile, showSchema, onToggleShowSchema, onImpor
   const showNav = useMediaQuery(theme.breakpoints.up('lg'));
   const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null);
   const closeMenu = () => setMenuAnchor(null);
+  // Same aria-hidden trap as the dialogs (see FocusSafeDialog): MUI restores focus to the trigger
+  // while #root is still aria-hidden. Restore it ourselves once the menu has fully exited.
+  const menuTrigger = useRef<HTMLElement | null>(null);
 
   const itemText = (label: string) => <ListItemText disableTypography><Typography sx={{ fontSize: 14, color: t.ink }}>{label}</Typography></ListItemText>;
 
@@ -64,13 +67,20 @@ export function Header({ mode, isMobile, showSchema, onToggleShowSchema, onImpor
 
       {isMobile ? (
         <>
-          <IconButton size="small" onClick={(e) => setMenuAnchor(e.currentTarget)} sx={{ color: t.inkDim }} aria-label="More actions">
+          <IconButton
+            size="small"
+            onClick={(e) => { menuTrigger.current = e.currentTarget; setMenuAnchor(e.currentTarget); }}
+            sx={{ color: t.inkDim }}
+            aria-label="More actions"
+          >
             <MoreVertRoundedIcon fontSize="small" />
           </IconButton>
           <Menu
             anchorEl={menuAnchor}
             open={Boolean(menuAnchor)}
             onClose={closeMenu}
+            disableRestoreFocus
+            TransitionProps={{ onExited: () => menuTrigger.current?.focus() }}
             anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
             transformOrigin={{ vertical: 'top', horizontal: 'right' }}
             slotProps={{ paper: { sx: { bgcolor: t.surface2, border: `1px solid ${t.border}`, backgroundImage: 'none', minWidth: 210, mt: 0.5 } } }}

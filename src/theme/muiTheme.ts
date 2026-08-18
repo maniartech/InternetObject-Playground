@@ -47,7 +47,9 @@ export const palette: Record<Mode, Tokens> = {
     borderSoft: '#20262f',
     ink: '#e6edf3',
     inkDim: '#9aa5b1',
-    inkFaint: '#6b7482',
+    // 4.95:1 on the darkest surface it lands on (#1b2129) — WCAG AA needs 4.5:1. The old #6b7482
+    // measured 3.43:1, failing on every surface. Do not darken this without re-checking contrast.
+    inkFaint: '#858f9e',
     accent: '#3b9dff',
     accentBright: '#69b7ff',
     accentSoft: 'rgba(59,157,255,0.15)',
@@ -73,7 +75,8 @@ export const palette: Record<Mode, Tokens> = {
     borderSoft: '#e6eaf0',
     ink: '#1a2029',
     inkDim: '#55606d',
-    inkFaint: '#8a94a1',
+    // 4.61:1 on white — the old #8a94a1 was 2.67:1, well below the 4.5:1 AA floor.
+    inkFaint: '#626c7a',
     accent: '#0071d1',
     accentBright: '#005bab',
     accentSoft: 'rgba(0,113,209,0.10)',
