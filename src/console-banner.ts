@@ -51,7 +51,10 @@ export function printConsoleBanner(): void {
   );
 
   console.log(
-    `%cLearn  %c${DOCS_URL}\n` + `%cAbout  %c${SITE_URL}\n` + `%cSource %c${SOURCE_URL}  (AGPL-3.0)`,
+    // "Playground source" (not "Internet Object source") -- the format/library is
+    // Apache-2.0; only this web app is AGPL, and the source offer is a per-app license
+    // obligation, not a statement about the format.
+    `%cLearn  %c${DOCS_URL}\n` + `%cAbout  %c${SITE_URL}\n` + `%cPlayground source %c${SOURCE_URL}  (AGPL-3.0)`,
     `color:${DIM}`,
     `color:${ACCENT}`,
     `color:${DIM}`,

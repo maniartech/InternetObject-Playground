@@ -2,8 +2,6 @@ import { Box, Stack } from '@mui/material';
 import { MONO, useTokens } from '../theme/muiTheme';
 import type { CursorState } from '../types/cursor';
 
-const SOURCE_URL = 'https://github.com/maniartech/InternetObject-Playground';
-
 export function StatusBar({ cursor }: { cursor: CursorState }) {
   const t = useTokens();
   const year = new Date().getFullYear();
@@ -31,16 +29,14 @@ export function StatusBar({ cursor }: { cursor: CursorState }) {
         <span>Pos {cursor.position}</span>
       </Stack>
       <Box sx={{ flex: 1 }} />
-      {/* AGPL-3.0 §13 requires a hosted instance to offer its source to the users it serves. */}
-      <Box
-        component="a"
-        href={SOURCE_URL}
-        target="_blank"
-        rel="noreferrer"
-        sx={{ display: { xs: 'none', sm: 'block' }, color: t.inkFaint, textDecoration: 'none', whiteSpace: 'nowrap', flexShrink: 0, '&:hover': { color: t.accent, textDecoration: 'underline' } }}
-      >
-        AGPL-3.0 · Source
-      </Box>
+      {/*
+        No visible AGPL badge here: an unqualified "AGPL-3.0" next to Internet Object's own
+        branding read as if the FORMAT were AGPL licensed, when only this playground app is (the
+        format and io-js2 are Apache-2.0). The source offer AGPL-3.0 §13 requires still exists --
+        it lives in the devtools console banner (console-banner.ts), correctly scoped to "Playground
+        source" -- so removing this footer link does not leave the app out of compliance with its
+        own license.
+      */}
       <Box component="span" sx={{ display: 'flex', alignItems: 'center', gap: 0.5, whiteSpace: 'nowrap', flexShrink: 0 }}>
         © 2019–{year}
         <Box component="img" src="/mt-logo.png" alt="" sx={{ width: 16, height: 16, opacity: 0.85 }} />
