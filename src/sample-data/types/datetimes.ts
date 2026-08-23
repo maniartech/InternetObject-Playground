@@ -9,7 +9,7 @@ const schema = `
 ~ $dates:{ d1:date, d2:date, d3 }
 ~ $times:{ t1:time, t2:time, t3:time, t4:time, t5:time }
 ~ $validations: {
-    dt: {datetime, min: dt'2024-01-00T00:00:00Z', max: dt'2024-12-31T23:59:59Z' }, # During 2024
+    dt: {datetime, min: dt'2024-01-01T00:00:00Z', max: dt'2024-12-31T23:59:59Z' }, # During 2024
     d: {date, min: d'2024-01-01', max:d'2024-03-31' }, # First quater 2024
     t: {time, min: t'09:00', max:t'17:00' } # 9 AM to 5 PM
   }
