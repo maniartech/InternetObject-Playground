@@ -84,7 +84,7 @@ function parseIO(
     return parseDoc(document, null, skipErrors, minifiedOutput);
   }
 
-  const defsResult = tryParse(defs, parseDefinitions, true, skipErrors);
+  const defsResult = tryParse(defs, (d, sink) => parseDefinitions(d, null, sink), true);
   if (defsResult.errorMessages.length > 0) {
     return {
       ...defsResult,
@@ -105,21 +105,32 @@ interface ParseIntermediateResult {
   docMarkers: EditorMarker[];
 }
 
+/**
+ * Runs one parse and collects everything the panel needs from it.
+ *
+ * `fn` is handed the **sink** rather than being asked for its errors afterwards. Since the library's
+ * §2.5 signature work every entry point takes one in slot three, and since C1a the sink reports the
+ * same set as `doc.getErrors()` — syntax errors included, which the old `getErrors()`-only route
+ * never saw on some documents.
+ *
+ * It also has to be the sink now rather than a method call: `io.parse` returns **plain JavaScript**,
+ * so there is no `getErrors()` and no `toJSON()` to call on the result. Asking a POJO for its errors
+ * would have quietly reported none, and asking it for `toJSON()` would have thrown.
+ */
 function tryParse<T>(
   input: string,
-  fn: (input: string, defs?: any) => T,
-  isDefs = false,
-  skipErrors = false
+  fn: (input: string, sink: Error[]) => T,
+  isDefs = false
 ): ParseIntermediateResult {
+  const sink: Error[] = [];
   try {
-    const result = fn(input, null);
+    const result = fn(input, sink);
 
-    let accumulatedErrors: Error[] = [];
-    if (result && typeof (result as any).getErrors === 'function') {
-      accumulatedErrors = (result as any).getErrors();
-    }
+    const accumulatedErrors: Error[] = sink;
 
-    const output = isDefs ? null : (result as any).toJSON({ skipErrors });
+    // `io.parse` already returns the projection, so there is nothing left to convert. Definitions
+    // are not projected at all — the panel wants the object, to parse the document with.
+    const output = isDefs ? null : (result as any);
     const defs = isDefs ? (result as IODefinitions) : null;
 
     if (accumulatedErrors.length > 0) {
@@ -165,7 +176,10 @@ function parseDoc(
   skipErrors: boolean,
   minifiedOutput: boolean
 ): NonNullable<ParseResponse['result']> {
-  const intermediate = tryParse(doc, (d) => parse(d, defs), false, skipErrors);
+  // `skipErrors` is the DATA axis: it decides whether failed records appear in the result. The sink
+  // is the REPORTING axis and is unaffected — the problem list still shows every error either way,
+  // which is exactly what the panel's toggle is for.
+  const intermediate = tryParse(doc, (d, sink) => parse(d, defs, sink, { skipErrors }), false);
 
   const hasErrors = intermediate.errorMessages.length > 0;
   let jsonText = '';

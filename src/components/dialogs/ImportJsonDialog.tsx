@@ -103,7 +103,13 @@ export function ImportJsonDialog({ isOpen, onClose, onImport, monacoTheme }: Pro
       onImport(schemaPart, cleanDataPart);
       onClose();
     } catch (e: any) {
-      setError({ message: `Failed to infer schema: ${e.message}`, isIOError: true, jsonInput: jsonText });
+      // Serialization refuses a document holding a failed record (`forbidden-error-node`). That is
+      // not an inference failure and saying so sends the reader looking in the wrong place: the
+      // schema was inferred, and then some row did not satisfy it.
+      const message = e?.errorCode === 'forbidden-error-node'
+        ? `Some rows do not fit the inferred schema, so this cannot be written as Internet Object text: ${e.message}`
+        : `Failed to infer schema: ${e.message}`;
+      setError({ message, isIOError: true, jsonInput: jsonText });
     }
   }, [jsonText, onImport, onClose, parseJsonError]);
 
