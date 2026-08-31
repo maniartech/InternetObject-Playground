@@ -12,33 +12,34 @@ const here = dirname(fileURLToPath(import.meta.url))
  *
  * `internet-object` is depended on as `file:../io-js2`, and pnpm **copies** a `file:` dependency
  * into the store at install time. It does not link it. So the copy is a snapshot taken once, and
- * nothing that happens in io-js2 afterwards reaches this app — not a rebuild, and certainly not
- * `tsup --watch`, which writes to `io-js2/dist` where nobody here is looking.
+ * nothing that happens in the library afterwards reaches this app — not a rebuild, and certainly
+ * not `tsup --watch`, which writes to a directory nobody here is looking at.
  *
  * That is not a theoretical hazard. It cost three separate debugging sessions:
  *
  *   - a copy four builds old, from a fortnight earlier, silently in use;
  *   - a sample document that stopped reporting its syntax errors, because the running library
- *     predated the fix that put them on the sink -- with the give-away being an error CODE the
- *     current library no longer emits;
+ *     predated the fix that put them on the sink — the give-away being an error CODE the current
+ *     library no longer emits;
  *   - and vite's own pre-bundled dependency cache in `node_modules/.vite`, which kept serving the
  *     stale copy even after the copy itself was refreshed.
  *
- * Aliasing to the source removes all three at once: there is no copy, no cache of a copy, and no
- * build step between an edit in io-js2 and a reload here. `pnpm build:watch` is not needed for
- * this app at all.
+ * Aliasing to the source removes all three: no copy, no cache of a copy, and no build step between
+ * an edit in the library and a reload here.
  *
- * DEV ONLY. `vite build` deliberately keeps using the installed package, because a production
- * build must exercise what a user actually installs. Set `IO_LOCAL=0` to opt out.
- */
-/**
- * Where the library's source is, on THIS machine.
+ * The location is resolved rather than assumed, the same way the library resolves its own siblings:
+ * the repository is called `InternetObject-js`, so a plain `git clone` produces that name, while
+ * this machine happens to use `io-js2`. Both are tried; `IO_LOCAL_PATH` overrides for any other
+ * layout and `IO_LOCAL=0` opts out.
  *
- * Resolved rather than assumed, the same way io-js2 resolves its own siblings: the repository is
- * called `InternetObject-js`, so a plain `git clone` produces that name, while this machine happens
- * to use `io-js2`. Both are tried, and `IO_LOCAL_PATH` overrides for any other layout.
+ * DEV ONLY. `vite build` keeps using the installed dependency, because a production build must
+ * exercise a real installed package rather than a working tree.
  */
-function findLocalSource(): string | null {
+function findLocalSource(): { entry: string | null; why: string } {
+  if (process.env.IO_LOCAL === '0') {
+    return { entry: null, why: 'IO_LOCAL=0 — using the installed dependency on purpose' }
+  }
+
   const override = process.env.IO_LOCAL_PATH
   const candidates = override
     ? [resolve(here, override)]
@@ -46,12 +47,17 @@ function findLocalSource(): string | null {
 
   for (const dir of candidates) {
     const entry = resolve(dir, 'src/index.ts')
-    if (existsSync(entry)) return entry
+    if (existsSync(entry)) return { entry, why: '' }
   }
-  return null
+
+  // An explicit path that does not resolve is a mistake worth naming. Falling back silently and
+  // then advising "set IO_LOCAL_PATH" to somebody who has just set it is how a typo costs an hour.
+  return override
+    ? { entry: null, why: `IO_LOCAL_PATH=${override} has no src/index.ts — check the path` }
+    : { entry: null, why: 'no sibling checkout found; set IO_LOCAL_PATH to point at one' }
 }
 
-const localSource = process.env.IO_LOCAL === '0' ? null : findLocalSource()
+const { entry: localSource, why: localSourceWhy } = findLocalSource()
 const useLocalSource = localSource !== null
 
 /**
@@ -79,15 +85,17 @@ export default defineConfig(({ command }) => ({
         console.log(
           localSource
             ? `\n  internet-object: ${relative(here, localSource)}  (live source — no build step needed)\n`
-            : '\n  internet-object: the installed copy  (no sibling checkout found; set IO_LOCAL_PATH to point at one)\n'
+            : `\n  internet-object: the installed dependency  (${localSourceWhy})\n`
         )
       },
     },
   ],
   resolve: {
-    alias: command === 'serve' && localSource
-      ? { 'internet-object': localSource }
-      : {},
+    // Typed explicitly: a conditional object literal widens to a union that `AliasOptions` will
+    // not accept, and vite.config.ts is type-checked (tsconfig includes it) precisely so that a
+    // mistake here is caught by `tsc` rather than by the dev server failing to start.
+    alias: ((): Record<string, string> =>
+      command === 'serve' && localSource ? { 'internet-object': localSource } : {})(),
   },
   optimizeDeps: {
     include: ['monaco-editor'],
