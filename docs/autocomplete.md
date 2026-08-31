@@ -15,7 +15,7 @@
 - **Constraint held:** playground-only. No io-js2 file was modified.
 - **Verified:** `tsc --noEmit` clean · 148 tests pass (122 of them for this feature) ·
   `vite build` green · dev server boots and every new module transforms · confirmed
-  working live in the browser by the user (signature help + completion, screenshotted).
+  working live in the browser (signature help + completion).
 - **Not verified:** no browser automation exists in this environment, so nothing was
   click-tested by me. The provider tests drive the real registered Monaco callbacks
   against a fake model, which covers behaviour but not rendering.
@@ -50,7 +50,7 @@ Changed: `monaco.ts` (register providers) · `parser.worker.ts` (build + attach 
 - **Hover treated `$` as absent from the word** and built `$$address`; Monaco's default
   word pattern includes `$`. Caught by the provider tests.
 
-### Refinements from live use (user-reported)
+### Refinements from live use
 
 - Members already filled by a record are no longer re-offered —
   `~ "Gatsby", "Fitzgerald", |` suggests `isbn` onward, not `title`/`author` again.

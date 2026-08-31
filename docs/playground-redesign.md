@@ -1,8 +1,8 @@
 # Playground Redesign — Modern, Responsive, MUI + React 19
 
-> **Goal:** Rebuild the Internet Object Playground UI to match the *structure* of the
-> Indigo playground (React 19 + MUI 6 + Monaco + `react-resizable-panels`, one token
-> source, a real mobile path) — modern and fully responsive.
+> **Goal:** Rebuild the Internet Object Playground UI to match the *structure* of a
+> sibling playground application (React 19 + MUI 6 + Monaco + `react-resizable-panels`,
+> one token source, a real mobile path) — modern and fully responsive.
 >
 > **HARD RULE (non-negotiable):** Every existing playground feature must keep working.
 > This is a **presentation-layer rework**, not a parser/logic rewrite. All parsing,
@@ -42,10 +42,8 @@
 - Mobile header actions collapsed into a labeled **kebab menu** (Separate Schema / JSON to IO /
   Share / theme). MUI `Menu` opens+unmounts cleanly under React 19 here.
 - Share dialog mobile: URL full-width row, Shorten/Copy split below, tighter padding/margins.
-- **Env note:** worktree's `file:../io-js2` is satisfied by a **directory junction** at
-  `.claude/worktrees/io-js2 → E:/Projects/internet-object/io-js2` (created this session; not
-  committed). A fresh clone/worktree must recreate it (or `npm i` from a checkout where
-  `../io-js2` resolves).
+- **Env note:** the `file:../io-js2` dependency needs a sibling checkout of the library
+  next to this repository. See the README for how dev resolves it from source.
 - **New structure (all under `src/`):** `App.tsx`, `main.tsx`, `monaco.ts`, `url.ts`,
   `theme/muiTheme.ts`, `types/cursor.ts`, `components/{Header,Sidebar,EditorPane,PaneHeader,
   OutputPane,StatusBar,ResizeHandle,MobileWorkspace}.tsx`, `components/dialogs/{Share,ImportJson,
@@ -57,12 +55,10 @@
   toggle,general-classes}.css`, `index.tsx`, `config-overrides.js`, `use-debounce`,
   `types/split-pane-react.d.ts`. Deps: dropped recoil/split-pane-react/react-toggle/prop-types;
   added mui/emotion/react-resizable-panels/fontsource-inter; React 18→19; monaco 0.44→0.52.
-- **Branch:** `claude/sleepy-wing-3375e7` (worktree). Nothing committed yet.
-- **Reference:** `E:\Projects\indigo\indigo\.claude\worktrees\vigilant-driscoll-d82847\playground\src`.
 
 ---
 
-## Reference structure (from Indigo playground)
+## Reference structure
 
 ```
 src/
@@ -92,13 +88,13 @@ Key patterns to copy:
 
 ## IO playground mapping
 
-| Indigo | Internet Object |
+| Reference app | Internet Object |
 |---|---|
-| Indigo / Go editors | **Schema** (top-left) / **Document** (bottom-left) editors |
+| Its two source editors | **Schema** (top-left) / **Document** (bottom-left) editors |
 | Output dock | **JSON Output** pane (right) + error overlay |
 | Sidebar = lessons | Sidebar = **sample-data** picker (optgroups → list) |
 | Header: Run/Share/theme | Header: **JSON→IO, Share, Separate-Schema, theme, nav** |
-| Mobile tabs Indigo/Go | Mobile tabs **Schema / Document / JSON** |
+| Its mobile source tabs | Mobile tabs **Schema / Document / JSON** |
 | StatusBar lines | Footer: **cursor Ln·Col·Pos** + © Maniar Technologies |
 
 ---
