@@ -29,10 +29,10 @@ print_error() {
     echo -e "${RED}[ERROR]${NC} $1"
 }
 
-# Function to check if yarn is available
-check_yarn() {
-    if ! command -v yarn &> /dev/null; then
-        print_error "yarn is not installed or not in PATH"
+# Function to check if pnpm is available
+check_pnpm() {
+    if ! command -v pnpm &> /dev/null; then
+        print_error "pnpm is not installed or not in PATH"
         exit 1
     fi
 }
@@ -45,19 +45,19 @@ check_package_json() {
     fi
 }
 
-# Function to ensure yarn.lock exists
+# Function to ensure the lockfile exists
 ensure_lockfile() {
-    if [ ! -f "yarn.lock" ]; then
-        print_warning "yarn.lock not found. Installing dependencies..."
-        yarn install
-        print_success "Dependencies installed and yarn.lock created"
+    if [ ! -f "pnpm-lock.yaml" ]; then
+        print_warning "pnpm-lock.yaml not found. Installing dependencies..."
+        pnpm install
+        print_success "Dependencies installed and pnpm-lock.yaml created"
     fi
 }
 
 # Function to run security audit
 run_audit() {
-    print_status "Running yarn audit..."
-    if yarn audit --level moderate; then
+    print_status "Running pnpm audit..."
+    if pnpm audit --audit-level moderate; then
         print_success "No moderate or higher vulnerabilities found!"
         return 0
     else
@@ -69,18 +69,17 @@ run_audit() {
 # Function to attempt automatic fixes
 attempt_fix() {
     print_status "Checking for available security fixes..."
-    print_warning "Note: Yarn doesn't have automatic vulnerability fixing like npm."
-    print_status "Please review vulnerabilities and update packages manually or use yarn upgrade."
+    print_status "'pnpm audit --fix' adds overrides to package.json; review them before committing."
 
     # Show detailed audit information
-    yarn audit --level info || true
+    pnpm audit --audit-level low || true
 }
 
 # Function to check for outdated packages
 check_outdated() {
     print_status "Checking for outdated packages..."
-    if yarn outdated; then
-        print_warning "Some packages are outdated. Consider updating them with 'yarn upgrade'."
+    if pnpm outdated; then
+        print_warning "Some packages are outdated. Consider updating them with 'pnpm update'."
     else
         print_success "All packages are up to date"
     fi
@@ -89,7 +88,7 @@ check_outdated() {
 # Function to validate project builds
 validate_build() {
     print_status "Validating project can build successfully..."
-    if yarn build; then
+    if pnpm build; then
         print_success "Project builds successfully"
     else
         print_error "Project build failed. Please check for breaking changes."
@@ -99,9 +98,11 @@ validate_build() {
 
 # Function to run tests if available
 run_tests() {
-    if yarn test --version > /dev/null 2>&1; then
+    # Ask package.json whether the script exists, rather than running the test runner
+    # with a flag just to see whether it errors.
+    if node -e "process.exit(require('./package.json').scripts['test:run'] ? 0 : 1)"; then
         print_status "Running tests..."
-        if yarn test --watchAll=false; then
+        if pnpm test:run; then
             print_success "Tests passed"
         else
             print_warning "Tests failed"
@@ -118,7 +119,7 @@ main() {
     echo ""
 
     # Pre-flight checks
-    check_yarn
+    check_pnpm
     check_package_json
 
     # Ensure lockfile exists

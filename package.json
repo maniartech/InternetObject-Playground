@@ -34,15 +34,15 @@
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:run": "vitest run",
-    "audit": "yarn audit --level info",
-    "audit:fix": "yarn audit --level moderate",
-    "audit:full": "yarn audit --level info && yarn outdated",
-    "security:check": "yarn audit --level moderate",
-    "security:fix": "yarn audit --level moderate",
+    "audit": "pnpm audit --audit-level low",
+    "audit:fix": "pnpm audit --fix",
+    "audit:full": "pnpm audit --audit-level low && pnpm outdated",
+    "security:check": "pnpm audit --audit-level moderate",
+    "security:fix": "pnpm audit --fix",
     "security:audit": "bash scripts/security-audit.sh",
-    "deps:check": "yarn outdated",
-    "deps:update": "yarn upgrade",
-    "deps:update-check": "yarn upgrade && yarn audit --level moderate"
+    "deps:check": "pnpm outdated",
+    "deps:update": "pnpm update",
+    "deps:update-check": "pnpm update && pnpm audit --audit-level moderate"
   },
   "browserslist": {
     "production": [
