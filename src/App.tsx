@@ -18,6 +18,7 @@ import { WelcomeNotification } from './components/dialogs/WelcomeNotification';
 
 import { makeTheme, palette, TokensContext, STORAGE_MODE_KEY, type Mode } from './theme/muiTheme';
 import { monacoThemeFor } from './monaco';
+import { MODEL_PATHS } from './completion/providers';
 import { buildShareUrl, decodeShared, SESSION_KEYS, LOCAL_KEYS } from './url';
 import sampleData from './sample-data';
 import { useParseIO } from './hooks/use-parse-io-v2';
@@ -322,6 +323,7 @@ export default function App() {
                           <Panel id="schema" order={1} defaultSize={32} minSize={12}>
                             <EditorPane
                               language="io"
+                              path={MODEL_PATHS.schema}
                               monacoTheme={monacoTheme}
                               value={schema}
                               onChange={(v) => setSchema(v ?? '')}
@@ -336,6 +338,7 @@ export default function App() {
                         <Panel id="document" order={2} minSize={20}>
                           <EditorPane
                             language="io"
+                            path={MODEL_PATHS.document}
                             monacoTheme={monacoTheme}
                             value={document}
                             onChange={(v) => setDocument(v ?? '')}

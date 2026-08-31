@@ -9,6 +9,9 @@ import { IOError, IOSyntaxError, IOValidationError } from 'internet-object';
 import { Decimal } from 'internet-object';
 import type { ErrorItem, EditorMarker, ErrorRange, ErrorCategory } from '../types/errors';
 import { categoryToSeverity, generateErrorId } from '../types/errors';
+import type { CompletionModel } from '../completion/types';
+import { EMPTY_COMPLETION_MODEL } from '../completion/types';
+import { buildCompletionModel, extractHeaderText } from '../completion/build-model';
 
 export interface ParseRequest {
   type: 'parse';
@@ -29,6 +32,8 @@ export interface ParseResponse {
     defsMarkers: EditorMarker[];
     jsonText: string;
     error: boolean;
+    /** Schema knowledge for editor autocomplete. Always present; empty when unknown. */
+    completionModel: CompletionModel;
   };
   error?: string;
 }
@@ -81,7 +86,10 @@ function parseIO(
   minifiedOutput: boolean
 ): NonNullable<ParseResponse['result']> {
   if (!defs) {
-    return parseDoc(document, null, skipErrors, minifiedOutput);
+    return {
+      ...parseDoc(document, null, skipErrors, minifiedOutput),
+      completionModel: completionModelFor(document, null, null),
+    };
   }
 
   const defsResult = tryParse(defs, (d, sink) => parseDefinitions(d, null, sink), true);
@@ -90,10 +98,63 @@ function parseIO(
       ...defsResult,
       jsonText: '',
       error: true,
+      // A schema being edited is broken most of the time. Completion still works from
+      // whatever compiled, which is the moment it is most useful.
+      completionModel: completionModelFor(document, defs, defsResult.defs),
     };
   }
 
-  return parseDoc(document, defsResult.defs, skipErrors, minifiedOutput);
+  return {
+    ...parseDoc(document, defsResult.defs, skipErrors, minifiedOutput),
+    completionModel: completionModelFor(document, defs, defsResult.defs),
+  };
+}
+
+/**
+ * Builds the editor's schema knowledge — off the UI thread, like everything else here.
+ *
+ * Definitions come from two places and both matter: the schema pane (when Separate
+ * Schema is on) and the document's OWN header, the part before the first `---`. The
+ * header is re-parsed here rather than taken from the document parse because `io.parse`
+ * returns plain JavaScript by design — the header does not survive it. Feeding the pane's
+ * definitions in as `externalDefs` is what lets a document header reference a schema
+ * declared in the pane.
+ *
+ * This is a second parse, so it is memoized on the text it depends on: typing in the
+ * *data* of a document leaves the header untouched, which is the common case, and it
+ * then costs nothing at all.
+ */
+let cachedModelKey: string | null = null;
+let cachedModel: CompletionModel = EMPTY_COMPLETION_MODEL;
+
+function completionModelFor(
+  document: string,
+  schemaText: string | null,
+  schemaDefs: IODefinitions | null
+): CompletionModel {
+  const header = extractHeaderText(document) ?? '';
+  const key = `${schemaText ?? ''}\u0000${header}`;
+  if (key === cachedModelKey) return cachedModel;
+
+  let model = EMPTY_COMPLETION_MODEL;
+  try {
+    // A half-typed schema throws rather than reporting through the sink, so the throw is
+    // the normal case here, not an exceptional one — someone is mid-keystroke.
+    const merged = header.trim() ? parseDefinitions(header.trim(), schemaDefs, []) : schemaDefs;
+    model = buildCompletionModel(merged ?? schemaDefs);
+  } catch {
+    // Fall back to whatever the schema pane alone yields, so completion degrades to
+    // "less complete" rather than "gone" while the header is being edited.
+    try {
+      model = buildCompletionModel(schemaDefs);
+    } catch {
+      model = EMPTY_COMPLETION_MODEL;
+    }
+  }
+
+  cachedModelKey = key;
+  cachedModel = model;
+  return model;
 }
 
 interface ParseIntermediateResult {
@@ -170,12 +231,16 @@ function tryParse<T>(
   }
 }
 
+/**
+ * Returns everything but the completion model — its callers attach that, because the
+ * model is built from the DEFINITIONS and does not depend on parsing the document body.
+ */
 function parseDoc(
   doc: string,
   defs: IODefinitions | null,
   skipErrors: boolean,
   minifiedOutput: boolean
-): NonNullable<ParseResponse['result']> {
+): Omit<NonNullable<ParseResponse['result']>, 'completionModel'> {
   // `skipErrors` is the DATA axis: it decides whether failed records appear in the result. The sink
   // is the REPORTING axis and is unaffected — the problem list still shows every error either way,
   // which is exactly what the panel's toggle is for.

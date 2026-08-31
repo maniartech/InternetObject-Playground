@@ -8,6 +8,7 @@ import { OutputPane } from './OutputPane';
 import { ProblemList } from './ProblemList';
 import { Sidebar, type SampleGroup } from './Sidebar';
 import { useTokens, MONO } from '../theme/muiTheme';
+import { MODEL_PATHS } from '../completion/providers';
 import type { EditorMarker, ErrorItem } from '../types/errors';
 
 export type MobileTab = 'schema' | 'document' | 'json';
@@ -146,11 +147,11 @@ export function MobileWorkspace(props: Props) {
         <Box sx={{ flex: 1, minHeight: 0, position: 'relative' }}>
           {paneBox(
             activeTab === 'schema',
-            <EditorPane language="io" bare monacoTheme={props.monacoTheme} value={props.schema} onChange={props.onSchemaChange} markers={props.defMarkers} onCaretChange={props.onSchemaCaret} selection={props.schemaSelection} />,
+            <EditorPane language="io" path={MODEL_PATHS.schema} bare monacoTheme={props.monacoTheme} value={props.schema} onChange={props.onSchemaChange} markers={props.defMarkers} onCaretChange={props.onSchemaCaret} selection={props.schemaSelection} />,
           )}
           {paneBox(
             activeTab === 'document',
-            <EditorPane language="io" bare monacoTheme={props.monacoTheme} value={props.document} onChange={props.onDocumentChange} markers={props.markers} onCaretChange={props.onDocumentCaret} selection={props.docSelection} />,
+            <EditorPane language="io" path={MODEL_PATHS.document} bare monacoTheme={props.monacoTheme} value={props.document} onChange={props.onDocumentChange} markers={props.markers} onCaretChange={props.onDocumentCaret} selection={props.docSelection} />,
           )}
           {paneBox(
             activeTab === 'json',

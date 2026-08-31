@@ -45,6 +45,15 @@ interface Props {
   header?: ReactNode;
   /** Drop the card border/radius (mobile embeds the editor inside a tab card). */
   bare?: boolean;
+  /**
+   * Stable model URI for this editor.
+   *
+   * Monaco registers language features per LANGUAGE, so the schema and document panes —
+   * both `io` — are otherwise indistinguishable to a completion provider. Without an
+   * explicit path `@monaco-editor/react` generates an anonymous URI per instance, and a
+   * provider cannot tell which pane it was asked about. See `completion/providers.ts`.
+   */
+  path?: string;
 }
 
 const BASE_OPTIONS = {
@@ -62,6 +71,9 @@ const BASE_OPTIONS = {
   lineNumbers: 'on',
   tabSize: 2,
   padding: { top: 10, bottom: 10 },
+  // The status bar carries the "toggle details" affordance, so the documentation the
+  // io suggestions provide is discoverable rather than hidden behind a shortcut.
+  suggest: { showStatusBar: true },
   scrollbar: { vertical: 'visible', horizontal: 'visible', verticalScrollbarSize: 10, horizontalScrollbarSize: 10 },
 } as const;
 
@@ -78,6 +90,7 @@ export function EditorPane({
   selection,
   header,
   bare,
+  path,
 }: Props) {
   const t = useTokens();
   const editorRef = useRef<any>(null);
@@ -172,6 +185,7 @@ export function EditorPane({
       {header}
       <Box sx={{ flex: 1, minHeight: 0 }}>
         <Editor
+          path={path}
           language={language}
           theme={monacoTheme}
           value={value ?? ''}

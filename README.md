@@ -14,6 +14,7 @@ Write a schema, write a document, and watch it parse, validate, and expand into 
 - **Convert JSON to IO.** Paste any JSON and the playground infers a schema and rewrites it in Internet Object form.
 - **Separate schema from data.** Toggle the schema into its own pane to see how IO keeps structure out of the payload.
 - **Catch errors as you type.** Parse and validation errors are listed as you go; click one to jump straight to it in the editor.
+- **Write with the schema's help.** The editors complete member names, `choices`, `$schema` references and variables from the schema you have actually written, and — because Internet Object records are positional — show which field the caret is on as you move along a row.
 - **Share what you build.** Any document can be turned into a link that restores the exact editor state.
 - **Learn from examples.** A library of samples covers the basics through to schemas, collections, and edge cases.
 
@@ -152,6 +153,7 @@ Built with React 19, TypeScript, MUI, Monaco, and Vite. The playground is versio
 
 - **[Accessibility](./docs/ACCESSIBILITY.md)** — WCAG 2.1 AA, keyboard navigation, screen readers
 - **[Web Worker](./docs/WEB_WORKER.md)** — how background parsing keeps the editor responsive
+- **[Autocomplete](./docs/autocomplete.md)** — how schema-aware completion is built, and why the work is split across threads
 - **[Security](./SECURITY-AUDIT.md)** — audit guidelines, and the [quick reference](./SECURITY-QUICK-REF.md)
 
 For the format itself, see the [specification](https://docs.internetobject.org).

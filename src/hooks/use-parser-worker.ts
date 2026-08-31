@@ -6,6 +6,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import type { ParseRequest, ParseResponse } from '../workers/parser.worker';
 import type { ErrorItem, EditorMarker } from '../types/errors';
+import type { CompletionModel } from '../completion/types';
 
 export interface WorkerParseResult {
   errorMessages: string[];
@@ -14,6 +15,8 @@ export interface WorkerParseResult {
   defsMarkers: EditorMarker[];
   jsonText: string;
   error: boolean;
+  /** Schema knowledge for editor autocomplete, computed in the worker. */
+  completionModel: CompletionModel;
 }
 
 export interface UseParserWorkerOptions {

@@ -5,6 +5,7 @@
 
 import { useCallback, useState, useEffect } from 'react';
 import { useParserWorker } from './use-parser-worker';
+import { setCompletionModel } from '../completion/model-store';
 import type { ErrorItem, EditorMarker } from '../types/errors';
 
 export interface ParseIOResult {
@@ -68,6 +69,11 @@ export function useParseIO(
 
     workerParse(documentText, showSchema ? schemaText : null, skipErrors, minifiedOutput)
       .then((result) => {
+        // Straight into the store, deliberately NOT into React state: the editor's
+        // completion providers read it imperatively, nothing renders it, and a state
+        // update here would re-render the whole workspace on every parse.
+        setCompletionModel(result.completionModel);
+
         setDefMarkers(result.defsMarkers);
         setMarkers(result.docMarkers);
         setErrorMessages(result.errorMessages);
