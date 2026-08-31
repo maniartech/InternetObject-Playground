@@ -11,16 +11,43 @@
 
 ## ▶ RESUME HERE — current state
 
-- **Phase:** IMPLEMENTED, all four phases. **Not committed — awaiting review.**
+- **Phase:** SHIPPED, all four phases, committed on `feat/api-0.3`. Not yet merged.
 - **Constraint held:** playground-only. No io-js2 file was modified.
-- **Verified:** `tsc --noEmit` clean · 148 tests pass (122 of them for this feature) ·
-  `vite build` green · dev server boots and every new module transforms · confirmed
-  working live in the browser (signature help + completion).
-- **Not verified:** no browser automation exists in this environment, so nothing was
-  click-tested by me. The provider tests drive the real registered Monaco callbacks
-  against a fake model, which covers behaviour but not rendering.
-- **ESLint does not run in this repo at all** — it has a legacy `.eslintrc.json` and the
-  installed ESLint is v10, which requires flat config. Pre-existing; unrelated to this work.
+- **Verified:** `tsc --noEmit` clean · 163 tests pass, 137 of them for this feature
+  (scanner 26 · build-model 45 · resolve 19 · providers 47) · `vite build` green ·
+  confirmed working live in the browser (signature help + completion).
+- **Not verified:** there is no browser automation in this environment, so nothing was
+  click-tested automatically. The provider tests drive the real registered Monaco
+  callbacks against a fake model, which covers behaviour but not rendering.
+
+### Still pending
+
+Nothing here blocks a merge; all of it is deliberate.
+
+1. **Inlay hints** — decided against for now (see "Decisions taken" below). Signature help
+   covers "which slot am I on"; inlay hints would render `age:` ghost text permanently
+   before each positional value. Worth revisiting only if the signature widget proves too
+   easy to miss.
+2. **No drift guard on `io-types.ts`.** It mirrors io-js2 by hand and nothing fails when
+   the library gains a type or constraint. A test could read
+   `io-js2/src/schema/types/*.ts` and diff the names, skipping when no sibling checkout
+   is present.
+3. **Hover is document-only.** It explains members and `$refs`, but hovering `string` or
+   `minLen` in the schema editor returns nothing — even though `typeDocs` and
+   `constraintDocs` already produce exactly that text for the completion list. Small gap,
+   cheap to close.
+4. **The details-pane default depends on Monaco internals.** `monaco.ts` deep-imports
+   `StandaloneServices` / `IStorageService` to set `expandSuggestionDocs`. Guarded by
+   try/catch and degrades to a collapsed pane, but it is untested and could silently stop
+   working on a Monaco upgrade.
+5. **Very large sections lose their schema.** Past `MAX_SCAN_CHARS` (64 KB) the scan
+   restarts at the nearest `~` and drops the section marker, so completion falls back to
+   the default schema. Correct-but-degraded, and only in documents far larger than any
+   sample.
+6. **No lint anywhere in the repo** — eslint is not a dependency and there is no lint
+   script, so none of this code has been linted. Pre-existing, repo-wide.
+7. **CI runs tests without coverage** — no coverage provider is installed; adding
+   `@vitest/coverage-v8` would restore the report and the codecov upload.
 
 ### Files
 
@@ -293,31 +320,32 @@ are not distinguishable.
 
 ---
 
-## Decisions still open
+## Decisions taken
 
-1. **Positional hints — signature help, inlay hints, or both?**
-   Signature help (recommended) is the idiomatic "which slot am I in" UI, appears only
-   while typing, and Monaco highlights the active parameter for free. Inlay hints render
-   `age:` ghost text permanently before each positional value — striking in a demo, but
-   visually noisy on a wide collection and needs exact per-value offsets. *Recommendation:
-   signature help in Phase 3; inlay hints as an opt-in follow-up if it feels wanting.*
-2. **Export `TypedefRegistry` from io-js2's `index.ts`?** Recommended — the alternative
-   is a hardcoded list in the playground that silently rots.
-3. **Accept the `parse` → `parseDocument` swap in the worker?** Required for schema-aware
-   completion in inline-header documents (i.e. most samples).
+1. **Positional hints: signature help, not inlay hints.** Monaco highlights the active
+   parameter for free and the widget appears only while typing. Inlay hints would put
+   `age:` ghost text permanently before every positional value — striking in a demo, noisy
+   on a wide collection, and needing exact per-value offsets. Left as a possible follow-up.
+2. **`TypedefRegistry` is NOT exported from io-js2.** Ruled out by the playground-only
+   constraint, and unreachable anyway: the package's `exports` map publishes only `.` and
+   `./package.json`. The vocabulary is mirrored in `io-types.ts` instead — see item 2 of
+   "Still pending".
+3. **The `parse` → `parseDocument` swap was rejected.** `parseDocument` takes no options
+   and would have dropped `skipErrors`. Definitions come from splitting the document at
+   its first `---` instead, leaving the existing parse call untouched.
 
 ---
 
 ## Phases (app must run green after each)
 
-1. **Static schema-editor completion** — `TypedefRegistry` export; static model; the
-   `path` prop on `EditorPane`; completion provider for the schema editor. Self-contained,
-   no worker change, immediately useful.
-2. **Schema-aware document completion** — worker `completionModel`; the caret scanner;
+1. ✅ **Static schema-editor completion** — local type vocabulary (no `TypedefRegistry`
+   export, see above); the `path` prop on `EditorPane`; completion provider for the
+   schema editor.
+2. ✅ **Schema-aware document completion** — worker `completionModel`; the caret scanner;
    document completion provider (keys, choices, `$`/`@` refs, section headers).
-3. **Positional slot guidance** — signature help provider driven by `slotIndex`.
-4. **Hovers + polish** — hover provider both editors; suggestion icons/detail/docs;
-   trigger characters tuned; dark/light styling check.
+3. ✅ **Positional slot guidance** — signature help provider driven by the caret's slot.
+4. ✅ **Hovers + polish** — hover provider (document side; see "Still pending" item 3);
+   suggestion kinds, details and documentation; trigger characters tuned.
 
 ## Verification
 
