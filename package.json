@@ -25,12 +25,12 @@
     "web-vitals": "^2.1.0"
   },
   "scripts": {
+    "preinstall": "node scripts/only-pnpm.mjs",
     "dev": "vite",
     "start": "vite",
     "build": "vite build",
     "build:check": "tsc && vite build",
     "preview": "vite preview",
-    "config-io": "node scripts/set-io-path.js",
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:run": "vitest run",
@@ -72,5 +72,10 @@
   },
   "resolutions": {
     "nth-check": ">=2.0.1"
+  },
+  "packageManager": "pnpm@10.22.0",
+  "engines": {
+    "node": ">=20",
+    "pnpm": ">=10"
   }
 }

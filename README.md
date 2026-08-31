@@ -30,30 +30,59 @@ It handles nested objects, arrays, and collections, and infers types (string, nu
 ## Run it locally
 
 ```bash
-npm install
-npm run dev          # http://localhost:4000
+corepack enable      # once per machine
+pnpm install
+pnpm dev             # http://localhost:4000
 ```
 
-The playground builds against the [`internet-object`](https://github.com/maniartech/InternetObject-js) library in a sibling folder (`../io-js2`). To point it somewhere else:
+**This project uses pnpm.** Not a preference — four different lockfiles once accumulated here, and
+each package manager's install undid the last one's work. `preinstall` now refuses anything else.
 
-```bash
-npm run config-io -- ../path/to/library
+### Working on the library at the same time
+
+The playground reads the [`internet-object`](https://github.com/maniartech/InternetObject-js)
+library from a **sibling checkout** while the dev server is running. Edit the library, reload the
+page — that is the whole loop. No rebuild, no re-install, no link.
+
+`pnpm dev` prints which library it is using at startup:
+
+```
+internet-object: ../io-js2/src  (live source — no build step needed)
 ```
 
-> **Note:** the library is a local `file:` dependency, which package managers *copy* rather than link. After changing the library, rebuild it and re-install here (`npm install --force`) or the playground will keep bundling the previous copy.
+`../io-js2` and `../InternetObject-js` are both found automatically; set `IO_LOCAL_PATH` for any
+other layout, or `IO_LOCAL=0` to use the installed package instead.
+
+> **`pnpm build` deliberately does not do this.** A production build resolves the real dependency,
+> because it has to exercise what a user actually installs. So `dist` correctness is still checked
+> against the published package, never against your working tree.
+
+<details>
+<summary>Why it works this way</summary>
+
+`internet-object` is declared as `file:../io-js2`, and pnpm **copies** a `file:` dependency into its
+store rather than linking it — the copy is a snapshot taken at install time. Vite then pre-bundles
+that copy into `node_modules/.vite/deps`. So a rebuild of the library reached the playground through
+neither path, and `tsup --watch` writes to a directory the playground never reads.
+
+A hand-made link solves it until the next install silently displaces it (look for
+`node_modules/.ignored_internet-object` — that is what a displaced link looks like). The dev alias
+lives in `vite.config.ts` instead: committed, shared by every machine, and an install cannot undo it.
+
+</details>
 
 ## Development
 
 | Script | Purpose |
 | ------ | ------- |
-| `npm run dev` | Start the dev server on port 4000 |
-| `npm run build` | Production build into `build/` |
-| `npm run build:check` | Type-check, then build |
-| `npm run preview` | Serve the production build locally |
-| `npm test` | Run tests in watch mode |
-| `npm run test:run` | Run tests once (CI) |
-| `npm run audit` | Check dependencies for vulnerabilities |
-| `npm run security:audit` | Full security audit |
+| `pnpm dev` | Start the dev server on port 4000 |
+| `pnpm build` | Production build into `build/` |
+| `pnpm build:check` | Type-check, then build |
+| `pnpm preview` | Serve the production build locally |
+| `pnpm test` | Run tests in watch mode |
+| `pnpm test:run` | Run tests once (CI) |
+| `pnpm audit` | Check dependencies for vulnerabilities |
+| `pnpm security:audit` | Full security audit |
 
 Built with React 19, TypeScript, MUI, Monaco, and Vite. The playground is versioned by publish date (`YYYYMMDD`), stamped into the build and printed in the browser console.
 

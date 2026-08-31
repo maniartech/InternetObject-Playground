@@ -1,5 +1,5 @@
 import { existsSync } from 'node:fs'
-import { dirname, resolve } from 'node:path'
+import { dirname, relative, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
@@ -31,8 +31,28 @@ const here = dirname(fileURLToPath(import.meta.url))
  * DEV ONLY. `vite build` deliberately keeps using the installed package, because a production
  * build must exercise what a user actually installs. Set `IO_LOCAL=0` to opt out.
  */
-const localSource = resolve(here, '../io-js2/src/index.ts')
-const useLocalSource = process.env.IO_LOCAL !== '0' && existsSync(localSource)
+/**
+ * Where the library's source is, on THIS machine.
+ *
+ * Resolved rather than assumed, the same way io-js2 resolves its own siblings: the repository is
+ * called `InternetObject-js`, so a plain `git clone` produces that name, while this machine happens
+ * to use `io-js2`. Both are tried, and `IO_LOCAL_PATH` overrides for any other layout.
+ */
+function findLocalSource(): string | null {
+  const override = process.env.IO_LOCAL_PATH
+  const candidates = override
+    ? [resolve(here, override)]
+    : ['../io-js2', '../InternetObject-js'].map((name) => resolve(here, name))
+
+  for (const dir of candidates) {
+    const entry = resolve(dir, 'src/index.ts')
+    if (existsSync(entry)) return entry
+  }
+  return null
+}
+
+const localSource = process.env.IO_LOCAL === '0' ? null : findLocalSource()
+const useLocalSource = localSource !== null
 
 /**
  * The playground is versioned by publish date (YYYYMMDD), not semver — it ships continuously and
@@ -57,15 +77,15 @@ export default defineConfig(({ command }) => ({
       configResolved() {
         if (command !== 'serve') return
         console.log(
-          useLocalSource
-            ? '\n  internet-object: ../io-js2/src  (live source — no build step needed)\n'
-            : '\n  internet-object: the installed copy  (pnpm COPIES file: deps — run `pnpm install` after building io-js2)\n'
+          localSource
+            ? `\n  internet-object: ${relative(here, localSource)}  (live source — no build step needed)\n`
+            : '\n  internet-object: the installed copy  (no sibling checkout found; set IO_LOCAL_PATH to point at one)\n'
         )
       },
     },
   ],
   resolve: {
-    alias: command === 'serve' && useLocalSource
+    alias: command === 'serve' && localSource
       ? { 'internet-object': localSource }
       : {},
   },
