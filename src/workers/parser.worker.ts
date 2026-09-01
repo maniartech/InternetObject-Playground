@@ -4,7 +4,7 @@
  */
 
 import type { IODefinitions } from 'internet-object';
-import { parse, parseDefinitions } from 'internet-object';
+import { safeParse, parseDefinitions } from 'internet-object';
 import { IOError, IOSyntaxError, IOValidationError } from 'internet-object';
 import { Decimal } from 'internet-object';
 import type { ErrorItem, EditorMarker, ErrorRange, ErrorCategory } from '../types/errors';
@@ -244,7 +244,14 @@ function parseDoc(
   // `skipErrors` is the DATA axis: it decides whether failed records appear in the result. The sink
   // is the REPORTING axis and is unaffected — the problem list still shows every error either way,
   // which is exactly what the panel's toggle is for.
-  const intermediate = tryParse(doc, (d, sink) => parse(d, defs, sink, { skipErrors }), false);
+  // `safeParse` IS this helper's shape, provided by the library since ADR 0006: the data and the
+  // errors come back in one result, so neither can be dropped on the way to the panel. The helper
+  // stays for definitions, which have no safe form — `parseDefinitions` takes a sink.
+  const intermediate = tryParse(doc, (d, sink) => {
+    const { data, errors } = safeParse(d, defs, { skipErrors });
+    sink.push(...errors);
+    return data;
+  }, false);
 
   const hasErrors = intermediate.errorMessages.length > 0;
   let jsonText = '';
